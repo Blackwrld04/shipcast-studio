@@ -1,0 +1,220 @@
+{
+  "repo_path": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast",
+  "repo_name": "shipcast",
+  "commit_range": "HEAD~5..HEAD",
+  "version_tag": "v0.2.0",
+  "voice_note": "Focus on the two-room Switch topology (#shipcast-studio-desk and #shipcast-verification-lab), cryptographic SHA-256 sandbox receipts, and human approval gate.",
+  "total_commits": 5,
+  "included_commits": 4,
+  "skipped_commits": 1,
+  "overall_importance": 9,
+  "files_touched": [
+    "dist/latest/bundle-data.json",
+    "dist/latest/changelog-entry.md",
+    "dist/latest/changelog-seo.jsonld",
+    "dist/latest/devto-article.md",
+    "dist/latest/social-posts.json",
+    "dist/latest/switch-room-summary.txt",
+    "dist/latest/validation-report.json",
+    "dist/latest/verification-receipt.json",
+    "shipcast.template.yaml",
+    "shipcast.v2.template.yaml",
+    "studio-ui/bundle-data.json"
+  ],
+  "total_insertions": 457,
+  "total_deletions": 182,
+  "categories": {
+    "Fixed": [
+      {
+        "sha": "985b6c5f7afb5d18c1e70a09ab16c213cdcfc0d0",
+        "short_sha": "985b6c5",
+        "subject": "fix(templates): remove  requirement so local unbridged Switch rooms enable Create all",
+        "body": "",
+        "author": "ShipCast Studio",
+        "date": "2026-11-05",
+        "category": "Fixed",
+        "files_changed": [
+          "shipcast.template.yaml",
+          "shipcast.v2.template.yaml"
+        ],
+        "insertions": 5,
+        "deletions": 15,
+        "importance_score": 7,
+        "skipped": false,
+        "skip_reason": ""
+      },
+      {
+        "sha": "31c1f722d0c12e418a63fa7b6bbdb4e4701798a4",
+        "short_sha": "31c1f72",
+        "subject": "fix(template-v2): add studio_group resource so v2 passes switch_core.template_lint with 0 errors",
+        "body": "",
+        "author": "ShipCast Studio",
+        "date": "2026-11-05",
+        "category": "Fixed",
+        "files_changed": [
+          "shipcast.v2.template.yaml"
+        ],
+        "insertions": 11,
+        "deletions": 0,
+        "importance_score": 7,
+        "skipped": false,
+        "skip_reason": ""
+      }
+    ],
+    "Added": [
+      {
+        "sha": "d02883bcbc919e90520ee65efca5b2a2a9333bfe",
+        "short_sha": "d02883b",
+        "subject": "feat(templates): default provider to antigravity and working directory to shipcast repo",
+        "body": "",
+        "author": "ShipCast Studio",
+        "date": "2026-11-05",
+        "category": "Added",
+        "files_changed": [
+          "shipcast.template.yaml",
+          "shipcast.v2.template.yaml"
+        ],
+        "insertions": 22,
+        "deletions": 6,
+        "importance_score": 8,
+        "skipped": false,
+        "skip_reason": ""
+      }
+    ],
+    "Documentation": [
+      {
+        "sha": "58ab37d2fd26278197977b6473da8b8d1278c68f",
+        "short_sha": "58ab37d",
+        "subject": "docs(bundle): refresh dist/latest bundle across full commit range",
+        "body": "",
+        "author": "ShipCast Studio",
+        "date": "2026-11-05",
+        "category": "Documentation",
+        "files_changed": [
+          "dist/latest/bundle-data.json",
+          "dist/latest/changelog-entry.md",
+          "dist/latest/changelog-seo.jsonld",
+          "dist/latest/devto-article.md",
+          "dist/latest/social-posts.json",
+          "dist/latest/switch-room-summary.txt",
+          "dist/latest/validation-report.json",
+          "dist/latest/verification-receipt.json",
+          "studio-ui/bundle-data.json"
+        ],
+        "insertions": 419,
+        "deletions": 161,
+        "importance_score": 5,
+        "skipped": false,
+        "skip_reason": ""
+      }
+    ]
+  },
+  "commits": [
+    {
+      "sha": "985b6c5f7afb5d18c1e70a09ab16c213cdcfc0d0",
+      "short_sha": "985b6c5",
+      "subject": "fix(templates): remove  requirement so local unbridged Switch rooms enable Create all",
+      "body": "",
+      "author": "ShipCast Studio",
+      "date": "2026-11-05",
+      "category": "Fixed",
+      "files_changed": [
+        "shipcast.template.yaml",
+        "shipcast.v2.template.yaml"
+      ],
+      "insertions": 5,
+      "deletions": 15,
+      "importance_score": 7,
+      "skipped": false,
+      "skip_reason": ""
+    },
+    {
+      "sha": "d02883bcbc919e90520ee65efca5b2a2a9333bfe",
+      "short_sha": "d02883b",
+      "subject": "feat(templates): default provider to antigravity and working directory to shipcast repo",
+      "body": "",
+      "author": "ShipCast Studio",
+      "date": "2026-11-05",
+      "category": "Added",
+      "files_changed": [
+        "shipcast.template.yaml",
+        "shipcast.v2.template.yaml"
+      ],
+      "insertions": 22,
+      "deletions": 6,
+      "importance_score": 8,
+      "skipped": false,
+      "skip_reason": ""
+    },
+    {
+      "sha": "31c1f722d0c12e418a63fa7b6bbdb4e4701798a4",
+      "short_sha": "31c1f72",
+      "subject": "fix(template-v2): add studio_group resource so v2 passes switch_core.template_lint with 0 errors",
+      "body": "",
+      "author": "ShipCast Studio",
+      "date": "2026-11-05",
+      "category": "Fixed",
+      "files_changed": [
+        "shipcast.v2.template.yaml"
+      ],
+      "insertions": 11,
+      "deletions": 0,
+      "importance_score": 7,
+      "skipped": false,
+      "skip_reason": ""
+    },
+    {
+      "sha": "58ab37d2fd26278197977b6473da8b8d1278c68f",
+      "short_sha": "58ab37d",
+      "subject": "docs(bundle): refresh dist/latest bundle across full commit range",
+      "body": "",
+      "author": "ShipCast Studio",
+      "date": "2026-11-05",
+      "category": "Documentation",
+      "files_changed": [
+        "dist/latest/bundle-data.json",
+        "dist/latest/changelog-entry.md",
+        "dist/latest/changelog-seo.jsonld",
+        "dist/latest/devto-article.md",
+        "dist/latest/social-posts.json",
+        "dist/latest/switch-room-summary.txt",
+        "dist/latest/validation-report.json",
+        "dist/latest/verification-receipt.json",
+        "studio-ui/bundle-data.json"
+      ],
+      "insertions": 419,
+      "deletions": 161,
+      "importance_score": 5,
+      "skipped": false,
+      "skip_reason": ""
+    },
+    {
+      "sha": "d42d77286ee233b794441b6a02fdd5ab398f9e03",
+      "short_sha": "d42d772",
+      "subject": "chore: untrack __pycache__ and add .gitignore",
+      "body": "",
+      "author": "ShipCast Studio",
+      "date": "2026-11-05",
+      "category": "Chore",
+      "files_changed": [
+        ".gitignore",
+        "shipcast/__pycache__/__init__.cpython-314.pyc",
+        "shipcast/__pycache__/analyzer.cpython-314.pyc",
+        "shipcast/__pycache__/bundler.cpython-314.pyc",
+        "shipcast/__pycache__/cli.cpython-314.pyc",
+        "shipcast/__pycache__/publisher.cpython-314.pyc",
+        "shipcast/__pycache__/validator.cpython-314.pyc",
+        "shipcast/__pycache__/verifier.cpython-314.pyc",
+        "tests/__pycache__/test_shipcast_pipeline.cpython-314-pytest-9.0.3.pyc"
+      ],
+      "insertions": 6,
+      "deletions": 0,
+      "importance_score": 2,
+      "skipped": true,
+      "skip_reason": "Minor chore/maintenance commit"
+    }
+  ],
+  "extracted_commands": [
+    "python3 -m shipcast.cli --help"
+  ]
+}

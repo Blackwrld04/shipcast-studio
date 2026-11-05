@@ -75,3 +75,4 @@ The complete, contract-validated blog post is generated and ready at:
    > *"At producer, ship release version zero point two point zero from HEAD tilde three to HEAD and highlight how our two linked Switch rooms separate sandbox command verification from the human approval desk."*
 2. Open **Insights** in the Wispr Flow desktop app and take a screenshot of your **Wispr usage scorecard**.
 3. Attach that screenshot when submitting your project on the hackathon portal!
+

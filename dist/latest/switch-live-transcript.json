@@ -1,0 +1,214 @@
+{
+  "rooms": {
+    "43434c36-2e18-40d9-b260-96982c8a4260": "Welcome",
+    "fad3bd1d-522d-4442-a130-5bfed59209ab": "shipcast-studio-desk",
+    "b475ef84-22c8-4a23-9b51-9c75aa90b4c4": "shipcast-verification-lab",
+    "feaca160-3645-496f-948f-b9b76f858abf": "New Chat"
+  },
+  "references": [
+    {
+      "id": "4fec5bbc-25d4-4f25-b5c9-f8469ff9dcb4",
+      "name": "shipcast-target-repository",
+      "description": "Primary source repository analyzed and verified by ShipCast"
+    },
+    {
+      "id": "50850bdf-0435-43ea-8fac-af269286fb0f",
+      "name": "shipcast-v0.2.0-release-bundle",
+      "description": "Validated v0.2.0 release bundle (7/7 editorial contract rules passed, SHA-256 receipt d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9) in dist/latest."
+    }
+  ],
+  "messages": [
+    {
+      "room": "Welcome",
+      "seq": 2,
+      "sender": "switch-buddy-admin",
+      "body": "Hi Admin, I\u2019m **switch-buddy-admin**, your assistant for everything Switch. \ud83d\udc4b\n\nSwitch brings your agents to where your team already works: ![Slack](switchdash://logo/slack), ![Microsoft Teams](switchdash://logo/teams), ![Mattermost](switchdash://logo/mattermost) and ![Telegram](switchdash://logo/telegram). Your team talks to agents in the channels they already use, and people and agents work together in shared rooms.\n\nI can help you:\n- \ud83d\udd0c Connect your team\u2019s chat app\n- \ud83e\udd16 Create agents and bring them into your channels\n- \ud83c\udfe0 Set up rooms where your team and agents work together\n- \ud83d\udcac Answer anything about Switch\n\nTell me which app your team uses, and I\u2019ll walk you through connecting it."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 3,
+      "sender": "shipcast-producer",
+      "body": "Hi there! Just @shipcast-producer me when you're ready."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 5,
+      "sender": "shipcast-verifier",
+      "body": "Hi! Mention @shipcast-verifier to get my attention."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 7,
+      "sender": "shipcast-publisher",
+      "body": "Hey! Ping @shipcast-publisher and I'll jump in."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 8,
+      "sender": "admin",
+      "body": "Template kickoff on behalf of @Admin"
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 9,
+      "sender": "admin",
+      "body": "@shipcast-verifier and @shipcast-publisher this is the backstage verification lab\nlinked to `shipcast-studio-desk`. Confirm in one line each that you have read\n`shipcast-editorial-contract` and are standing by for handoffs from producer.\n"
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 10,
+      "sender": "shipcast-publisher",
+      "body": "Starting a session to handle this \u2014 one moment."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 11,
+      "sender": "shipcast-verifier",
+      "body": "Starting a session to handle this \u2014 one moment."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 12,
+      "sender": "shipcast-publisher",
+      "body": "`shipcast-editorial-contract` loaded and 7 rules verified \u2014 standing by for handoffs from producer."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 13,
+      "sender": "shipcast-verifier",
+      "body": "Read `shipcast-editorial-contract` (Rule 4: every runnable snippet must exit 0 with a SHA-256 receipt in `verification-receipt.json`) and standing by for handoffs from producer."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 14,
+      "sender": "shipcast-producer",
+      "body": "@shipcast-verifier \u2022 **Release Handoff:** Please verify and sign the SHA-256 sandbox receipt for `v0.2.0` (`HEAD~5..HEAD`), then pass the signed receipt to `shipcast-publisher` for bundling and contract validation.\n\u2022 **Analysis File:** Saved at `dist/latest/analysis.json` (4 commits included, 1 chore skipped, overall importance 9/10).\n\u2022 **Voice Note:** \"Focus on the two-room Switch topology (#shipcast-studio-desk and #shipcast-verification-lab), cryptographic SHA-256 sandbox receipts, and human approval gate.\"\n\u2022 **Extracted CLI Commands to Verify:** `python3 -m shipcast.cli --help` and `pytest -q`"
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 15,
+      "sender": "shipcast-verifier",
+      "body": "On it \u2014 assuming `snippet-auditor` and running sandbox verification on `v0.2.0` commands (`python3 -m shipcast.cli --help` and `pytest -q`)."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 16,
+      "sender": "shipcast-verifier",
+      "body": "\ud83c\udfad assumed the `snippet-auditor` role."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 17,
+      "sender": "shipcast-verifier",
+      "body": "@shipcast-publisher Sandbox verification for `v0.2.0` (`HEAD~5..HEAD`) passed (`all_passed: true`, 2/2 checks exit 0). Receipt saved to `dist/latest/verification-receipt.json` alongside `dist/latest/analysis.json`.\n\n- **Overall Receipt SHA-256:** `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`\n- **Check 1 (`python3 -m shipcast.cli --help`):** exit `0` \u00b7 receipt `9e0b9428774d2022a14257b0b508893463b55ee1a1eec827b5e2e6a3d29da725` \u00b7 stdout: `usage: shipcast [-h] {analyze,verify,run-pipeline,validate,publish,serve-studio} ...`\n- **Check 2 (`pytest -q`):** exit `0` \u00b7 receipt `72a6dd9366fcadfb70045c96401a40bdb1153b2ccfb8d1c753d9fada4819110c` \u00b7 stdout: `..... [100%] 5 passed in 0.10s`\n\nReady for you to generate the release bundle, run `shipcast validate` against `shipcast-editorial-contract`, and report back to `shipcast-producer`."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 18,
+      "sender": "shipcast-publisher",
+      "body": "On it \u2014 building and validating the `v0.2.0` release bundle in `dist/latest`."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 19,
+      "sender": "shipcast-publisher",
+      "body": "@shipcast-producer Release bundle for `shipcast` `v0.2.0` (`HEAD~5..HEAD`) generated in `dist/latest`, validated against `shipcast-editorial-contract` (`valid: true`, 7/7 rules passed), and attached to `shipcast-studio-desk` as reference `shipcast-v0.2.0-release-bundle` (`50850bdf-0435-43ea-8fac-af269286fb0f`).\n\n- **Overall Receipt SHA-256:** `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9` (2/2 sandbox checks exit 0)\n- **Contract Validation (7/7 passed):** `frontmatter.required_fields` \u00b7 `frontmatter.description_length` (110/160 chars) \u00b7 `markdown.title_matches_h1` \u00b7 `verification.all_snippets_passed` \u00b7 `editorial.no_banned_buzzwords` \u00b7 `switch.slack_telegram_safe_summary` \u00b7 `switch.no_accidental_agent_mentions`\n- **Staged Artifacts (`dist/latest`):** `devto-article.md`, `changelog-entry.md`, `changelog-seo.jsonld`, `social-posts.json`, `switch-room-summary.txt`, `verification-receipt.json`, `validation-report.json`\n\n**Room Summary Card for `shipcast-studio-desk`:**\n**ShipCast Release Package Ready \u2014 shipcast v0.2.0**\n\u2022 **Role Held:** `release-captain` (exclusive lock active)\n\u2022 **Git Range:** `HEAD~5..HEAD` (4 commits included, 1 filtered)\n\u2022 **Importance Score:** 9/10 (+457/-182 lines in 11 files)\n\u2022 **Sandbox Verification:** 2/2 commands passed (Receipt `d23ff7cf96db30bd`)\n\u2022 **Artifacts Staged:** `devto-article.md`, `changelog-entry.md`, `social-posts.json`, `changelog-seo.jsonld`\n\u2022 **Next Step:** Reply `Approve publish` in this thread to update `CHANGELOG.md` and publish the release bundle.\n\nReady for human sign-off in `shipcast-studio-desk` \u2014 standing by before any external publish."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 20,
+      "sender": "shipcast-producer",
+      "body": "Starting a session to handle this \u2014 one moment."
+    },
+    {
+      "room": "shipcast-verification-lab",
+      "seq": 21,
+      "sender": "shipcast-producer",
+      "body": "\u2022 **Bundle Received:** Validated `v0.2.0` release bundle (`d23ff7cf96db30bd`, 7/7 contract checks passed) and attached reference `shipcast-v0.2.0-release-bundle` confirmed. Switching back to `shipcast-studio-desk` to post the summary card for human sign-off."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 2,
+      "sender": "shipcast-producer",
+      "body": "Hello! Tag @shipcast-producer to loop me in."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 4,
+      "sender": "shipcast-publisher",
+      "body": "Hey! I'm on standby \u2014 @shipcast-publisher to get started."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 6,
+      "sender": "admin",
+      "body": "Template kickoff on behalf of @Admin"
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 7,
+      "sender": "admin",
+      "body": "@shipcast-producer welcome to the ShipCast Studio Desk. In two lines, introduce\nyourself, claim the `release-captain` role if available, and tell the release owner how\nto trigger a verified release from git commits or a voice note.\n"
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 8,
+      "sender": "shipcast-producer",
+      "body": "Starting a session to handle this \u2014 one moment."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 9,
+      "sender": "shipcast-producer",
+      "body": "\ud83c\udfad assumed the `release-captain` role."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 10,
+      "sender": "shipcast-producer",
+      "body": "\u2022 **Role & Status:** I am the ShipCast Producer\u2014I coordinate commit analysis, backstage CLI verification, and release bundling, and I have claimed the exclusive `release-captain` role.\n\u2022 **How to Trigger:** Ask me in this room with a target version tag and git commit range (plus any optional voice-dictated notes) to kick off a verified release."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 11,
+      "sender": "shipcast-producer",
+      "body": "\u2022 **Session Handoff:** Connected to `shipcast-studio-desk` (taking over from the prior idle session `dbd26581-2803-5774-83cf-18e7aea5ac91`) and secured the exclusive `release-captain` lock.\n\u2022 **Current Step:** Running `shipcast.cli analyze` for `v0.2.0` (`HEAD~5..HEAD`) with the voice note focus on two-room Switch topology, SHA-256 sandbox receipts, and the human approval gate."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 12,
+      "sender": "shipcast-producer",
+      "body": "\u2022 **Analysis Complete:** Analyzed `HEAD~5..HEAD` for `v0.2.0` (4 commits included, 1 chore skipped, overall importance 9/10). Hopping to `shipcast-verification-lab` to hand off sandbox verification."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 13,
+      "sender": "shipcast-producer",
+      "body": "\u2022 **Backstage Handoff Dispatched:** Sent the `v0.2.0` (`HEAD~5..HEAD`) commit analysis, voice note context, and extracted CLI commands (`python3 -m shipcast.cli --help`, `pytest -q`) to the verification lab.\n\u2022 **Next Step:** Waiting for the verifier and publisher to complete SHA-256 sandbox execution and 7-rule editorial contract validation before posting the summary card for your approval."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 14,
+      "sender": "shipcast-producer",
+      "body": "**ShipCast Release Package Ready \u2014 shipcast v0.2.0**\n\u2022 **Session Handoff:** Reconnected to `shipcast-studio-desk` (taking over from prior session `9c056879-7002-4955-9412-a25505e0b2fe` after backstage verification in `shipcast-verification-lab`).\n\u2022 **Role Held:** `release-captain` (exclusive lock active)\n\u2022 **Git Range:** `HEAD~5..HEAD` (4 commits included, 1 filtered)\n\u2022 **Importance Score:** 9/10 (+457/-182 lines in 11 files)\n\u2022 **Sandbox Verification:** 2/2 commands passed (Receipt `d23ff7cf96db30bd` \u00b7 full SHA-256 `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`)\n\u2022 **Contract Validation:** 7/7 rules passed against `shipcast-editorial-contract` (`valid: true`)\n\u2022 **Attached Reference:** `shipcast-v0.2.0-release-bundle` (`50850bdf-0435-43ea-8fac-af269286fb0f`)\n\u2022 **Artifacts Staged:** `devto-article.md`, `changelog-entry.md`, `social-posts.json`, `changelog-seo.jsonld`\n\u2022 **Next Step:** Reply `Approve publish` in this thread to update `CHANGELOG.md` and publish the release bundle."
+    },
+    {
+      "room": "New Chat",
+      "seq": 2,
+      "sender": "shipcast-producer",
+      "body": "Hi! I'm shipcast-producer \u2014 how can I help?"
+    },
+    {
+      "room": "New Chat",
+      "seq": 5,
+      "sender": "Admin",
+      "body": "Cut release v0.2.0 from HEAD~5..HEAD in shipcast-studio-desk. Voice note: Focus on the two-room Switch topology (#shipcast-studio-desk and #shipcast-verification-lab), cryptographic SHA-256 sandbox receipts, and human approval gate."
+    },
+    {
+      "room": "New Chat",
+      "seq": 6,
+      "sender": "shipcast-producer",
+      "body": "On it \u2014 connecting to shipcast-studio-desk to claim the release-captain role and run the diff analysis for v0.2.0."
+    }
+  ]
+}
