@@ -1,5 +1,9 @@
 # ShipCast Studio — 4-Track Hackathon Submission Kit
 
+- **Live Public GitHub Repository:** https://github.com/Blackwrld04/shipcast-studio
+- **Staged DEV.to Blog Draft (`edit_url`):** https://dev.to/olajide_abdulquadri_807ef/shipcast-studio-on-switch-rooms-cryptographically-verified-multi-agent-release-notes-3ilf-temp-slug-4446916/edit
+- **Local Studio Workbench UI:** http://127.0.0.1:8765
+
 This file contains everything needed to submit **ShipCast Studio** across **four prize tracks simultaneously**:
 1. **Main Track 02: Best Personal or Creative Workflow (\$2,000)**
 2. **Side Track: Code with Wispr (\$500)**
