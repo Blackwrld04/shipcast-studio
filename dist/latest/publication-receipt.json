@@ -1,12 +1,12 @@
 {
-  "published_at": "2026-11-05T13:19:02Z",
+  "published_at": "2026-11-05T16:34:43Z",
   "version_tag": "v0.2.0",
-  "approved_by": "blackwrld04",
-  "approval_message": "Approved. Publish v0.2.0!",
-  "approval_signature_sha256": "e8379e918ae9e83e2d6652e0ef8cc0d045d2915e0e8c2a8206613471fcd5e3a6",
-  "verification_receipt_sha256": "21fe43f069b4048548663c91ce1447f1d53f27f3da56d9e37a35b160b952b183",
+  "approved_by": "Admin",
+  "approval_message": "Approve publish in shipcast-studio-desk",
+  "approval_signature_sha256": "21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5",
+  "verification_receipt_sha256": "d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9",
   "changelog_path": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/CHANGELOG.md",
-  "changelog_updated": true,
+  "changelog_updated": false,
   "devto": {
     "status": "staged_locally"
   }

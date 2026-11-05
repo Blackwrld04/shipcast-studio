@@ -6,6 +6,21 @@ Instead of trusting a single chatbot to summarize `git log` and publish unchecke
 
 ---
 
+## Live Execution Proof in Switch Console (`v0.40.1`)
+
+All 3 agents (`shipcast-producer`, `shipcast-verifier`, `shipcast-publisher`) and both linked rooms (`shipcast-studio-desk` and `shipcast-verification-lab`) were provisioned and executed end-to-end on a local Switch server. The complete 39-message room transcript and attached reference (`shipcast-v0.2.0-release-bundle`) are saved in [`dist/latest/switch-live-transcript.json`](dist/latest/switch-live-transcript.json) and [`dist/latest/publication-receipt.json`](dist/latest/publication-receipt.json).
+
+### 1. One-Click Group Template Import (`shipcast.template.yaml`)
+![Switch Console Template Import](assets/switch-console-template-import.png)
+
+### 2. Producer Claiming `release-captain` & Coordinating Backstage Verification
+![Switch Console Producer Live Execution](assets/switch-console-producer-live.png)
+
+### 3. Human Approval Gate (`Approve publish`) & Cryptographic Receipt (`SHA-256`)
+![Switch Console Publication Complete](assets/switch-console-publication-complete.png)
+
+---
+
 ## Architecture: Why Switch Rooms Are Essential
 
 ```mermaid

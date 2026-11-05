@@ -3,7 +3,8 @@
     "43434c36-2e18-40d9-b260-96982c8a4260": "Welcome",
     "fad3bd1d-522d-4442-a130-5bfed59209ab": "shipcast-studio-desk",
     "b475ef84-22c8-4a23-9b51-9c75aa90b4c4": "shipcast-verification-lab",
-    "feaca160-3645-496f-948f-b9b76f858abf": "New Chat"
+    "feaca160-3645-496f-948f-b9b76f858abf": "New Chat",
+    "8bcf9acc-1f21-4aa7-a360-454f3f474859": "New Chat"
   },
   "references": [
     {
@@ -23,6 +24,30 @@
       "seq": 2,
       "sender": "switch-buddy-admin",
       "body": "Hi Admin, I\u2019m **switch-buddy-admin**, your assistant for everything Switch. \ud83d\udc4b\n\nSwitch brings your agents to where your team already works: ![Slack](switchdash://logo/slack), ![Microsoft Teams](switchdash://logo/teams), ![Mattermost](switchdash://logo/mattermost) and ![Telegram](switchdash://logo/telegram). Your team talks to agents in the channels they already use, and people and agents work together in shared rooms.\n\nI can help you:\n- \ud83d\udd0c Connect your team\u2019s chat app\n- \ud83e\udd16 Create agents and bring them into your channels\n- \ud83c\udfe0 Set up rooms where your team and agents work together\n- \ud83d\udcac Answer anything about Switch\n\nTell me which app your team uses, and I\u2019ll walk you through connecting it."
+    },
+    {
+      "room": "New Chat",
+      "seq": 2,
+      "sender": "shipcast-producer",
+      "body": "Hi! I'm shipcast-producer \u2014 how can I help?"
+    },
+    {
+      "room": "New Chat",
+      "seq": 5,
+      "sender": "Admin",
+      "body": "Approve publish in shipcast-studio-desk"
+    },
+    {
+      "room": "New Chat",
+      "seq": 6,
+      "sender": "shipcast-producer",
+      "body": "On it \u2014 checking `shipcast-studio-desk` and running the publish step."
+    },
+    {
+      "room": "New Chat",
+      "seq": 7,
+      "sender": "shipcast-producer",
+      "body": "**ShipCast Publication Complete \u2014 shipcast v0.2.0**\n\u2022 **Status:** Published in `shipcast-studio-desk` and verified `CHANGELOG.md` (`v0.2.0` entry present)\n\u2022 **Approved By:** `Admin` (`Approve publish in shipcast-studio-desk`)\n\u2022 **Approval Signature (SHA-256):** `21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5`\n\u2022 **Verification Receipt (SHA-256):** `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`\n\u2022 **Publication Receipt:** `dist/latest/publication-receipt.json` (`2026-11-05T16:34:43Z`)\n\u2022 **Role Status:** Released the exclusive `release-captain` role in `shipcast-studio-desk`."
     },
     {
       "room": "shipcast-verification-lab",
@@ -191,6 +216,24 @@
       "seq": 14,
       "sender": "shipcast-producer",
       "body": "**ShipCast Release Package Ready \u2014 shipcast v0.2.0**\n\u2022 **Session Handoff:** Reconnected to `shipcast-studio-desk` (taking over from prior session `9c056879-7002-4955-9412-a25505e0b2fe` after backstage verification in `shipcast-verification-lab`).\n\u2022 **Role Held:** `release-captain` (exclusive lock active)\n\u2022 **Git Range:** `HEAD~5..HEAD` (4 commits included, 1 filtered)\n\u2022 **Importance Score:** 9/10 (+457/-182 lines in 11 files)\n\u2022 **Sandbox Verification:** 2/2 commands passed (Receipt `d23ff7cf96db30bd` \u00b7 full SHA-256 `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`)\n\u2022 **Contract Validation:** 7/7 rules passed against `shipcast-editorial-contract` (`valid: true`)\n\u2022 **Attached Reference:** `shipcast-v0.2.0-release-bundle` (`50850bdf-0435-43ea-8fac-af269286fb0f`)\n\u2022 **Artifacts Staged:** `devto-article.md`, `changelog-entry.md`, `social-posts.json`, `changelog-seo.jsonld`\n\u2022 **Next Step:** Reply `Approve publish` in this thread to update `CHANGELOG.md` and publish the release bundle."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 15,
+      "sender": "shipcast-producer",
+      "body": "\u2022 **Session Handoff & Approval Received:** Connected to `shipcast-studio-desk` (taking over from prior idle session `876405fb-e3b0-5ada-a862-acda0ab0f21a`) with explicit publish approval from `Admin`\u2014running `shipcast.cli publish` for `v0.2.0` now."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 16,
+      "sender": "shipcast-producer",
+      "body": "\ud83c\udfad released the `release-captain` role."
+    },
+    {
+      "room": "shipcast-studio-desk",
+      "seq": 17,
+      "sender": "shipcast-producer",
+      "body": "**ShipCast Publication Complete \u2014 shipcast v0.2.0**\n\u2022 **Status:** Published and `CHANGELOG.md` verified (`v0.2.0` entry present)\n\u2022 **Approved By:** `Admin` (`Approve publish in shipcast-studio-desk`)\n\u2022 **Approval Signature (SHA-256):** `21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5`\n\u2022 **Verification Receipt (SHA-256):** `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`\n\u2022 **Publication Receipt:** `dist/latest/publication-receipt.json` (`2026-11-05T16:34:43Z`)\n\u2022 **Role Status:** Released exclusive `release-captain` lock \u2014 studio desk is ready for the next release."
     },
     {
       "room": "New Chat",
