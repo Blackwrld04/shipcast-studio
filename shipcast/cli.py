@@ -1,20 +1,64 @@
-"""Command-line interface for ShipCast."""
+"""Command-line interface and live Studio HTTP API server for ShipCast."""
 
 from __future__ import annotations
 
 import argparse
-from functools import partial
 import http.server
 import json
 from pathlib import Path
 import shutil
 import sys
+from typing import Any
 
 from shipcast.analyzer import analyze_repository
 from shipcast.bundler import create_release_bundle
 from shipcast.publisher import publish_release_bundle
 from shipcast.validator import validate_release_bundle
 from shipcast.verifier import extract_fenced_commands, verify_commands
+
+
+def execute_pipeline(
+    repo_path: Path,
+    commit_range: str,
+    version_tag: str,
+    voice_note: str,
+    min_importance: int,
+    extra_commands: list[str],
+    output_dir: Path,
+) -> dict[str, Any]:
+    repo_path = repo_path.resolve()
+    output_dir = output_dir.resolve()
+
+    analysis = analyze_repository(
+        repo_path=repo_path,
+        commit_range=commit_range,
+        version_tag=version_tag,
+        voice_note=voice_note,
+        min_importance=min_importance,
+    )
+
+    commands: list[tuple[str, str]] = [("bash", cmd) for cmd in analysis.extracted_commands]
+    for extra in extra_commands:
+        if extra and ("bash", extra) not in commands:
+            commands.append(("bash", extra))
+
+    receipt = verify_commands(
+        commands=commands,
+        working_dir=repo_path,
+        version_tag=version_tag,
+    )
+
+    bundle = create_release_bundle(
+        analysis=analysis.to_dict(),
+        receipt=receipt.to_dict(),
+        output_dir=output_dir,
+    )
+
+    studio_dir = repo_path / "studio-ui"
+    if studio_dir.exists():
+        shutil.copyfile(output_dir / "bundle-data.json", studio_dir / "bundle-data.json")
+
+    return bundle
 
 
 def cmd_analyze(args: argparse.Namespace) -> int:
@@ -63,40 +107,17 @@ def cmd_verify(args: argparse.Namespace) -> int:
 
 
 def cmd_run_pipeline(args: argparse.Namespace) -> int:
-    repo_path = Path(args.repo).resolve()
-    output_dir = Path(args.output_dir).resolve()
-
-    analysis = analyze_repository(
-        repo_path=repo_path,
+    bundle = execute_pipeline(
+        repo_path=Path(args.repo),
         commit_range=args.range,
         version_tag=args.version,
         voice_note=args.voice_note,
         min_importance=args.min_importance,
+        extra_commands=args.command or [],
+        output_dir=Path(args.output_dir),
     )
-
-    commands: list[tuple[str, str]] = [("bash", cmd) for cmd in analysis.extracted_commands]
-    for extra in args.command or []:
-        commands.append(("bash", extra))
-
-    receipt = verify_commands(
-        commands=commands,
-        working_dir=repo_path,
-        version_tag=args.version,
-    )
-
-    bundle = create_release_bundle(
-        analysis=analysis.to_dict(),
-        receipt=receipt.to_dict(),
-        output_dir=output_dir,
-    )
-
-    # Also sync bundle-data.json into studio-ui/ if present so the web preview updates automatically
-    studio_dir = repo_path / "studio-ui"
-    if studio_dir.exists():
-        shutil.copyfile(output_dir / "bundle-data.json", studio_dir / "bundle-data.json")
-
     print(bundle["preview"]["room_summary"])
-    print(f"\n[Bundle written to: {output_dir}]")
+    print(f"\n[Bundle written to: {Path(args.output_dir).resolve()}]")
     return 0 if bundle["validation_report"]["valid"] else 1
 
 
@@ -122,11 +143,69 @@ def cmd_publish(args: argparse.Namespace) -> int:
     return 0
 
 
+class StudioRequestHandler(http.server.SimpleHTTPRequestHandler):
+    repo_root: Path = Path(".")
+
+    def _send_json(self, status: int, data: dict[str, Any]) -> None:
+        raw = json.dumps(data, indent=2).encode("utf-8")
+        self.send_response(status)
+        self.send_header("Content-Type", "application/json; charset=utf-8")
+        self.send_header("Content-Length", str(len(raw)))
+        self.end_headers()
+        self.wfile.write(raw)
+
+    def do_POST(self) -> None:
+        length = int(self.headers.get("Content-Length", "0"))
+        body_raw = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
+        try:
+            payload = json.loads(body_raw)
+        except json.JSONDecodeError:
+            payload = {}
+
+        if self.path == "/api/run-pipeline":
+            try:
+                bundle = execute_pipeline(
+                    repo_path=self.repo_root,
+                    commit_range=payload.get("range", "HEAD~3..HEAD"),
+                    version_tag=payload.get("version", "v0.2.0"),
+                    voice_note=payload.get("voice_note", ""),
+                    min_importance=int(payload.get("min_importance", 4)),
+                    extra_commands=payload.get("commands", ["pytest -q"]),
+                    output_dir=self.repo_root / "dist" / "latest",
+                )
+                self._send_json(200, {"ok": True, "bundle": bundle})
+            except Exception as exc:
+                self._send_json(400, {"ok": False, "error": str(exc)})
+            return
+
+        if self.path == "/api/publish":
+            try:
+                pub = publish_release_bundle(
+                    bundle_dir=self.repo_root / "dist" / "latest",
+                    repo_path=self.repo_root,
+                    approved_by=payload.get("approved_by", "blackwrld04"),
+                    approval_message=payload.get("approval_message", "Approved. Publish it!"),
+                    publish_devto=bool(payload.get("devto", False)),
+                )
+                self._send_json(200, {"ok": True, "publication_receipt": pub})
+            except Exception as exc:
+                self._send_json(400, {"ok": False, "error": str(exc)})
+            return
+
+        self._send_json(404, {"ok": False, "error": f"Unknown endpoint: {self.path}"})
+
+
 def cmd_serve_studio(args: argparse.Namespace) -> int:
     studio_dir = Path(args.dir).resolve()
-    handler = partial(http.server.SimpleHTTPRequestHandler, directory=str(studio_dir))
-    with http.server.ThreadingHTTPServer(("127.0.0.1", args.port), handler) as httpd:
-        print(f"ShipCast Studio UI serving at http://127.0.0.1:{args.port}")
+    repo_root = studio_dir.parent
+
+    class BoundHandler(StudioRequestHandler):
+        def __init__(self, *h_args: Any, **h_kwargs: Any) -> None:
+            self.repo_root = repo_root
+            super().__init__(*h_args, directory=str(studio_dir), **h_kwargs)
+
+    with http.server.ThreadingHTTPServer(("127.0.0.1", args.port), BoundHandler) as httpd:
+        print(f"ShipCast Studio UI + Live API serving at http://127.0.0.1:{args.port}", flush=True)
         httpd.serve_forever()
 
 

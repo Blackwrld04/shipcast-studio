@@ -20,3 +20,4 @@ Tutorials and release notes rot when LLMs invent CLI flags or guess terminal out
 4. **Evaluate Results:**
    - If `all_passed` is `false`, post the failing command, `exit_code`, and `stderr` in `{team}-verification-lab` and refuse to advance the release.
    - If `all_passed` is `true`, call `send_targeted_message` to address `{team}-publisher` in `{team}-verification-lab` with the `overall_receipt_sha256`.
+

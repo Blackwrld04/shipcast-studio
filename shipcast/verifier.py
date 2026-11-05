@@ -169,3 +169,4 @@ def verify_commands(
         overall_receipt_sha256=hasher.hexdigest(),
         results=[asdict(r) for r in results],
     )
+

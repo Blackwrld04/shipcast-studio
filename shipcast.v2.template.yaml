@@ -22,7 +22,7 @@ params:
     required: false
   provider:
     type: provider
-    default: [antigravity, claude, codex, opencode, cursor]
+    default: [claude, opencode, antigravity, codex, cursor]
     input: advanced
   machine:
     type: machine
@@ -106,3 +106,4 @@ resources:
       on every bundle before returning to `{team}-studio-desk`.
     kickoff: |
       @{verifier.name} and @{publisher.name} confirm you are ready in `{team}-verification-lab`.
+

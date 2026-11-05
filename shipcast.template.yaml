@@ -35,7 +35,7 @@ params:
   provider:
     type: provider
     description: Coding agent runtime that backs the crew. First installed provider is chosen.
-    default: [antigravity, claude, codex, opencode, cursor]
+    default: [claude, opencode, antigravity, codex, cursor]
     input: advanced
   location:
     type: location
@@ -253,3 +253,4 @@ links:
   - from: "{team}-verification-lab"
     to: "{team}-studio-desk"
     label: human-approval-desk
+

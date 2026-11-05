@@ -264,3 +264,4 @@ def analyze_repository(
         commits=[asdict(r) for r in records],
         extracted_commands=extracted_commands,
     )
+

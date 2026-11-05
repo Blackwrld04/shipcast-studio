@@ -285,3 +285,4 @@ def create_release_bundle(
         json.dumps(bundle_manifest, indent=2), encoding="utf-8"
     )
     return bundle_manifest
+

@@ -187,3 +187,4 @@ def test_switch_templates_contain_required_primitives() -> None:
     assert "verification-and-drafting" in v1_text
     assert "addressing: owner-agents" in v1_text
     assert "allow_existing: true" in v1_text
+

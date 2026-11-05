@@ -25,3 +25,4 @@ You are **shipcast-publisher**. You operate in `{team}-verification-lab` (`addre
    - `switch.slack_telegram_safe_summary`
    - `switch.no_accidental_agent_mentions`
 4. **Attach Reference & Notify Producer:** Attach the bundle reference to `{team}-studio-desk` (`create_reference` / `attach_reference_to_room`) and notify `{team}-producer` that the release receipt is ready for human approval.
+

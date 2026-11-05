@@ -123,3 +123,4 @@ def publish_release_bundle(
         json.dumps(pub_receipt, indent=2), encoding="utf-8"
     )
     return pub_receipt
+
