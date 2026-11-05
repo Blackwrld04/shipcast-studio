@@ -22,11 +22,15 @@ params:
     required: false
   provider:
     type: provider
-    default: [claude, opencode, antigravity, codex, cursor]
+    default: [antigravity, claude, opencode, codex, cursor]
     input: advanced
   machine:
     type: machine
     default: [$first]
+    input: advanced
+  directory:
+    type: directory
+    default: "/home/blackwrld04/.gemini/antigravity/scratch/shipcast"
     input: advanced
 
 form:
@@ -39,9 +43,11 @@ resources:
     description: "Coordinates releases in studio-desk, analyzes git diffs, and gates publishing on human sign-off"
     provider: "{provider}"
     machine: "{machine}"
-    directory: "{$agents_dir}/{producer.name}"
+    directory: "{directory}"
     repo: "{repo_url}"
     addressing: anyone
+    auto_mode: true
+    auto_approve: true
     instructions: |
       You are the Producer of the ShipCast release studio. Coordinate git diff analysis
       in `{team}-studio-desk`, delegate verification to `{team}-verification-lab`, and
@@ -53,9 +59,11 @@ resources:
     description: "Executes tutorial commands and code blocks in an isolated sandbox and signs SHA-256 receipts"
     provider: "{provider}"
     machine: "{machine}"
-    directory: "{$agents_dir}/{verifier.name}"
+    directory: "{directory}"
     repo: "{repo_url}"
     addressing: owner-agents
+    auto_mode: true
+    auto_approve: true
     instructions: |
       You are the Sandbox Verifier in `{team}-verification-lab`. Run `python3 -m shipcast.cli verify`
       on every command and code snippet before handing off the SHA-256 receipt to publisher.
@@ -66,9 +74,11 @@ resources:
     description: "Builds the DEV.to tutorial, Keep-a-Changelog entry, JSON-LD SEO, and social posts under strict contract validation"
     provider: "{provider}"
     machine: "{machine}"
-    directory: "{$agents_dir}/{publisher.name}"
+    directory: "{directory}"
     repo: "{repo_url}"
     addressing: owner-agents
+    auto_mode: true
+    auto_approve: true
     instructions: |
       You are the Publisher in `{team}-verification-lab`. Run `python3 -m shipcast.cli run-pipeline`
       and `python3 -m shipcast.cli validate` against `shipcast-editorial-contract`.

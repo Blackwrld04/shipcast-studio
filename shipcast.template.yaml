@@ -35,7 +35,7 @@ params:
   provider:
     type: provider
     description: Coding agent runtime that backs the crew. First installed provider is chosen.
-    default: [claude, opencode, antigravity, codex, cursor]
+    default: [antigravity, claude, opencode, codex, cursor]
     input: advanced
   location:
     type: location
@@ -45,7 +45,7 @@ params:
   directory:
     type: directory
     description: Working directory for each agent on the host machine.
-    default: "{$agents_dir}/{agent}"
+    default: "/home/blackwrld04/.gemini/antigravity/scratch/shipcast"
     input: advanced
 
 form:
@@ -59,6 +59,8 @@ agents:
     description: Coordinates releases in studio-desk, analyzes git diffs, and gates publishing on human sign-off
     addressing: anyone
     allow_existing: true
+    auto_mode: true
+    auto_approve: true
     provider: "{provider}"
     location: "{location}"
     directory: "{directory}"
@@ -101,6 +103,8 @@ agents:
     description: Executes tutorial commands and code blocks in an isolated sandbox and signs SHA-256 receipts
     addressing: owner-agents
     allow_existing: true
+    auto_mode: true
+    auto_approve: true
     provider: "{provider}"
     location: "{location}"
     directory: "{directory}"
@@ -127,6 +131,8 @@ agents:
     description: Builds the DEV.to tutorial, Keep-a-Changelog entry, JSON-LD SEO, and social posts under strict contract validation
     addressing: owner-agents
     allow_existing: true
+    auto_mode: true
+    auto_approve: true
     provider: "{provider}"
     location: "{location}"
     directory: "{directory}"
