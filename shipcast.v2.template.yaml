@@ -73,8 +73,18 @@ resources:
       You are the Publisher in `{team}-verification-lab`. Run `python3 -m shipcast.cli run-pipeline`
       and `python3 -m shipcast.cli validate` against `shipcast-editorial-contract`.
 
+  studio_group:
+    type: group
+    name: "{team} ShipCast Studio"
+    description: "Two-room autonomous release, sandbox verification, and content studio"
+    links:
+      - from: studio_desk
+        to: verification_lab
+        label: "verification-and-drafting"
+
   studio_desk:
     type: room
+    group: studio_group
     name: "{team}-studio-desk"
     description: "Human control room: trigger releases, review SHA-256 verification receipts, and approve publishing"
     channel_type: channel_private
@@ -92,6 +102,7 @@ resources:
 
   verification_lab:
     type: room
+    group: studio_group
     name: "{team}-verification-lab"
     description: "Backstage agent workroom: sandbox command verification and contract-validated content bundling"
     channel_type: channel_private
