@@ -164,7 +164,6 @@ rooms:
     channel_type: channel_private
     bridge: "{bridge}"
     agents: ["{team}-producer", "{team}-publisher"]
-    users: ["{$creator}"]
     aliases:
       "{team}-producer": producer
       "{team}-publisher": publisher
@@ -174,7 +173,7 @@ rooms:
         instructions: |
           Hold the exclusive release lock for this room while a release is being
           analyzed, verified in `{team}-verification-lab`, and awaiting human approval
-          from {$creator}. Drop the role once the release is published or aborted.
+          from the release owner. Drop the role once the release is published or aborted.
     references:
       - type: github
         name: "{team}-target-repository"
@@ -194,7 +193,7 @@ rooms:
           - target_repo_url: {repo_url}
           - verification_room: {team}-verification-lab
           - min_importance_score: 4
-          - human_approver: {$creator}
+          - human_approver: release-owner
           - publish_gate: explicit_human_approval_required
           - chat_format: slack_and_telegram_safe_bullets
     instructions: |
@@ -204,11 +203,11 @@ rooms:
       - Format all summaries as bolded bullet lines (no Markdown tables).
       - Escalate all code verification and bundle drafting to `{team}-verification-lab`
         via the room link.
-      - Nothing is published or written to `CHANGELOG.md` until {$creator} explicitly
+      - Nothing is published or written to `CHANGELOG.md` until the release owner explicitly
         replies with approval in this room.
     kickoff: |
       @{team}-producer welcome to the ShipCast Studio Desk. In two lines, introduce
-      yourself, claim the `release-captain` role if available, and tell {$creator} how
+      yourself, claim the `release-captain` role if available, and tell the release owner how
       to trigger a verified release from git commits or a voice note.
 
   - name: "{team}-verification-lab"
@@ -216,7 +215,6 @@ rooms:
     channel_type: channel_private
     bridge: "{bridge}"
     agents: ["{team}-producer", "{team}-verifier", "{team}-publisher"]
-    users: ["{$creator}"]
     aliases:
       "{team}-producer": producer
       "{team}-verifier": verifier

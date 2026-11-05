@@ -100,13 +100,9 @@ resources:
     channel_type: channel_private
     bridge: "{bridge}"
     agents: [producer, publisher]
-    users:
-      - if: "{bridge}"
-        value: ["{$creator}"]
-      - value: []
     instructions: |
       Human control desk for ShipCast releases. Escalate verification to `{team}-verification-lab`
-      and gate all publishing on {$creator}'s explicit approval.
+      and gate all publishing on the release owner's explicit approval.
     kickoff: |
       @{producer.name} welcome to `{team}-studio-desk`. Introduce yourself in two lines.
 
@@ -118,10 +114,6 @@ resources:
     channel_type: channel_private
     bridge: "{bridge}"
     agents: [producer, verifier, publisher]
-    users:
-      - if: "{bridge}"
-        value: ["{$creator}"]
-      - value: []
     instructions: |
       Backstage verification and bundling lab for ShipCast. Enforce `shipcast-editorial-contract`
       on every bundle before returning to `{team}-studio-desk`.
