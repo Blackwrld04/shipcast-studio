@@ -1,0 +1,1090 @@
+<!DOCTYPE html>
+<html lang="en" class="dark" data-density="compact" data-radius="subtle" data-border="hairline">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ShipCast Studio — Switch Rooms Release & Verification Workbench</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
+  <style>
+    :root {
+      --brand: #E56B38;
+      --background: #FAFAFA;
+      --foreground: #141414;
+      --card: #FFFFFF;
+      --card-elevated: #F3F3F3;
+      --muted: #EFEFEF;
+      --muted-foreground: #616161;
+      --border: #E2E2E2;
+      --primary: var(--brand);
+      --primary-foreground: #FFFFFF;
+      --success: #15803D;
+      --success-bg: rgba(21, 128, 61, 0.10);
+      --warning: #B45309;
+      --warning-bg: rgba(180, 83, 9, 0.10);
+      --danger: #B91C1C;
+      --danger-bg: rgba(185, 28, 28, 0.10);
+      --radius-control: 4px;
+      --radius-surface: 6px;
+      --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
+      --font-mono: 'JetBrains Mono', monospace;
+    }
+
+    html.dark {
+      --background: #0A0A0A;
+      --foreground: #EDEDED;
+      --card: #111111;
+      --card-elevated: #171717;
+      --muted: #1A1A1A;
+      --muted-foreground: #9E9E9E;
+      --border: #262626;
+      --success: #22C55E;
+      --success-bg: rgba(34, 197, 94, 0.12);
+      --warning: #F59E0B;
+      --warning-bg: rgba(245, 158, 11, 0.12);
+      --danger: #EF4444;
+      --danger-bg: rgba(239, 68, 68, 0.12);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      background: var(--background);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      font-size: 13.5px;
+      line-height: 1.5;
+      height: 100vh;
+      overflow: hidden;
+      display: grid;
+      grid-template-columns: 260px 1fr;
+      grid-template-rows: 48px 1fr;
+    }
+
+    /* Topbar */
+    header.topbar {
+      grid-column: 1 / -1;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 16px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .brand-cluster {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .brand-mark {
+      width: 22px;
+      height: 22px;
+      border-radius: var(--radius-control);
+      background: var(--primary);
+      color: var(--primary-foreground);
+      font-family: var(--font-mono);
+      font-weight: 600;
+      font-size: 11px;
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      letter-spacing: -0.03em;
+    }
+
+    .brand-title {
+      font-weight: 600;
+      font-size: 14px;
+      letter-spacing: -0.01em;
+    }
+
+    .breadcrumb-sep {
+      color: var(--muted-foreground);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    .tag-pill {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      padding: 2px 7px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--border);
+      background: var(--card-elevated);
+      color: var(--foreground);
+      font-variant-numeric: tabular-nums;
+    }
+
+    .tag-pill.verified {
+      color: var(--success);
+      background: var(--success-bg);
+      border-color: rgba(34, 197, 94, 0.3);
+    }
+
+    .topbar-actions {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    button.btn {
+      height: 30px;
+      padding: 0 11px;
+      border-radius: var(--radius-control);
+      border: 1px solid var(--border);
+      background: var(--card-elevated);
+      color: var(--foreground);
+      font-family: var(--font-sans);
+      font-size: 12.5px;
+      font-weight: 500;
+      cursor: pointer;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      transition: transform 100ms cubic-bezier(0.2, 0, 0, 1), opacity 150ms;
+    }
+
+    button.btn:hover {
+      border-color: var(--muted-foreground);
+    }
+
+    button.btn:active {
+      transform: scale(0.98);
+    }
+
+    button.btn-primary {
+      background: var(--primary);
+      color: var(--primary-foreground);
+      border-color: var(--primary);
+    }
+
+    button.btn-success {
+      background: var(--success);
+      color: #052e16;
+      border-color: var(--success);
+      font-weight: 600;
+    }
+
+    /* Sidebar */
+    aside.sidebar {
+      background: var(--card);
+      border-right: 1px solid var(--border);
+      padding: 14px 12px;
+      overflow-y: auto;
+      display: flex;
+      flex-direction: column;
+      gap: 18px;
+    }
+
+    .nav-group-label {
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted-foreground);
+      margin-bottom: 6px;
+      padding: 0 6px;
+    }
+
+    .room-list {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+    }
+
+    .room-item {
+      width: 100%;
+      text-align: left;
+      padding: 7px 8px;
+      border-radius: var(--radius-control);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--foreground);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12.5px;
+      font-family: var(--font-mono);
+    }
+
+    .room-item:hover {
+      background: var(--card-elevated);
+    }
+
+    .room-item.active {
+      background: var(--card-elevated);
+      border-color: var(--border);
+      font-weight: 600;
+    }
+
+    .meta-list {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+      padding: 0 6px;
+    }
+
+    .meta-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 12px;
+      gap: 6px;
+    }
+
+    .meta-key {
+      color: var(--muted-foreground);
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+    }
+
+    .agent-roster {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+    }
+
+    .agent-card {
+      padding: 8px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-surface);
+      background: var(--background);
+    }
+
+    .agent-card-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      margin-bottom: 3px;
+    }
+
+    .agent-card-desc {
+      font-size: 11.5px;
+      color: var(--muted-foreground);
+    }
+
+    /* Main Workbench */
+    main.workbench {
+      display: grid;
+      grid-template-columns: 440px 1fr;
+      height: calc(100vh - 48px);
+      overflow: hidden;
+    }
+
+    /* Left Pane: Switch Room Stream */
+    section.room-pane {
+      border-right: 1px solid var(--border);
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      background: var(--background);
+    }
+
+    .pane-header {
+      padding: 10px 14px;
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    .pane-title {
+      font-family: var(--font-mono);
+      font-size: 12.5px;
+      font-weight: 600;
+    }
+
+    .pane-subtitle {
+      font-size: 11.5px;
+      color: var(--muted-foreground);
+    }
+
+    .message-stream {
+      flex: 1;
+      overflow-y: auto;
+      padding: 12px 14px;
+      display: flex;
+      flex-direction: column;
+      gap: 10px;
+    }
+
+    .msg-card {
+      padding: 10px 12px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-surface);
+      background: var(--card);
+    }
+
+    .msg-card.link-hop {
+      border-style: dashed;
+      background: var(--card-elevated);
+    }
+
+    .msg-head {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      margin-bottom: 5px;
+      font-size: 11.5px;
+    }
+
+    .msg-actor {
+      font-family: var(--font-mono);
+      font-weight: 600;
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .actor-badge {
+      font-size: 10px;
+      padding: 1px 5px;
+      border-radius: 3px;
+      border: 1px solid var(--border);
+      color: var(--muted-foreground);
+    }
+
+    .actor-badge.human {
+      color: var(--primary);
+      border-color: var(--primary);
+    }
+
+    .msg-body {
+      font-size: 12.5px;
+      white-space: pre-wrap;
+      color: var(--foreground);
+    }
+
+    .msg-tool-call {
+      margin-top: 6px;
+      padding: 5px 8px;
+      background: var(--background);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-control);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted-foreground);
+    }
+
+    .room-composer {
+      padding: 10px 12px;
+      border-top: 1px solid var(--border);
+      background: var(--card);
+      display: flex;
+      flex-direction: column;
+      gap: 8px;
+    }
+
+    .composer-row {
+      display: flex;
+      gap: 6px;
+    }
+
+    input.composer-input {
+      flex: 1;
+      height: 30px;
+      padding: 0 10px;
+      border: 1px solid var(--border);
+      border-radius: var(--radius-control);
+      background: var(--background);
+      color: var(--foreground);
+      font-family: var(--font-mono);
+      font-size: 12px;
+    }
+
+    /* Right Pane: Artifact & Receipt Inspector */
+    section.inspector-pane {
+      display: flex;
+      flex-direction: column;
+      height: 100%;
+      overflow: hidden;
+      background: var(--background);
+    }
+
+    .kpi-strip {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      border-bottom: 1px solid var(--border);
+      background: var(--card);
+    }
+
+    .kpi-cell {
+      padding: 10px 14px;
+      border-right: 1px solid var(--border);
+    }
+
+    .kpi-cell:last-child {
+      border-right: none;
+    }
+
+    .kpi-label {
+      font-size: 11px;
+      color: var(--muted-foreground);
+      margin-bottom: 2px;
+    }
+
+    .kpi-value {
+      font-family: var(--font-mono);
+      font-size: 16px;
+      font-weight: 600;
+      font-variant-numeric: tabular-nums;
+    }
+
+    .kpi-delta {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--muted-foreground);
+    }
+
+    .tab-bar {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 14px;
+      height: 40px;
+      background: var(--card);
+      border-bottom: 1px solid var(--border);
+    }
+
+    .tabs {
+      display: flex;
+      gap: 4px;
+    }
+
+    .tab-btn {
+      height: 28px;
+      padding: 0 10px;
+      border-radius: var(--radius-control);
+      border: 1px solid transparent;
+      background: transparent;
+      color: var(--muted-foreground);
+      font-size: 12px;
+      font-weight: 500;
+      cursor: pointer;
+    }
+
+    .tab-btn.active {
+      background: var(--card-elevated);
+      color: var(--foreground);
+      border-color: var(--border);
+    }
+
+    .inspector-content {
+      flex: 1;
+      overflow-y: auto;
+      padding: 16px;
+    }
+
+    table.data-table {
+      width: 100%;
+      border-collapse: collapse;
+      border: 1px solid var(--border);
+      background: var(--card);
+      font-size: 12.5px;
+      font-variant-numeric: tabular-nums;
+    }
+
+    table.data-table th,
+    table.data-table td {
+      padding: 8px 10px;
+      border-bottom: 1px solid var(--border);
+      text-align: left;
+      vertical-align: top;
+    }
+
+    table.data-table th {
+      background: var(--card-elevated);
+      font-size: 11px;
+      font-weight: 600;
+      color: var(--muted-foreground);
+      font-family: var(--font-mono);
+    }
+
+    pre.code-surface {
+      padding: 12px;
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: var(--radius-surface);
+      font-family: var(--font-mono);
+      font-size: 12px;
+      line-height: 1.55;
+      overflow-x: auto;
+      white-space: pre-wrap;
+    }
+
+    .section-block {
+      margin-bottom: 16px;
+    }
+
+    .section-block-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      margin-bottom: 8px;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+
+    @media (max-width: 1024px) {
+      body {
+        grid-template-columns: 1fr;
+        overflow: auto;
+        height: auto;
+      }
+      aside.sidebar {
+        display: none;
+      }
+      main.workbench {
+        grid-template-columns: 1fr;
+        height: auto;
+      }
+    }
+  </style>
+</head>
+<body>
+  <header class="topbar">
+    <div class="brand-cluster">
+      <span class="brand-mark">SC</span>
+      <span class="brand-title">ShipCast Studio</span>
+      <span class="breadcrumb-sep">/</span>
+      <span class="tag-pill" id="top-repo-tag">shipcast v0.2.0</span>
+      <span class="tag-pill verified" id="top-receipt-badge">SHA-256 VERIFIED</span>
+    </div>
+    <div class="topbar-actions">
+      <button class="btn" id="btn-CopyTemplate" title="Copy Switch Template Command">
+        <span>Template: shipcast.template.yaml</span>
+      </button>
+      <button class="btn btn-success" id="btn-approve-release">
+        <span>Approve &amp; Publish in #studio-desk</span>
+      </button>
+      <button class="btn" id="btn-theme-toggle">Light / Dark</button>
+    </div>
+  </header>
+
+  <aside class="sidebar">
+    <div>
+      <div class="nav-group-label">Switch Room Group</div>
+      <div class="room-list">
+        <button class="room-item active" data-room="all" onclick="filterRoom('all', this)">
+          <span>All Linked Rooms (2)</span>
+          <span class="tag-pill">Live</span>
+        </button>
+        <button class="room-item" data-room="studio-desk" onclick="filterRoom('studio-desk', this)">
+          <span>#shipcast-studio-desk</span>
+          <span class="tag-pill">Desk</span>
+        </button>
+        <button class="room-item" data-room="verification-lab" onclick="filterRoom('verification-lab', this)">
+          <span>#shipcast-verification-lab</span>
+          <span class="tag-pill">Lab</span>
+        </button>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-group-label">Switch Room Roles (!roles)</div>
+      <div class="meta-list">
+        <div class="meta-row">
+          <span class="meta-key">release-captain</span>
+          <span class="tag-pill verified">EXCLUSIVE · producer</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">snippet-auditor</span>
+          <span class="tag-pill">SHARED · verifier</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-group-label">Room Context (!list-documents)</div>
+      <div class="meta-list">
+        <div class="meta-row">
+          <span class="meta-key">shipcast-release-bindings</span>
+          <span class="tag-pill">Doc</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">shipcast-editorial-contract</span>
+          <span class="tag-pill">7 Rules</span>
+        </div>
+        <div class="meta-row">
+          <span class="meta-key">shipcast-target-repository</span>
+          <span class="tag-pill">GitHub Ref</span>
+        </div>
+      </div>
+    </div>
+
+    <div>
+      <div class="nav-group-label">Onboarded Switch Agents</div>
+      <div class="agent-roster">
+        <div class="agent-card">
+          <div class="agent-card-head">
+            <span>@producer</span>
+            <span class="tag-pill">anyone</span>
+          </div>
+          <div class="agent-card-desc">Home: #studio-desk. Parses git diffs, routes to lab, gates publish on human sign-off.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-card-head">
+            <span>@verifier</span>
+            <span class="tag-pill">owner-agents</span>
+          </div>
+          <div class="agent-card-desc">Home: #verification-lab. Runs commands in isolated subprocess &amp; signs SHA-256 receipt.</div>
+        </div>
+        <div class="agent-card">
+          <div class="agent-card-head">
+            <span>@publisher</span>
+            <span class="tag-pill">owner-agents</span>
+          </div>
+          <div class="agent-card-desc">Home: #verification-lab. Validates 7-rule editorial contract &amp; stages DEV.to + SEO bundle.</div>
+        </div>
+      </div>
+    </div>
+  </aside>
+
+  <main class="workbench">
+    <section class="room-pane">
+      <div class="pane-header">
+        <div>
+          <div class="pane-title" id="stream-room-title">Switch Room Trace (Linked Rooms)</div>
+          <div class="pane-subtitle">Link: #shipcast-studio-desk ↔ #shipcast-verification-lab</div>
+        </div>
+        <span class="tag-pill" id="approval-state-pill">Awaiting Human Gate</span>
+      </div>
+
+      <div class="message-stream" id="message-stream"></div>
+
+      <div class="room-composer">
+        <div class="composer-row">
+          <input
+            type="text"
+            id="composer-input"
+            class="composer-input"
+            value="@producer Approve publish for v0.2.0"
+            aria-label="Send message to #shipcast-studio-desk"
+          />
+          <button class="btn btn-primary" onclick="sendHumanMessage()">Send</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="inspector-pane">
+      <div class="kpi-strip">
+        <div class="kpi-cell">
+          <div class="kpi-label">Importance Score</div>
+          <div class="kpi-value" id="kpi-importance">9/10</div>
+          <div class="kpi-delta" id="kpi-commits">Commits analyzed</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Sandbox Verification</div>
+          <div class="kpi-value" id="kpi-checks">2/2 PASS</div>
+          <div class="kpi-delta" id="kpi-sha">SHA-256 signed</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Editorial Contract</div>
+          <div class="kpi-value" id="kpi-contract">7/7 PASS</div>
+          <div class="kpi-delta">Zero unverified code</div>
+        </div>
+        <div class="kpi-cell">
+          <div class="kpi-label">Human Publish Gate</div>
+          <div class="kpi-value" id="kpi-gate-status">LOCKED</div>
+          <div class="kpi-delta" id="kpi-gate-sub">Role: release-captain</div>
+        </div>
+      </div>
+
+      <div class="tab-bar">
+        <div class="tabs">
+          <button class="tab-btn active" onclick="switchTab('receipt', this)">1. Sandbox Receipt (SHA-256)</button>
+          <button class="tab-btn" onclick="switchTab('contract', this)">2. Contract Audit (7/7)</button>
+          <button class="tab-btn" onclick="switchTab('devto', this)">3. DEV.to Article Draft</button>
+          <button class="tab-btn" onclick="switchTab('changelog', this)">4. Changelog &amp; Socials</button>
+        </div>
+        <button class="btn" onclick="copyCurrentArtifact()">Copy Active Artifact</button>
+      </div>
+
+      <div class="inspector-content" id="inspector-content"></div>
+    </section>
+  </main>
+
+  <script>
+    const FALLBACK_BUNDLE = {
+      analysis: {
+        repo_name: "shipcast",
+        commit_range: "HEAD~3..HEAD",
+        version_tag: "v0.2.0",
+        voice_note: "Dictated with Wispr Flow: Highlight how our two linked Switch rooms separate noisy sandbox command verification from the human approval desk.",
+        total_commits: 4,
+        included_commits: 3,
+        skipped_commits: 1,
+        overall_importance: 9,
+        files_touched: [
+          "shipcast.template.yaml",
+          "shipcast/analyzer.py",
+          "shipcast/verifier.py",
+          "shipcast/validator.py",
+          "shipcast/bundler.py",
+          "shipcast/publisher.py",
+          "studio-ui/index.html"
+        ],
+        total_insertions: 642,
+        total_deletions: 18
+      },
+      verification_receipt: {
+        version_tag: "v0.2.0",
+        verified_at: "2026-11-05T14:12:00Z",
+        all_passed: true,
+        total_checks: 2,
+        passed_checks: 2,
+        failed_checks: 0,
+        overall_receipt_sha256: "9f4b2e8c1a7d6f3e5b0c8a2d4e6f1b3c5a7d9e0f2b4c6a8d0e2f4a6b8c0d2e4f",
+        results: [
+          {
+            index: 1,
+            language: "bash",
+            command: "python3 -m shipcast.cli --help",
+            passed: true,
+            exit_code: 0,
+            duration_ms: 48,
+            stdout: "usage: shipcast [-h] {analyze,verify,run-pipeline,validate,publish,serve-studio} ...",
+            stderr: "",
+            receipt_sha256: "4a8b12c9e0d3f5a7b9c1d3e5f7a9b1c3d5e7f9a1b3c5d7e9f1a3b5c7d9e1f3a5"
+          },
+          {
+            index: 2,
+            language: "bash",
+            command: "pytest -q",
+            passed: true,
+            exit_code: 0,
+            duration_ms: 195,
+            stdout: "7 passed in 0.19s",
+            stderr: "",
+            receipt_sha256: "7c2d4e6f8a0b2c4d6e8f0a2b4c6d8e0f2a4b6c8d0e2f4a6b8c0d2e4f6a8b0c2d"
+          }
+        ]
+      },
+      validation_report: {
+        valid: true,
+        passed_count: 7,
+        failed_count: 0,
+        findings: [
+          { rule_id: "frontmatter.required_fields", passed: true, message: "Frontmatter includes title, description, and tags." },
+          { rule_id: "frontmatter.description_length", passed: true, message: "Description length is 119/160 chars." },
+          { rule_id: "markdown.title_matches_h1", passed: true, message: "Frontmatter title matches first '# ' heading." },
+          { rule_id: "verification.all_snippets_passed", passed: true, message: "All 2 sandbox checks passed (SHA-256: 9f4b2e8c1a7d...)." },
+          { rule_id: "editorial.no_banned_buzzwords", passed: true, message: "Zero banned marketing buzzwords detected." },
+          { rule_id: "switch.slack_telegram_safe_summary", passed: true, message: "Switch room summary uses Slack/Telegram-safe bolded bullet lines (no raw tables)." },
+          { rule_id: "switch.no_accidental_agent_mentions", passed: true, message: "No accidental '@agent' mentions inside free-text summary body." }
+        ]
+      },
+      preview: {
+        room_summary: "**ShipCast Release Package Ready — shipcast v0.2.0**\n• **Role Held:** `release-captain` (exclusive lock active)\n• **Git Range:** `HEAD~3..HEAD` (3 commits included, 1 filtered)\n• **Importance Score:** 9/10 (+642/-18 lines in 7 files)\n• **Sandbox Verification:** 2/2 commands passed (Receipt `9f4b2e8c1a7d6f3e`)\n• **Artifacts Staged:** `devto-article.md`, `changelog-entry.md`, `social-posts.json`, `changelog-seo.jsonld`\n• **Next Step:** Reply `Approve publish` in this thread to update `CHANGELOG.md` and publish the release bundle.",
+        changelog_markdown: "## [v0.2.0] - 2026-11-05\n\n> Importance Score: **9/10** · Commits included: **3** (filtered 1 low-signal commits) · Verification Receipt: `9f4b2e8c1a7d6f3e`\n\n### Added\n- **feat: add two-room Switch template with exclusive release-captain role** (`a1c4f92`, +240/-0)\n- **feat: add subprocess sandbox verifier with SHA-256 execution receipts** (`b8e3d10`, +215/-10)\n- **feat: add 7-rule deterministic editorial contract validator** (`c7d2a19`, +187/-8)\n",
+        devto_article_markdown: "---\ntitle: \"Shipping shipcast v0.2.0 with Switch Rooms: Verified Multi-Agent Release Notes\"\npublished: false\ndescription: \"How shipcast v0.2.0 uses linked Switch rooms and sandbox verification to ship tested tutorials and changelogs.\"\ntags: switch, ai, opensource, devtools\nai_disclosure_level: some_ai\n---\n\n# Shipping shipcast v0.2.0 with Switch Rooms: Verified Multi-Agent Release Notes\n\nEvery code release normally ends with a manual chore: reading `git log`, checking which CLI flags changed, testing code snippets by hand so tutorials do not lie, and formatting release notes across multiple channels...",
+        social_posts: {
+          x_thread: [
+            "Shipped shipcast v0.2.0 (+642/-18 lines across 7 files) and let our Switch Rooms agent crew verify and package the release.\n\n• 3 commits analyzed (1 noise commit filtered)\n• 2/2 CLI snippets executed in sandbox (SHA: 9f4b2e8c1a7d)\n• Gated by human sign-off in chat #HowISwitch",
+            "How the 2-room Switch topology works:\n\n1. studio-desk: producer claims the exclusive release-captain role & parses git diff\n2. verification-lab: verifier runs every tutorial snippet in a sandbox before publisher drafts the DEV post\n3. Human replies 'Approve' in chat to ship."
+          ],
+          linkedin_post: "Writing code takes two hours; verifying tutorial snippets, updating CHANGELOG.md, and writing release notes takes another hour.\n\nToday we shipped shipcast v0.2.0 (+642/-18 lines) using ShipCast on Switch Rooms."
+        }
+      }
+    };
+
+    let activeBundle = FALLBACK_BUNDLE;
+    let activeTab = "receipt";
+    let currentRoomFilter = "all";
+
+    const roomMessages = [
+      {
+        room: "studio-desk",
+        actor: "$creator (You)",
+        badge: "human",
+        time: "14:10:04",
+        body: "@producer ship v0.2.0 from HEAD~3..HEAD. Voice note (Wispr Flow): Highlight how our two linked Switch rooms separate noisy sandbox command verification from the human approval desk.",
+        tool: null
+      },
+      {
+        room: "studio-desk",
+        actor: "shipcast-producer",
+        badge: "anyone · release-captain",
+        time: "14:10:06",
+        body: "Claiming exclusive role `release-captain` and analyzing git range `HEAD~3..HEAD` before escalating to `#shipcast-verification-lab`.",
+        tool: "MCP: assume_role(role='release-captain') → CLI: shipcast analyze --range HEAD~3..HEAD --version v0.2.0"
+      },
+      {
+        room: "verification-lab",
+        actor: "shipcast-producer → shipcast-verifier",
+        badge: "room-link: verification-and-drafting",
+        time: "14:10:09",
+        linkHop: true,
+        body: "Escalating release brief for `v0.2.0` (Importance 9/10, 3 commits included, 1 chore commit skipped). Extracted 2 CLI verification targets.",
+        tool: "MCP: connect_to_room('#shipcast-verification-lab') → send_targeted_message(target='shipcast-verifier')"
+      },
+      {
+        room: "verification-lab",
+        actor: "shipcast-verifier",
+        badge: "owner-agents · snippet-auditor",
+        time: "14:10:12",
+        body: "Executing 2 extracted CLI commands in isolated subprocess sandbox. All 2 checks exited 0 in 243ms. Signed receipt `9f4b2e8c1a7d6f3e`. Handing off to publisher.",
+        tool: "CLI: shipcast verify --version v0.2.0 → MCP: send_targeted_message(target='shipcast-publisher')"
+      },
+      {
+        room: "verification-lab",
+        actor: "shipcast-publisher",
+        badge: "owner-agents",
+        time: "14:10:16",
+        body: "Built DEV.to article, Keep-a-Changelog entry, JSON-LD SEO, and social posts. Validated against room doc `shipcast-editorial-contract`: 7/7 rules passed.",
+        tool: "CLI: shipcast validate --bundle-dir dist/latest → MCP: attach_reference_to_room('#shipcast-studio-desk')"
+      },
+      {
+        room: "studio-desk",
+        actor: "shipcast-producer",
+        badge: "anyone · release-captain",
+        time: "14:10:19",
+        body: FALLBACK_BUNDLE.preview.room_summary,
+        tool: "MCP: connect_to_room('#shipcast-studio-desk') → post_message(thread_id=root)"
+      }
+    ];
+
+    async function loadLiveBundle() {
+      try {
+        const res = await fetch("./bundle-data.json", { cache: "no-store" });
+        if (res.ok) {
+          activeBundle = await res.json();
+          roomMessages[5].body = activeBundle.preview.room_summary;
+        }
+      } catch (_) {
+        // Fallback bundle remains active when opened directly via file://
+      }
+      renderKPIs();
+      renderStream();
+      renderInspector();
+    }
+
+    function renderKPIs() {
+      const a = activeBundle.analysis;
+      const r = activeBundle.verification_receipt;
+      const v = activeBundle.validation_report;
+      document.getElementById("top-repo-tag").textContent = `${a.repo_name} ${a.version_tag}`;
+      document.getElementById("kpi-importance").textContent = `${a.overall_importance}/10`;
+      document.getElementById("kpi-commits").textContent = `${a.included_commits} kept · ${a.skipped_commits} filtered`;
+      document.getElementById("kpi-checks").textContent = `${r.passed_checks}/${r.total_checks} PASS`;
+      document.getElementById("kpi-sha").textContent = `SHA: ${r.overall_receipt_sha256.slice(0, 12)}...`;
+      document.getElementById("kpi-contract").textContent = `${v.passed_count}/${v.findings.length} PASS`;
+    }
+
+    function renderStream() {
+      const container = document.getElementById("message-stream");
+      container.innerHTML = "";
+      const visible = roomMessages.filter(m => currentRoomFilter === "all" || m.room === currentRoomFilter);
+      for (const m of visible) {
+        const card = document.createElement("div");
+        card.className = "msg-card" + (m.linkHop ? " link-hop" : "");
+        card.innerHTML = `
+          <div class="msg-head">
+            <span class="msg-actor">
+              <span>[${m.room}] ${m.actor}</span>
+              <span class="actor-badge ${m.badge === 'human' ? 'human' : ''}">${m.badge}</span>
+            </span>
+            <span class=" breadcrumb-sep">${m.time}</span>
+          </div>
+          <div class="msg-body"></div>
+          ${m.tool ? `<div class="msg-tool-call">${m.tool}</div>` : ""}
+        `;
+        card.querySelector(".msg-body").textContent = m.body;
+        container.appendChild(card);
+      }
+      container.scrollTop = container.scrollHeight;
+    }
+
+    function filterRoom(room, btn) {
+      currentRoomFilter = room;
+      document.querySelectorAll(".room-item").forEach(el => el.classList.remove("active"));
+      btn.classList.add("active");
+      renderStream();
+    }
+
+    function switchTab(tab, btn) {
+      activeTab = tab;
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
+      btn.classList.add("active");
+      renderInspector();
+    }
+
+    function renderInspector() {
+      const box = document.getElementById("inspector-content");
+      const r = activeBundle.verification_receipt;
+      const v = activeBundle.validation_report;
+      const p = activeBundle.preview;
+
+      if (activeTab === "receipt") {
+        const rows = r.results.map(item => `
+          <tr>
+            <td>#${item.index}</td>
+            <td><code>${item.language}</code></td>
+            <td><code>${item.command}</code></td>
+            <td><span class="tag-pill verified">EXIT ${item.exit_code}</span></td>
+            <td>${item.duration_ms}ms</td>
+            <td><code>${item.receipt_sha256.slice(0, 16)}...</code></td>
+          </tr>
+        `).join("");
+
+        const outputs = r.results.map(item => `
+          <div class="section-block">
+            <div class="section-block-title">
+              <span>Command #${item.index}: ${item.command}</span>
+              <span class="tag-pill">SHA-256: ${item.receipt_sha256.slice(0, 20)}...</span>
+            </div>
+            <pre class="code-surface">${item.stdout || "(no stdout)"}</pre>
+          </div>
+        `).join("");
+
+        box.innerHTML = `
+          <div class="section-block">
+            <div class="section-block-title">
+              <span>Subprocess Sandbox Execution Receipt (#shipcast-verification-lab)</span>
+              <span class="tag-pill verified">Master SHA-256: ${r.overall_receipt_sha256.slice(0, 20)}...</span>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>#</th>
+                  <th>Lang</th>
+                  <th>Executed Command</th>
+                  <th>Status</th>
+                  <th>Time</th>
+                  <th>Receipt Digest</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+          ${outputs}
+        `;
+      } else if (activeTab === "contract") {
+        const rows = v.findings.map(f => `
+          <tr>
+            <td><code>${f.rule_id}</code></td>
+            <td><span class="tag-pill ${f.passed ? 'verified' : ''}">${f.passed ? 'PASS' : 'FAIL'}</span></td>
+            <td>${f.message}</td>
+          </tr>
+        `).join("");
+        box.innerHTML = `
+          <div class="section-block">
+            <div class="section-block-title">
+              <span>Room Document: shipcast-editorial-contract</span>
+              <span class="tag-pill verified">${v.passed_count}/${v.findings.length} Rules Passed</span>
+            </div>
+            <table class="data-table">
+              <thead>
+                <tr>
+                  <th>Contract Rule ID</th>
+                  <th>Result</th>
+                  <th>Verification Detail</th>
+                </tr>
+              </thead>
+              <tbody>${rows}</tbody>
+            </table>
+          </div>
+        `;
+      } else if (activeTab === "devto") {
+        box.innerHTML = `
+          <div class="section-block">
+            <div class="section-block-title">
+              <span>Generated DEV.to Tutorial (ai_disclosure_level: some_ai)</span>
+              <span class="tag-pill">dist/latest/devto-article.md</span>
+            </div>
+            <pre class="code-surface" id="devto-pre"></pre>
+          </div>
+        `;
+        document.getElementById("devto-pre").textContent = p.devto_article_markdown;
+      } else if (activeTab === "changelog") {
+        box.innerHTML = `
+          <div class="section-block">
+            <div class="section-block-title">
+              <span>Keep-a-Changelog Entry (CHANGELOG.md)</span>
+              <span class="tag-pill">dist/latest/changelog-entry.md</span>
+            </div>
+            <pre class="code-surface" id="changelog-pre"></pre>
+          </div>
+          <div class="section-block">
+            <div class="section-block-title">
+              <span>Platform-Native X / Twitter Thread (#HowISwitch)</span>
+              <span class="tag-pill">dist/latest/social-posts.json</span>
+            </div>
+            <pre class="code-surface" id="social-pre"></pre>
+          </div>
+        `;
+        document.getElementById("changelog-pre").textContent = p.changelog_markdown;
+        document.getElementById("social-pre").textContent = p.social_posts.x_thread.join("\n\n---\n\n");
+      }
+    }
+
+    function approveReleaseInRoom(customText) {
+      const msgText = customText || "@producer Approve publish for v0.2.0";
+      roomMessages.push({
+        room: "studio-desk",
+        actor: "$creator (You)",
+        badge: "human",
+        time: new Date().toTimeString().slice(0, 8),
+        body: msgText,
+        tool: null
+      });
+      roomMessages.push({
+        room: "studio-desk",
+        actor: "shipcast-producer",
+        badge: "anyone · release-captain",
+        time: new Date().toTimeString().slice(0, 8),
+        body: "Human sign-off verified. Updated `CHANGELOG.md` with `[v0.2.0]`, wrote `publication-receipt.json`, staged DEV.to draft, and released exclusive role `release-captain`.",
+        tool: "CLI: shipcast publish --approved-by creator → MCP: release_role('release-captain')"
+      });
+      document.getElementById("kpi-gate-status").textContent = "PUBLISHED";
+      document.getElementById("kpi-gate-status").style.color = "var(--success)";
+      document.getElementById("kpi-gate-sub").textContent = "Approved by $creator";
+      const statePill = document.getElementById("approval-state-pill");
+      statePill.textContent = "Published & Role Released";
+      statePill.classList.add("verified");
+      renderStream();
+    }
+
+    function sendHumanMessage() {
+      const input = document.getElementById("composer-input");
+      const val = input.value.trim();
+      if (!val) return;
+      approveReleaseInRoom(val);
+      input.value = "";
+    }
+
+    function copyCurrentArtifact() {
+      const p = activeBundle.preview;
+      const text = activeTab === "devto"
+        ? p.devto_article_markdown
+        : activeTab === "changelog"
+          ? p.changelog_markdown
+          : JSON.stringify(activeBundle.verification_receipt, null, 2);
+      navigator.clipboard.writeText(text);
+    }
+
+    document.getElementById("btn-approve-release").addEventListener("click", () => {
+      approveReleaseInRoom("@producer Approve publish for v0.2.0");
+    });
+
+    document.getElementById("btn-theme-toggle").addEventListener("click", () => {
+      document.documentElement.classList.toggle("dark");
+    });
+
+    document.getElementById("btn-CopyTemplate").addEventListener("click", () => {
+      navigator.clipboard.writeText("shipcast.template.yaml");
+    });
+
+    loadLiveBundle();
+  </script>
+</body>
+</html>

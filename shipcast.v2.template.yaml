@@ -1,0 +1,108 @@
+# ShipCast Studio (Switch Template Language v2 — Resource Graph Format)
+#
+# Use this template on Switch servers with `agent_management` enabled.
+# For local Switch Console setups, use `shipcast.template.yaml` (version 1).
+version: 2
+
+params:
+  team:
+    type: string
+    label: Studio prefix
+    description: Short lowercase prefix for every agent and room created
+    default: shipcast
+    pattern: "[a-z][a-z0-9-]*"
+  repo_url:
+    type: string
+    label: Target GitHub repository URL
+    default: "https://github.com/sandbox-quantum/switch"
+  bridge:
+    type: bridge
+    label: Messaging app
+    default: [Discord, Telegram, Slack, $first]
+    required: false
+  provider:
+    type: provider
+    default: [antigravity, claude, codex, opencode, cursor]
+    input: advanced
+  machine:
+    type: machine
+    default: [$first]
+    input: advanced
+
+form:
+  advanced: { label: Advanced, open: false }
+
+resources:
+  producer:
+    type: agent
+    display_name: "{team}-producer"
+    description: "Coordinates releases in studio-desk, analyzes git diffs, and gates publishing on human sign-off"
+    provider: "{provider}"
+    machine: "{machine}"
+    directory: "{$agents_dir}/{producer.name}"
+    repo: "{repo_url}"
+    addressing: anyone
+    instructions: |
+      You are the Producer of the ShipCast release studio. Coordinate git diff analysis
+      in `{team}-studio-desk`, delegate verification to `{team}-verification-lab`, and
+      publish only after explicit human approval.
+
+  verifier:
+    type: agent
+    display_name: "{team}-verifier"
+    description: "Executes tutorial commands and code blocks in an isolated sandbox and signs SHA-256 receipts"
+    provider: "{provider}"
+    machine: "{machine}"
+    directory: "{$agents_dir}/{verifier.name}"
+    repo: "{repo_url}"
+    addressing: owner-agents
+    instructions: |
+      You are the Sandbox Verifier in `{team}-verification-lab`. Run `python3 -m shipcast.cli verify`
+      on every command and code snippet before handing off the SHA-256 receipt to publisher.
+
+  publisher:
+    type: agent
+    display_name: "{team}-publisher"
+    description: "Builds the DEV.to tutorial, Keep-a-Changelog entry, JSON-LD SEO, and social posts under strict contract validation"
+    provider: "{provider}"
+    machine: "{machine}"
+    directory: "{$agents_dir}/{publisher.name}"
+    repo: "{repo_url}"
+    addressing: owner-agents
+    instructions: |
+      You are the Publisher in `{team}-verification-lab`. Run `python3 -m shipcast.cli run-pipeline`
+      and `python3 -m shipcast.cli validate` against `shipcast-editorial-contract`.
+
+  studio_desk:
+    type: room
+    name: "{team}-studio-desk"
+    description: "Human control room: trigger releases, review SHA-256 verification receipts, and approve publishing"
+    channel_type: channel_private
+    bridge: "{bridge}"
+    agents: [producer, publisher]
+    users:
+      - if: "{bridge}"
+        value: ["{$creator}"]
+      - value: []
+    instructions: |
+      Human control desk for ShipCast releases. Escalate verification to `{team}-verification-lab`
+      and gate all publishing on {$creator}'s explicit approval.
+    kickoff: |
+      @{producer.name} welcome to `{team}-studio-desk`. Introduce yourself in two lines.
+
+  verification_lab:
+    type: room
+    name: "{team}-verification-lab"
+    description: "Backstage agent workroom: sandbox command verification and contract-validated content bundling"
+    channel_type: channel_private
+    bridge: "{bridge}"
+    agents: [producer, verifier, publisher]
+    users:
+      - if: "{bridge}"
+        value: ["{$creator}"]
+      - value: []
+    instructions: |
+      Backstage verification and bundling lab for ShipCast. Enforce `shipcast-editorial-contract`
+      on every bundle before returning to `{team}-studio-desk`.
+    kickoff: |
+      @{verifier.name} and @{publisher.name} confirm you are ready in `{team}-verification-lab`.

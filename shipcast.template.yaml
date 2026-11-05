@@ -1,0 +1,255 @@
+# ShipCast Studio: Autonomous Code-to-Content & Verified Release Studio
+#
+# Official Switch Group Template (version 1 — works on both local Switch Console
+# servers and managed servers).
+#
+# Creates:
+#   - 3 specialized agents (`{team}-producer`, `{team}-verifier`, `{team}-publisher`)
+#     with `allow_existing: true` and strict `addressing` boundaries (`anyone` vs `owner-agents`)
+#   - 1 room group (`{team} ShipCast Studio`) containing 2 linked rooms:
+#     1. `{team}-studio-desk`: Human control room with exclusive `release-captain` role,
+#        GitHub repository reference, and room bindings document.
+#     2. `{team}-verification-lab`: Backstage verification & drafting workroom with
+#        shared `snippet-auditor` role and the `shipcast-editorial-contract` document.
+#   - Bidirectional room links (`links:`) connecting intake to verification.
+version: 1
+
+params:
+  team:
+    type: string
+    label: Studio prefix
+    description: Short lowercase prefix for every agent and room this template creates
+    default: shipcast
+    pattern: "[a-z][a-z0-9-]*"
+  repo_url:
+    type: string
+    label: Target GitHub repository URL
+    description: Repository whose commits and CLI snippets ShipCast will analyze and verify
+    default: "https://github.com/sandbox-quantum/switch"
+  bridge:
+    type: bridge
+    label: Messaging app
+    description: Where the rooms are mirrored (Discord, Telegram, Slack, Mattermost, or default)
+    default: [$first]
+    required: false
+  provider:
+    type: provider
+    description: Coding agent runtime that backs the crew. First installed provider is chosen.
+    default: [antigravity, claude, codex, opencode, cursor]
+    input: advanced
+  location:
+    type: location
+    description: Machine the agents run on (`local` for this computer, or an SSH host).
+    default: local
+    input: advanced
+  directory:
+    type: directory
+    description: Working directory for each agent on the host machine.
+    default: "{$agents_dir}/{agent}"
+    input: advanced
+
+form:
+  advanced:
+    label: Advanced runtime settings
+    open: false
+
+agents:
+  - name: "{team}-producer"
+    display_name: "{team}-producer"
+    description: Coordinates releases in studio-desk, analyzes git diffs, and gates publishing on human sign-off
+    addressing: anyone
+    allow_existing: true
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+    repo: "{repo_url}"
+    instructions: |
+      You are the Producer of the ShipCast release studio. Your home room is
+      `{team}-studio-desk`, and you also belong to `{team}-verification-lab`.
+
+      ## Golden Rules (Switch Patterns & Gotchas)
+      1. **Post one short line before any slow step.** Before running `git log`,
+         `shipcast analyze`, or switching rooms, post a single line in the thread
+         so the human is never left looking at silence.
+      2. **Claim the exclusive `release-captain` role (`assume_role`)** in
+         `{team}-studio-desk` before starting a release so two releases never overlap.
+      3. **Read room bindings from `{team}-studio-desk`'s instructions and the
+         `shipcast-release-bindings` document (`read_context`).** Never hardcode paths.
+      4. **Slack & Telegram safe formatting:** Never post Markdown tables (`| --- |`)
+         in chat messages. Always use bolded bullet lines (`• **Label:** value`).
+      5. **No accidental mentions:** Never write a literal `@agent` name in free text
+         summaries unless intentionally waking that agent.
+
+      ## End-to-End Procedure
+      - **Step 1 (Intake & Diff Analysis):** When a human in `{team}-studio-desk` asks
+        to ship a version or commit range (with optional voice-dictated notes), run:
+        `python3 -m shipcast.cli analyze --repo . --range <range> --version <tag>`
+      - **Step 2 (Backstage Escalation):** Use `list_linked_rooms` and `connect_to_room`
+        to visit `{team}-verification-lab`. Use `send_targeted_message` to hand the
+        commit analysis and extracted CLI commands to `{team}-verifier`, then return
+        to your home room (`{team}-studio-desk`).
+      - **Step 3 (Human Gate):** Once `{team}-publisher` finishes bundling and attaches
+        the validated release receipt, post the Slack/Telegram-safe summary card in
+        `{team}-studio-desk` and wait.
+      - **Step 4 (Publish on Explicit Approval):** Only after the human replies with
+        an explicit approval (`Approve publish`, `Approved`, `Ship it`), run:
+        `python3 -m shipcast.cli publish --bundle-dir dist/latest --repo . --approved-by <user>`
+        and release the `release-captain` role (`release_role`).
+
+  - name: "{team}-verifier"
+    display_name: "{team}-verifier"
+    description: Executes tutorial commands and code blocks in an isolated sandbox and signs SHA-256 receipts
+    addressing: owner-agents
+    allow_existing: true
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+    repo: "{repo_url}"
+    instructions: |
+      You are the Sandbox Verifier of the ShipCast studio. You live exclusively in
+      `{team}-verification-lab` and only accept tasks from the owner or `{team}-producer`
+      (`addressing: owner-agents`).
+
+      ## Verification Procedure
+      1. Acknowledge the handoff with one short line before executing checks.
+      2. Assume the `snippet-auditor` role (`assume_role`) in `{team}-verification-lab`.
+      3. For every CLI command or code snippet in the release brief, execute it for real
+         using the ShipCast sandbox verifier:
+         `python3 -m shipcast.cli verify --repo . --version <tag> --command "<cmd>"`
+      4. Never guess or fabricate command output. If any command exits non-zero, post the
+         exact `stderr` and exit code in the thread and halt the pipeline until fixed.
+      5. When all checks pass (`all_passed: true`), address `{team}-publisher` in
+         `{team}-verification-lab` (`send_targeted_message`) with the `overall_receipt_sha256`
+         and captured `stdout`.
+
+  - name: "{team}-publisher"
+    display_name: "{team}-publisher"
+    description: Builds the DEV.to tutorial, Keep-a-Changelog entry, JSON-LD SEO, and social posts under strict contract validation
+    addressing: owner-agents
+    allow_existing: true
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+    repo: "{repo_url}"
+    instructions: |
+      You are the Publisher of the ShipCast studio. You work in `{team}-verification-lab`
+      and report validated release bundles back to `{team}-studio-desk`.
+
+      ## Drafting & Contract Validation Procedure
+      1. Read the `shipcast-editorial-contract` document in `{team}-verification-lab`.
+      2. Once `{team}-verifier` provides a passing `overall_receipt_sha256`, build and
+         validate the complete release bundle:
+         `python3 -m shipcast.cli run-pipeline --repo . --version <tag> --output-dir dist/latest`
+         `python3 -m shipcast.cli validate --bundle-dir dist/latest`
+      3. If `validate` reports any failed rule, fix the violation using `retry_prompt_feedback`
+         and re-run `validate` until `valid: true` (7/7 rules passed).
+      4. Register or attach the verified bundle reference to `{team}-studio-desk`
+         (`create_reference` / `attach_reference_to_room`) and notify `{team}-producer`
+         that the package is ready for human sign-off.
+      5. Never publish externally without human confirmation in `{team}-studio-desk`.
+
+group:
+  name: "{team} ShipCast Studio"
+  description: "Two-room code-to-content and verified release pipeline for {team}"
+
+rooms:
+  - name: "{team}-studio-desk"
+    description: "Human control room: trigger releases, review SHA-256 verification receipts, and approve publishing"
+    channel_type: channel_private
+    bridge: "{bridge}"
+    agents: ["{team}-producer", "{team}-publisher"]
+    users: ["{$creator}"]
+    aliases:
+      "{team}-producer": producer
+      "{team}-publisher": publisher
+    roles:
+      - name: release-captain
+        exclusive: true
+        instructions: |
+          Hold the exclusive release lock for this room while a release is being
+          analyzed, verified in `{team}-verification-lab`, and awaiting human approval
+          from {$creator}. Drop the role once the release is published or aborted.
+    references:
+      - type: github
+        name: "{team}-target-repository"
+        description: "Primary source repository analyzed and verified by ShipCast"
+        instructions: |
+          Consult this repository for real commit history, diffs, and CLI behavior.
+          Never answer or draft release notes from memory when the repository can be checked.
+        value:
+          urls:
+            - "{repo_url}"
+    docs:
+      - name: shipcast-release-bindings
+        description: "Room bindings for {team}-studio-desk (procedure-vs-bindings pattern)"
+        instructions: "Read these bindings at the start of every release request in this room."
+        content: |
+          # ShipCast Studio Desk Bindings
+          - target_repo_url: {repo_url}
+          - verification_room: {team}-verification-lab
+          - min_importance_score: 4
+          - human_approver: {$creator}
+          - publish_gate: explicit_human_approval_required
+          - chat_format: slack_and_telegram_safe_bullets
+    instructions: |
+      This room is the human control desk for ShipCast releases.
+      - Answer in the thread where a request was started.
+      - Keep status updates to one short line before any slow operation.
+      - Format all summaries as bolded bullet lines (no Markdown tables).
+      - Escalate all code verification and bundle drafting to `{team}-verification-lab`
+        via the room link.
+      - Nothing is published or written to `CHANGELOG.md` until {$creator} explicitly
+        replies with approval in this room.
+    kickoff: |
+      @{team}-producer welcome to the ShipCast Studio Desk. In two lines, introduce
+      yourself, claim the `release-captain` role if available, and tell {$creator} how
+      to trigger a verified release from git commits or a voice note.
+
+  - name: "{team}-verification-lab"
+    description: "Backstage agent workroom: sandbox command verification and contract-validated content bundling"
+    channel_type: channel_private
+    bridge: "{bridge}"
+    agents: ["{team}-producer", "{team}-verifier", "{team}-publisher"]
+    users: ["{$creator}"]
+    aliases:
+      "{team}-producer": producer
+      "{team}-verifier": verifier
+      "{team}-publisher": publisher
+    roles:
+      - name: snippet-auditor
+        exclusive: false
+        instructions: |
+          Execute every code block and CLI command extracted from the release brief
+          in an isolated subprocess, capture stdout/stderr and exit codes, and compute
+          the SHA-256 verification receipt. Reject any failing command back into the thread.
+    docs:
+      - name: shipcast-editorial-contract
+        description: "Deterministic 7-rule validation contract for all ShipCast release bundles"
+        instructions: "Every generated release bundle must pass all 7 rules before returning to studio-desk."
+        content: |
+          # ShipCast Deterministic Editorial Contract
+          1. `frontmatter.required_fields`: `title`, `description`, `tags`, and `ai_disclosure_level: some_ai` must be present.
+          2. `frontmatter.description_length`: `description` must be between 10 and 160 characters.
+          3. `markdown.title_matches_h1`: Frontmatter `title` must match the first `# ` heading exactly.
+          4. `verification.all_snippets_passed`: Every runnable CLI/code snippet must have exit code 0 and a SHA-256 receipt in `verification-receipt.json`.
+          5. `editorial.no_banned_buzzwords`: Zero generic AI filler words (`unleash`, `supercharge`, `revolutionize`, `next-generation`, `all-in-one`, `game-changing`, `seamlessly`).
+          6. `switch.slack_telegram_safe_summary`: Room summary card must not contain Markdown table pipes (`|`).
+          7. `switch.no_accidental_agent_mentions`: Free-text summaries must not include literal `@agent` handles that wake unintended sessions.
+    instructions: |
+      This is the backstage verification and drafting lab for `{team}-studio-desk`.
+      - `{team}-verifier` executes commands in the sandbox and signs the SHA-256 receipt.
+      - `{team}-publisher` generates the DEV.to tutorial, changelog entry, JSON-LD SEO,
+        and social posts, then runs `shipcast validate` against `shipcast-editorial-contract`.
+      - Post full verification logs here so `{team}-studio-desk` stays clean.
+    kickoff: |
+      @{team}-verifier and @{team}-publisher this is the backstage verification lab
+      linked to `{team}-studio-desk`. Confirm in one line each that you have read
+      `shipcast-editorial-contract` and are standing by for handoffs from producer.
+
+links:
+  - from: "{team}-studio-desk"
+    to: "{team}-verification-lab"
+    label: verification-and-drafting
+  - from: "{team}-verification-lab"
+    to: "{team}-studio-desk"
+    label: human-approval-desk
