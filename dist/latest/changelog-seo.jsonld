@@ -1,0 +1,15 @@
+{
+  "@context": "https://schema.org",
+  "@type": "TechArticle",
+  "headline": "shipcast v0.2.0: Verified Multi-Agent Release & Changelog",
+  "datePublished": "2026-11-05",
+  "proficiencyLevel": "Expert",
+  "softwareVersion": "v0.2.0",
+  "about": {
+    "@type": "SoftwareApplication",
+    "name": "shipcast",
+    "applicationCategory": "DeveloperApplication",
+    "operatingSystem": "Linux, macOS, Windows"
+  },
+  "identifier": "21fe43f069b4048548663c91ce1447f1d53f27f3da56d9e37a35b160b952b183"
+}

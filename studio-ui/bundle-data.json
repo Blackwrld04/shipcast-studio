@@ -1,0 +1,260 @@
+{
+  "generated_at": "2026-11-05T13:19:02Z",
+  "output_dir": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/dist/latest",
+  "analysis": {
+    "repo_path": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast",
+    "repo_name": "shipcast",
+    "commit_range": "HEAD~3..HEAD",
+    "version_tag": "v0.2.0",
+    "voice_note": "Dictated with Wispr Flow: Highlight how our two linked Switch rooms separate noisy sandbox command verification from the human approval desk.",
+    "total_commits": 3,
+    "included_commits": 3,
+    "skipped_commits": 0,
+    "overall_importance": 10,
+    "files_touched": [
+      "README.md",
+      "agents/PRODUCER.md",
+      "agents/PUBLISHER.md",
+      "agents/VERIFIER.md",
+      "shipcast.template.yaml",
+      "shipcast.v2.template.yaml",
+      "shipcast/bundler.py",
+      "shipcast/cli.py",
+      "shipcast/publisher.py",
+      "shipcast/validator.py",
+      "shipcast/verifier.py",
+      "studio-ui/index.html",
+      "tests/test_shipcast_pipeline.py"
+    ],
+    "total_insertions": 2813,
+    "total_deletions": 0,
+    "categories": {
+      "Added": [
+        {
+          "sha": "e486111ee9339a2061d20520d2cb1e3d1c1eebf5",
+          "short_sha": "e486111",
+          "subject": "feat(switch): add linked two-room Switch templates, agent briefs, and Studio Workbench UI",
+          "body": "",
+          "author": "ShipCast Studio",
+          "date": "2026-11-05",
+          "category": "Added",
+          "files_changed": [
+            "README.md",
+            "agents/PRODUCER.md",
+            "agents/PUBLISHER.md",
+            "agents/VERIFIER.md",
+            "shipcast.template.yaml",
+            "shipcast.v2.template.yaml",
+            "studio-ui/index.html",
+            "tests/test_shipcast_pipeline.py"
+          ],
+          "insertions": 1845,
+          "deletions": 0,
+          "importance_score": 10,
+          "skipped": false,
+          "skip_reason": ""
+        },
+        {
+          "sha": "b7f7c7a31d4d798090359133d35ea1fa5b295753",
+          "short_sha": "b7f7c7a",
+          "subject": "feat(pipeline): add multi-format release bundler and human-gated CHANGELOG publisher",
+          "body": "",
+          "author": "ShipCast Studio",
+          "date": "2026-11-05",
+          "category": "Added",
+          "files_changed": [
+            "shipcast/bundler.py",
+            "shipcast/cli.py",
+            "shipcast/publisher.py"
+          ],
+          "insertions": 612,
+          "deletions": 0,
+          "importance_score": 10,
+          "skipped": false,
+          "skip_reason": ""
+        },
+        {
+          "sha": "70efffb5020211066630e13c3ff803a39c62d83c",
+          "short_sha": "70efffb",
+          "subject": "feat(verifier): add subprocess sandbox runner with SHA-256 receipts and 7-rule contract validator",
+          "body": "",
+          "author": "ShipCast Studio",
+          "date": "2026-11-05",
+          "category": "Added",
+          "files_changed": [
+            "shipcast/validator.py",
+            "shipcast/verifier.py"
+          ],
+          "insertions": 356,
+          "deletions": 0,
+          "importance_score": 9,
+          "skipped": false,
+          "skip_reason": ""
+        }
+      ]
+    },
+    "commits": [
+      {
+        "sha": "e486111ee9339a2061d20520d2cb1e3d1c1eebf5",
+        "short_sha": "e486111",
+        "subject": "feat(switch): add linked two-room Switch templates, agent briefs, and Studio Workbench UI",
+        "body": "",
+        "author": "ShipCast Studio",
+        "date": "2026-11-05",
+        "category": "Added",
+        "files_changed": [
+          "README.md",
+          "agents/PRODUCER.md",
+          "agents/PUBLISHER.md",
+          "agents/VERIFIER.md",
+          "shipcast.template.yaml",
+          "shipcast.v2.template.yaml",
+          "studio-ui/index.html",
+          "tests/test_shipcast_pipeline.py"
+        ],
+        "insertions": 1845,
+        "deletions": 0,
+        "importance_score": 10,
+        "skipped": false,
+        "skip_reason": ""
+      },
+      {
+        "sha": "b7f7c7a31d4d798090359133d35ea1fa5b295753",
+        "short_sha": "b7f7c7a",
+        "subject": "feat(pipeline): add multi-format release bundler and human-gated CHANGELOG publisher",
+        "body": "",
+        "author": "ShipCast Studio",
+        "date": "2026-11-05",
+        "category": "Added",
+        "files_changed": [
+          "shipcast/bundler.py",
+          "shipcast/cli.py",
+          "shipcast/publisher.py"
+        ],
+        "insertions": 612,
+        "deletions": 0,
+        "importance_score": 10,
+        "skipped": false,
+        "skip_reason": ""
+      },
+      {
+        "sha": "70efffb5020211066630e13c3ff803a39c62d83c",
+        "short_sha": "70efffb",
+        "subject": "feat(verifier): add subprocess sandbox runner with SHA-256 receipts and 7-rule contract validator",
+        "body": "",
+        "author": "ShipCast Studio",
+        "date": "2026-11-05",
+        "category": "Added",
+        "files_changed": [
+          "shipcast/validator.py",
+          "shipcast/verifier.py"
+        ],
+        "insertions": 356,
+        "deletions": 0,
+        "importance_score": 9,
+        "skipped": false,
+        "skip_reason": ""
+      }
+    ],
+    "extracted_commands": [
+      "python3 -m shipcast.cli --help"
+    ]
+  },
+  "verification_receipt": {
+    "repo_path": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast",
+    "version_tag": "v0.2.0",
+    "verified_at": "2026-11-05T13:19:02Z",
+    "all_passed": true,
+    "total_checks": 2,
+    "passed_checks": 2,
+    "failed_checks": 0,
+    "overall_receipt_sha256": "21fe43f069b4048548663c91ce1447f1d53f27f3da56d9e37a35b160b952b183",
+    "results": [
+      {
+        "index": 1,
+        "language": "bash",
+        "command": "python3 -m shipcast.cli --help",
+        "passed": true,
+        "exit_code": 0,
+        "stdout": "usage: shipcast [-h]\n                {analyze,verify,run-pipeline,validate,publish,serve-studio} ...\n\nShipCast: Autonomous Code-to-Content & Verified Release Studio for Switch\nRooms\n\npositional arguments:\n  {analyze,verify,run-pipeline,validate,publish,serve-studio}\n    analyze             Analyze a git commit range and score importance\n    verify              Execute commands/snippets in sandbox & sign receipt\n    run-pipeline        Run full analyze -> verify -> bundle -> validate\n                        pipeline and print Switch receipt\n    validate            Validate a generated release bundle against contract\n    publish             Publish a validated bundle after human approval\n    serve-studio        Serve the local ShipCast Studio web UI\n\noptions:\n  -h, --help            show this help message and exit",
+        "stderr": "",
+        "duration_ms": 199,
+        "receipt_sha256": "9e0b9428774d2022a14257b0b508893463b55ee1a1eec827b5e2e6a3d29da725"
+      },
+      {
+        "index": 2,
+        "language": "bash",
+        "command": "pytest -q",
+        "passed": true,
+        "exit_code": 0,
+        "stdout": ".....                                                                    [100%]\n5 passed in 0.19s",
+        "stderr": "",
+        "duration_ms": 1930,
+        "receipt_sha256": "debc015f11b7ccecfa56c88a482c710be21c9218ccea6bdb7cec92b98e760fab"
+      }
+    ]
+  },
+  "validation_report": {
+    "valid": true,
+    "passed_count": 7,
+    "failed_count": 0,
+    "findings": [
+      {
+        "rule_id": "frontmatter.required_fields",
+        "passed": true,
+        "message": "Frontmatter includes title, description, and tags."
+      },
+      {
+        "rule_id": "frontmatter.description_length",
+        "passed": true,
+        "message": "Description length is 110/160 chars."
+      },
+      {
+        "rule_id": "markdown.title_matches_h1",
+        "passed": true,
+        "message": "Frontmatter title matches first '# ' heading."
+      },
+      {
+        "rule_id": "verification.all_snippets_passed",
+        "passed": true,
+        "message": "All 2 sandbox checks passed (SHA-256: 21fe43f069b4...)."
+      },
+      {
+        "rule_id": "editorial.no_banned_buzzwords",
+        "passed": true,
+        "message": "Zero banned marketing buzzwords detected."
+      },
+      {
+        "rule_id": "switch.slack_telegram_safe_summary",
+        "passed": true,
+        "message": "Switch room summary uses Slack/Telegram-safe bolded bullet lines (no raw tables)."
+      },
+      {
+        "rule_id": "switch.no_accidental_agent_mentions",
+        "passed": true,
+        "message": "No accidental '@agent' mentions inside free-text summary body."
+      }
+    ],
+    "retry_prompt_feedback": ""
+  },
+  "artifacts": {
+    "devto_article": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/dist/latest/devto-article.md",
+    "changelog_entry": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/dist/latest/changelog-entry.md",
+    "changelog_jsonld": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/dist/latest/changelog-seo.jsonld",
+    "social_posts": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/dist/latest/social-posts.json",
+    "switch_room_summary": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/dist/latest/switch-room-summary.txt"
+  },
+  "preview": {
+    "room_summary": "**ShipCast Release Package Ready \u2014 shipcast v0.2.0**\n\u2022 **Role Held:** `release-captain` (exclusive lock active)\n\u2022 **Git Range:** `HEAD~3..HEAD` (3 commits included, 0 filtered)\n\u2022 **Importance Score:** 10/10 (+2813/-0 lines in 13 files)\n\u2022 **Sandbox Verification:** 2/2 commands passed (Receipt `21fe43f069b40485`)\n\u2022 **Artifacts Staged:** `devto-article.md`, `changelog-entry.md`, `social-posts.json`, `changelog-seo.jsonld`\n\u2022 **Next Step:** Reply `Approve publish` in this thread to update `CHANGELOG.md` and publish the release bundle.",
+    "changelog_markdown": "## [v0.2.0] - 2026-11-05\n\n> Importance Score: **10/10** \u00b7 Commits included: **3** (filtered 0 low-signal commits) \u00b7 Verification Receipt: `21fe43f069b40485`\n\n### Release Context\nDictated with Wispr Flow: Highlight how our two linked Switch rooms separate noisy sandbox command verification from the human approval desk.\n\n### Added\n- **feat(switch): add linked two-room Switch templates, agent briefs, and Studio Workbench UI** (`e486111`, +1845/-0) (`README.md`, `agents/PRODUCER.md`, `agents/PUBLISHER.md`)\n- **feat(pipeline): add multi-format release bundler and human-gated CHANGELOG publisher** (`b7f7c7a`, +612/-0) (`shipcast/bundler.py`, `shipcast/cli.py`, `shipcast/publisher.py`)\n- **feat(verifier): add subprocess sandbox runner with SHA-256 receipts and 7-rule contract validator** (`70efffb`, +356/-0) (`shipcast/validator.py`, `shipcast/verifier.py`)\n",
+    "devto_article_markdown": "---\ntitle: \"Shipping shipcast v0.2.0 with Switch Rooms: Verified Multi-Agent Release Notes\"\npublished: false\ndescription: \"How shipcast v0.2.0 uses linked Switch rooms and sandbox verification to ship tested tutorials and changelogs.\"\ntags: switch, ai, opensource, devtools\nai_disclosure_level: some_ai\n---\n\n# Shipping shipcast v0.2.0 with Switch Rooms: Verified Multi-Agent Release Notes\n\nEvery code release normally ends with a manual chore: reading `git log`, checking which CLI flags changed, testing code snippets by hand so tutorials do not lie, and formatting release notes across multiple channels.\n\nFor **shipcast `v0.2.0`**, we automated this workflow inside **Switch Rooms** using two linked rooms (`studio-desk` and `verification-lab`) and three specialized agents (`producer`, `verifier`, and `publisher`) governed by an explicit human sign-off gate.\n\n> **Creator Note (Dictated in Switch Room):** Dictated with Wispr Flow: Highlight how our two linked Switch rooms separate noisy sandbox command verification from the human approval desk.\n\n## 1. Architecture: Why Two Linked Switch Rooms Beat a Single Bot\n\nInstead of trusting one prompt to summarize commits and publish unchecked markdown, ShipCast separates coordination, sandbox execution, and contract validation across two linked Switch rooms:\n\n```mermaid\nflowchart LR\n  human[\"Human Creator in Discord / Telegram / Slack\"] --> desk[\"Room 1: studio-desk (producer)\"]\n  desk -->|\"Switch Room Link: verification-and-drafting\"| lab[\"Room 2: verification-lab (verifier + publisher)\"]\n  lab -->|\"SHA-256 Receipt + Validated Bundle\"| desk\n```\n\n- **Room 1 (`studio-desk`)**: Holds the human creator and the `producer` agent (`addressing: anyone`), which claims the exclusive `release-captain` role so overlapping releases never collide.\n- **Room 2 (`verification-lab`)**: Holds `verifier` and `publisher` (`addressing: owner-agents`). They cannot be triggered by random channel chatter\u2014only by structured handoffs from `producer`.\n\n## 2. What Shipped in `shipcast v0.2.0`\n\nOur git analyzer scanned `HEAD~3..HEAD` (3 total commits, filtering out 0 low-signal commits) and scored this release **10/10** across **13 files** (`+2813 / -0` lines):\n\n- **`e486111` \u2014 feat(switch): add linked two-room Switch templates, agent briefs, and Studio Workbench UI** (`+1845 / -0` lines across `README.md, agents/PRODUCER.md, agents/PUBLISHER.md`)\n- **`b7f7c7a` \u2014 feat(pipeline): add multi-format release bundler and human-gated CHANGELOG publisher** (`+612 / -0` lines across `shipcast/bundler.py, shipcast/cli.py, shipcast/publisher.py`)\n- **`70efffb` \u2014 feat(verifier): add subprocess sandbox runner with SHA-256 receipts and 7-rule contract validator** (`+356 / -0` lines across `shipcast/validator.py, shipcast/verifier.py`)\n\n## 3. Sandbox Verification Receipts (`verification-lab`)\n\nBefore `publisher` was allowed to draft this post, `verifier` executed every command in an isolated subprocess and recorded its cryptographic SHA-256 receipt (`21fe43f069b404854866...`):\n\n### Check #1: `PASS (exit 0)` in 199ms\n- **Receipt SHA-256:** `9e0b9428774d2022a14257b0...`\n\n```bash\npython3 -m shipcast.cli --help\n```\n\n**Captured Sandbox Output:**\n```text\nusage: shipcast [-h]\n                {analyze,verify,run-pipeline,validate,publish,serve-studio} ...\n\nShipCast: Autonomous Code-to-Content & Verified Release Studio for Switch\nRooms\n\npositional arguments:\n  {analyze,verify,run-pipeline,validate,publish,serve-studio}\n    analyze             Analyze a git commit range and score importance\n    verify              Execute commands/snippets in sandbox & sign receipt\n    run-pipeline        Run full analyze -> verify -> bundle -> validate\n                        pipeline and print Switch receipt\n    validate            Validate a generated release bundle against contract\n    publish             Publish a validated bundle after human approval\n    serve-studio        Serve the local ShipCast Studio web UI\n\noptions:\n  -h, --help            show this help message and exit\n```\n\n### Check #2: `PASS (exit 0)` in 1930ms\n- **Receipt SHA-256:** `debc015f11b7ccecfa56c88a...`\n\n```bash\npytest -q\n```\n\n**Captured Sandbox Output:**\n```text\n.....                                                                    [100%]\n5 passed in 0.19s\n```\n\n## 4. Reproducing This Setup in Switch Console\n\nClone the repository and import `shipcast.template.yaml` into **Switch Console \u2192 Templates \u2192 Import template** to stand up all three agents, both linked rooms, the room-scoped editorial contract document, and the `release-captain` role in one click.\n",
+    "social_posts": {
+      "x_thread": [
+        "Shipped shipcast v0.2.0 (+2813/-0 lines across 13 files) and let our Switch Rooms agent crew verify and package the release.\n\n\u2022 3 commits analyzed (0 noise commits filtered)\n\u2022 2/2 CLI snippets executed in sandbox (SHA: 21fe43f069b4)\n\u2022 Gated by human sign-off in chat #HowISwitch",
+        "How the 2-room Switch topology works:\n\n1. studio-desk: producer claims the exclusive release-captain role & parses git diff\n2. verification-lab: verifier runs every tutorial snippet in a sandbox before publisher drafts the DEV post\n3. Human replies 'Approve' in chat to ship."
+      ],
+      "linkedin_post": "Writing code takes two hours; verifying tutorial snippets, updating CHANGELOG.md, and writing release notes takes another hour.\n\nToday we shipped shipcast v0.2.0 (+2813/-0 lines) using ShipCast on Switch Rooms. Instead of a single chatbot guessing what changed, three agents collaborate across two linked Switch rooms: a Producer in the main desk room, and a Verifier + Publisher in a linked backstage verification room.\n\nEvery CLI snippet in the release tutorial was executed in an isolated sandbox (2/2 passed, receipt 21fe43f069b4) before surfacing a clean approval card in chat. #HowISwitch #OpenSource #AIAgents",
+      "discord_announcement": "**shipcast v0.2.0 is ready for release**\n\u2022 **Importance Score:** 10/10\n\u2022 **Diff Stats:** +2813 / -0 lines across 13 files\n\u2022 **Sandbox Verification:** 2/2 checks passed (`21fe43f069b4`) "
+    }
+  }
+}

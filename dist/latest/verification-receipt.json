@@ -1,0 +1,34 @@
+{
+  "repo_path": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast",
+  "version_tag": "v0.2.0",
+  "verified_at": "2026-11-05T13:19:02Z",
+  "all_passed": true,
+  "total_checks": 2,
+  "passed_checks": 2,
+  "failed_checks": 0,
+  "overall_receipt_sha256": "21fe43f069b4048548663c91ce1447f1d53f27f3da56d9e37a35b160b952b183",
+  "results": [
+    {
+      "index": 1,
+      "language": "bash",
+      "command": "python3 -m shipcast.cli --help",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": "usage: shipcast [-h]\n                {analyze,verify,run-pipeline,validate,publish,serve-studio} ...\n\nShipCast: Autonomous Code-to-Content & Verified Release Studio for Switch\nRooms\n\npositional arguments:\n  {analyze,verify,run-pipeline,validate,publish,serve-studio}\n    analyze             Analyze a git commit range and score importance\n    verify              Execute commands/snippets in sandbox & sign receipt\n    run-pipeline        Run full analyze -> verify -> bundle -> validate\n                        pipeline and print Switch receipt\n    validate            Validate a generated release bundle against contract\n    publish             Publish a validated bundle after human approval\n    serve-studio        Serve the local ShipCast Studio web UI\n\noptions:\n  -h, --help            show this help message and exit",
+      "stderr": "",
+      "duration_ms": 199,
+      "receipt_sha256": "9e0b9428774d2022a14257b0b508893463b55ee1a1eec827b5e2e6a3d29da725"
+    },
+    {
+      "index": 2,
+      "language": "bash",
+      "command": "pytest -q",
+      "passed": true,
+      "exit_code": 0,
+      "stdout": ".....                                                                    [100%]\n5 passed in 0.19s",
+      "stderr": "",
+      "duration_ms": 1930,
+      "receipt_sha256": "debc015f11b7ccecfa56c88a482c710be21c9218ccea6bdb7cec92b98e760fab"
+    }
+  ]
+}
