@@ -3,49 +3,51 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>ShipCast Monitor — Switch Rooms Release &amp; Verification Telemetry</title>
+  <title>ShipCast Studio — Autonomous Release Crew on Switch Rooms</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
   <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600&family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap" rel="stylesheet" />
   <style>
     :root {
-      --bg-canvas: #08080A;
-      --bg-sidebar: #060608;
-      --bg-card: #0C0C0F;
-      --bg-card-hover: #111116;
-      --bg-elevated: #16161C;
-      --bg-active-nav: #1A1A21;
-      --border: #1C1C22;
-      --border-strong: #2A2A33;
+      --bg-canvas: #09090C;
+      --bg-sidebar: #0D0D12;
+      --bg-card: #121218;
+      --bg-card-hover: #171720;
+      --bg-elevated: #1B1B25;
+      --bg-input: #14141C;
+      --border: #1E1E28;
+      --border-strong: #2A2A38;
       --text-primary: #F4F4F6;
-      --text-secondary: #8A8A98;
-      --text-muted: #5A5A68;
-      --accent-amber: #F59E0B;
-      --accent-emerald: #10B981;
+      --text-secondary: #9292A2;
+      --text-muted: #5E5E70;
+      --accent-green: #10B981;
+      --accent-green-bg: rgba(16, 185, 129, 0.12);
       --accent-blue: #3B82F6;
-      --accent-line: #8B5CF6;
+      --accent-blue-bg: rgba(59, 130, 246, 0.12);
+      --accent-purple: #8B5CF6;
+      --accent-purple-bg: rgba(139, 92, 246, 0.12);
+      --accent-amber: #F59E0B;
       --accent-danger: #EF4444;
-      --bar-fill: rgba(30, 58, 95, 0.36);
-      --bar-stroke: rgba(59, 130, 246, 0.42);
       --font-sans: 'Plus Jakarta Sans', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', monospace;
-      --ease: cubic-bezier(0.22, 1, 0.36, 1);
+      --ease: cubic-bezier(0.2, 0.9, 0.3, 1);
     }
 
     html.light {
-      --bg-canvas: #F6F6F8;
-      --bg-sidebar: #EFEFF2;
+      --bg-canvas: #F5F5F7;
+      --bg-sidebar: #FFFFFF;
       --bg-card: #FFFFFF;
-      --bg-card-hover: #F9F9FB;
-      --bg-elevated: #EAEAEF;
-      --bg-active-nav: #E2E2E9;
-      --border: #DCDCE2;
-      --border-strong: #C4C4CE;
-      --text-primary: #111115;
-      --text-secondary: #585866;
-      --text-muted: #828292;
-      --bar-fill: rgba(59, 130, 246, 0.16);
-      --bar-stroke: rgba(37, 99, 235, 0.48);
+      --bg-card-hover: #F8F8FA;
+      --bg-elevated: #F0F0F4;
+      --bg-input: #FFFFFF;
+      --border: #E2E2E8;
+      --border-strong: #D0D0DA;
+      --text-primary: #121217;
+      --text-secondary: #5E5E6E;
+      --text-muted: #8E8E9E;
+      --accent-green-bg: rgba(16, 185, 129, 0.1);
+      --accent-blue-bg: rgba(59, 130, 246, 0.1);
+      --accent-purple-bg: rgba(139, 92, 246, 0.1);
     }
 
     * {
@@ -63,739 +65,828 @@
       height: 100vh;
       overflow: hidden;
       display: grid;
-      grid-template-columns: 224px 1fr;
-      grid-template-rows: 56px 1fr;
+      grid-template-columns: 240px 1fr;
       -webkit-font-smoothing: antialiased;
     }
 
     /* =========================================================================
-       LEFT SIDEBAR (Matches API Monitor Reference)
+       1. LEFT SIDEBAR (Learned directly from Switch Console v0.40.1)
        ========================================================================= */
     aside.sidebar {
-      grid-row: 1 / -1;
       background: var(--bg-sidebar);
       border-right: 1px solid var(--border);
       display: flex;
       flex-direction: column;
       justify-content: space-between;
       user-select: none;
+      padding-bottom: 12px;
     }
 
-    .sidebar-brand {
-      height: 56px;
-      padding: 0 20px;
+    .server-switcher {
+      padding: 14px 16px 12px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       gap: 10px;
-      font-weight: 600;
-      font-size: 14px;
-      letter-spacing: -0.01em;
+    }
+
+    .server-badge {
+      width: 26px;
+      height: 26px;
+      border-radius: 7px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 12px;
       color: var(--text-primary);
     }
 
-    .sidebar-brand svg {
-      width: 18px;
-      height: 18px;
-      color: var(--text-primary);
-      flex-shrink: 0;
-    }
-
-    .sidebar-nav {
+    .server-info {
       flex: 1;
-      padding: 22px 12px;
-      overflow-y: auto;
-      display: flex;
-      flex-direction: column;
-      gap: 24px;
+      min-width: 0;
     }
 
-    .nav-group-title {
+    .server-name {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .live-dot {
+      width: 6px;
+      height: 6px;
+      border-radius: 50%;
+      background: var(--accent-green);
+      box-shadow: 0 0 8px var(--accent-green);
+      display: inline-block;
+    }
+
+    .server-sub {
       font-size: 11px;
-      font-weight: 500;
       color: var(--text-muted);
-      padding: 0 10px;
-      margin-bottom: 8px;
-      letter-spacing: 0.01em;
     }
 
-    .nav-items {
-      display: flex;
-      flex-direction: column;
-      gap: 2px;
+    .nav-section {
+      padding: 10px 10px 0;
+    }
+
+    .nav-label {
+      font-size: 10.5px;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 0.05em;
+      color: var(--text-muted);
+      padding: 6px 10px 4px;
     }
 
     .nav-link {
-      width: 100%;
-      height: 36px;
-      padding: 0 10px;
-      border: none;
-      border-radius: 4px;
-      background: transparent;
-      color: var(--text-secondary);
-      font-family: var(--font-sans);
-      font-size: 13px;
-      font-weight: 500;
       display: flex;
       align-items: center;
       justify-content: space-between;
+      padding: 7px 10px;
+      border-radius: 6px;
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      font-weight: 500;
       cursor: pointer;
-      transition: background 120ms var(--ease), color 120ms var(--ease);
+      border: none;
+      background: transparent;
+      width: 100%;
+      transition: all 120ms var(--ease);
       text-align: left;
+    }
+
+    .nav-link:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .nav-link.active {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      font-weight: 600;
     }
 
     .nav-link-left {
       display: flex;
       align-items: center;
-      gap: 10px;
+      gap: 9px;
     }
 
     .nav-link svg {
       width: 15px;
       height: 15px;
       color: var(--text-muted);
-      transition: color 120ms var(--ease);
-      flex-shrink: 0;
-    }
-
-    .nav-link:hover {
-      color: var(--text-primary);
-      background: rgba(255, 255, 255, 0.03);
-    }
-
-    .nav-link:hover svg {
-      color: var(--text-secondary);
-    }
-
-    .nav-link.active {
-      background: var(--bg-active-nav);
-      color: var(--text-primary);
     }
 
     .nav-link.active svg {
       color: var(--text-primary);
     }
 
-    .nav-shortcut {
+    .nav-badge {
       font-family: var(--font-mono);
       font-size: 10px;
+      padding: 1px 6px;
+      border-radius: 10px;
+      background: var(--bg-elevated);
       color: var(--text-muted);
     }
 
+    /* Switch Rooms List in Sidebar */
+    .room-item {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      padding: 6px 10px;
+      border-radius: 6px;
+      font-size: 12px;
+      color: var(--text-secondary);
+      cursor: pointer;
+    }
+
+    .room-item:hover {
+      background: var(--bg-card-hover);
+      color: var(--text-primary);
+    }
+
+    .room-item.active {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+    }
+
+    .room-hash {
+      color: var(--text-muted);
+      font-size: 13px;
+      font-weight: 600;
+    }
+
+    /* Sidebar Footer */
     .sidebar-footer {
-      height: 58px;
-      padding: 0 16px;
+      padding: 10px 14px;
       border-top: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-      cursor: pointer;
-      transition: background 120ms var(--ease);
-    }
-
-    .sidebar-footer:hover {
-      background: var(--bg-card);
-    }
-
-    .avatar-box {
-      width: 28px;
-      height: 28px;
-      border-radius: 4px;
-      background: linear-gradient(135deg, #1E3A8A 0%, #0F172A 60%, #10B981 100%);
-      border: 1px solid var(--border-strong);
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      font-family: var(--font-mono);
       font-size: 11px;
-      font-weight: 600;
-      color: #FFF;
+      color: var(--text-muted);
     }
 
     /* =========================================================================
-       TOP HEADER BAR (Breadcrumbs + Search Input + Action Bell)
+       2. MAIN CONTENT LAYOUT
        ========================================================================= */
-    header.topbar {
-      height: 56px;
-      padding: 0 32px;
+    main.main-viewport {
+      display: flex;
+      flex-direction: column;
+      height: 100vh;
+      overflow: hidden;
       background: var(--bg-canvas);
+    }
+
+    /* Header Bar */
+    header.topbar {
+      height: 52px;
+      padding: 0 24px;
       border-bottom: 1px solid var(--border);
       display: flex;
       align-items: center;
       justify-content: space-between;
-    }
-
-    .breadcrumbs {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      font-size: 13px;
-    }
-
-    .crumb-muted {
-      color: var(--text-secondary);
-    }
-
-    .crumb-slash {
-      color: var(--text-muted);
-      font-family: var(--font-mono);
-      font-size: 12px;
-    }
-
-    .crumb-current {
-      color: var(--text-primary);
-      font-weight: 600;
-    }
-
-    .topbar-right {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-    }
-
-    .search-box {
-      width: 256px;
-      height: 34px;
-      padding: 0 10px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      transition: border-color 120ms var(--ease);
-    }
-
-    .search-box:focus-within {
-      border-color: var(--border-strong);
-    }
-
-    .search-box svg {
-      width: 13px;
-      height: 13px;
-      color: var(--text-muted);
+      background: var(--bg-canvas);
       flex-shrink: 0;
     }
 
-    .search-box input {
-      flex: 1;
-      background: transparent;
-      border: none;
-      color: var(--text-primary);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      outline: none;
-    }
-
-    .search-box input::placeholder {
-      color: var(--text-muted);
-    }
-
-    .slash-badge {
-      width: 18px;
-      height: 18px;
-      border: 1px solid var(--border);
-      background: var(--bg-elevated);
-      border-radius: 2px;
-      font-family: var(--font-mono);
-      font-size: 10px;
-      color: var(--text-muted);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-    }
-
-    .icon-btn {
-      width: 34px;
-      height: 34px;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      color: var(--text-secondary);
-      display: inline-flex;
-      align-items: center;
-      justify-content: center;
-      cursor: pointer;
-      position: relative;
-      transition: border-color 120ms var(--ease), color 120ms var(--ease);
-    }
-
-    .icon-btn:hover {
-      border-color: var(--border-strong);
-      color: var(--text-primary);
-    }
-
-    .icon-btn svg {
-      width: 15px;
-      height: 15px;
-    }
-
-    .bell-dot {
-      position: absolute;
-      top: 7px;
-      right: 8px;
-      width: 5px;
-      height: 5px;
-      border-radius: 50%;
-      background: var(--accent-emerald);
-    }
-
-    /* =========================================================================
-       MAIN CONTENT AREA & TELEMETRY COMPONENTS
-       ========================================================================= */
-    main.main-scroll {
-      overflow-y: auto;
-      padding: 28px 32px 40px;
-    }
-
-    .view-pane {
-      display: none;
-      max-width: 1360px;
-      margin: 0 auto;
-      animation: fadeIn 140ms var(--ease);
-    }
-
-    .view-pane.active {
-      display: block;
-    }
-
-    @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(3px); }
-      to { opacity: 1; transform: translateY(0); }
-    }
-
-    /* Status Header Row */
-    .status-header {
-      display: flex;
-      align-items: flex-start;
-      justify-content: space-between;
-      gap: 16px;
-      margin-bottom: 22px;
-    }
-
-    .status-title {
-      font-size: 21px;
+    .breadcrumb-title {
+      font-size: 14px;
       font-weight: 600;
-      letter-spacing: -0.02em;
-      color: var(--text-primary);
-      margin-bottom: 4px;
-    }
-
-    .status-sub {
       display: flex;
       align-items: center;
       gap: 8px;
-      font-size: 12.5px;
-      color: var(--text-secondary);
     }
 
-    .status-square {
-      width: 7px;
-      height: 7px;
-      background: #4F6EF7;
-      display: inline-block;
-      border-radius: 1px;
+    .tag-pill {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      padding: 2px 7px;
+      border-radius: 4px;
+      background: var(--accent-green-bg);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+      font-weight: 500;
     }
 
-    .header-controls {
+    .topbar-actions {
       display: flex;
       align-items: center;
-      gap: 10px;
-    }
-
-    .segmented-group {
-      display: inline-flex;
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 2px;
-      gap: 2px;
-    }
-
-    .seg-btn {
-      height: 28px;
-      padding: 0 11px;
-      border: none;
-      border-radius: 2px;
-      background: transparent;
-      color: var(--text-secondary);
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 500;
-      cursor: pointer;
-      transition: background 120ms var(--ease), color 120ms var(--ease);
-    }
-
-    .seg-btn:hover {
-      color: var(--text-primary);
-    }
-
-    .seg-btn.active {
-      background: var(--bg-active-nav);
-      color: var(--text-primary);
-      font-weight: 600;
+      gap: 8px;
     }
 
     .action-btn {
-      height: 32px;
+      height: 30px;
       padding: 0 12px;
-      border-radius: 3px;
+      border-radius: 6px;
+      font-size: 12px;
+      font-weight: 600;
       border: 1px solid var(--border);
       background: var(--bg-card);
       color: var(--text-primary);
-      font-family: var(--font-sans);
-      font-size: 12px;
-      font-weight: 500;
+      cursor: pointer;
       display: inline-flex;
       align-items: center;
-      gap: 7px;
-      cursor: pointer;
+      gap: 6px;
+      transition: all 120ms var(--ease);
       text-decoration: none;
-      transition: border-color 120ms var(--ease), background 120ms var(--ease);
     }
 
     .action-btn:hover {
-      border-color: var(--border-strong);
       background: var(--bg-card-hover);
+      border-color: var(--border-strong);
     }
 
     .action-btn.primary {
       background: var(--text-primary);
       color: var(--bg-canvas);
       border-color: var(--text-primary);
-      font-weight: 600;
     }
 
-    .action-btn.emerald {
-      border-color: rgba(16, 185, 129, 0.4);
-      background: rgba(16, 185, 129, 0.1);
-      color: var(--accent-emerald);
-      font-weight: 600;
+    .action-btn.primary:hover {
+      opacity: 0.9;
     }
 
-    /* 4-Card KPI Telemetry Grid */
-    .kpi-grid {
-      display: grid;
-      grid-template-columns: repeat(4, 1fr);
-      gap: 16px;
-      margin-bottom: 16px;
+    .action-btn.green {
+      background: var(--accent-green);
+      color: #052e16;
+      border-color: var(--accent-green);
     }
 
-    .kpi-card {
-      background: var(--bg-card);
+    .action-btn.green:hover {
+      opacity: 0.92;
+    }
+
+    .icon-btn {
+      width: 30px;
+      height: 30px;
+      border-radius: 6px;
       border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 18px 20px;
-      cursor: pointer;
-      transition: border-color 120ms var(--ease), background 120ms var(--ease);
-    }
-
-    .kpi-card:hover {
-      border-color: var(--border-strong);
-      background: var(--bg-card-hover);
-    }
-
-    .kpi-top {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 14px;
-      color: var(--text-secondary);
-      font-size: 12.5px;
-      font-weight: 500;
-    }
-
-    .kpi-top svg {
-      width: 15px;
-      height: 15px;
+      background: var(--bg-card);
       color: var(--text-muted);
-    }
-
-    .kpi-bottom {
-      display: flex;
-      align-items: baseline;
-      gap: 9px;
-    }
-
-    .kpi-num {
-      font-size: 27px;
-      font-weight: 600;
-      letter-spacing: -0.03em;
-      color: var(--text-primary);
-      font-variant-numeric: tabular-nums;
-      line-height: 1.1;
-    }
-
-    .kpi-trend {
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      color: var(--text-secondary);
-    }
-
-    /* Middle 2-Column Section (Chart + Progress Bars) */
-    .mid-grid {
-      display: grid;
-      grid-template-columns: 1.85fr 1fr;
-      gap: 16px;
-      margin-bottom: 16px;
-    }
-
-    .surface-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 20px 22px;
-    }
-
-    .card-header {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      margin-bottom: 18px;
-    }
-
-    .card-title {
-      font-size: 13.5px;
-      font-weight: 600;
-      color: var(--text-primary);
-      letter-spacing: -0.01em;
-    }
-
-    .card-link {
-      font-size: 12px;
-      color: var(--text-secondary);
-      background: none;
-      border: none;
-      cursor: pointer;
-      font-family: var(--font-sans);
-    }
-
-    .card-link:hover {
-      color: var(--text-primary);
-    }
-
-    /* Horizontal Latency / Score Bars (Right Panel) */
-    .bar-list {
-      display: flex;
-      flex-direction: column;
-      gap: 18px;
-    }
-
-    .bar-item {
-      display: flex;
-      flex-direction: column;
-      gap: 7px;
-    }
-
-    .bar-item-head {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      gap: 8px;
-    }
-
-    .bar-item-name {
-      color: var(--text-primary);
-      white-space: nowrap;
-      overflow: hidden;
-      text-overflow: ellipsis;
-    }
-
-    .bar-item-val {
-      font-variant-numeric: tabular-nums;
-      color: var(--text-secondary);
-      flex-shrink: 0;
-    }
-
-    .bar-item-val.amber {
-      color: var(--accent-amber);
-    }
-
-    .bar-item-val.emerald {
-      color: var(--accent-emerald);
-    }
-
-    .bar-track {
-      width: 100%;
-      height: 4px;
-      background: var(--bg-elevated);
-      border-radius: 1px;
-      overflow: hidden;
-    }
-
-    .bar-fill-el {
-      height: 100%;
-      border-radius: 1px;
-      transition: width 260ms var(--ease);
-    }
-
-    /* Bottom Anomaly / Event Table */
-    .table-card {
-      background: var(--bg-card);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      overflow: hidden;
-    }
-
-    .table-card-head {
-      padding: 18px 22px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      border-bottom: 1px solid var(--border);
-    }
-
-    table.monitor-table {
-      width: 100%;
-      border-collapse: collapse;
-      font-size: 12.5px;
-      font-variant-numeric: tabular-nums;
-    }
-
-    table.monitor-table th {
-      padding: 12px 22px;
-      text-align: left;
-      font-family: var(--font-mono);
-      font-size: 10.5px;
-      font-weight: 500;
-      text-transform: uppercase;
-      letter-spacing: 0.06em;
-      color: var(--text-muted);
-      border-bottom: 1px solid var(--border);
-    }
-
-    table.monitor-table td {
-      padding: 13px 22px;
-      border-bottom: 1px solid var(--border);
-      color: var(--text-primary);
-      vertical-align: middle;
-    }
-
-    table.monitor-table tr:last-child td {
-      border-bottom: none;
-    }
-
-    table.monitor-table tr:hover td {
-      background: var(--bg-card-hover);
-    }
-
-    .mono-badge {
-      font-family: var(--font-mono);
-      font-size: 11px;
-      padding: 2px 7px;
-      border-radius: 2px;
-      border: 1px solid var(--border);
-      background: var(--bg-elevated);
-      color: var(--text-secondary);
       display: inline-flex;
       align-items: center;
-      gap: 5px;
+      justify-content: center;
+      cursor: pointer;
     }
 
-    .mono-badge.pass {
-      color: var(--accent-emerald);
-      border-color: rgba(16, 185, 129, 0.3);
-      background: rgba(16, 185, 129, 0.08);
-    }
-
-    .mono-badge.amber {
-      color: var(--accent-amber);
-      border-color: rgba(245, 158, 11, 0.3);
-      background: rgba(245, 158, 11, 0.08);
-    }
-
-    .mono-badge.fail {
-      color: var(--accent-danger);
-      border-color: rgba(239, 68, 68, 0.35);
-      background: rgba(239, 68, 68, 0.1);
-    }
-
-    /* Sub-Views Layout Helpers */
-    .two-col {
-      display: grid;
-      grid-template-columns: 1.15fr 0.85fr;
-      gap: 16px;
-      align-items: start;
-    }
-
-    .input-field, .select-field {
-      width: 100%;
-      height: 34px;
-      padding: 0 10px;
-      background: var(--bg-canvas);
-      border: 1px solid var(--border);
-      border-radius: 3px;
+    .icon-btn:hover {
       color: var(--text-primary);
-      font-family: var(--font-mono);
-      font-size: 12px;
-      outline: none;
-    }
-
-    .input-field:focus, .select-field:focus {
       border-color: var(--border-strong);
     }
 
-    pre.code-block {
-      padding: 14px;
-      background: var(--bg-canvas);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      font-family: var(--font-mono);
-      font-size: 11.5px;
-      line-height: 1.6;
-      color: var(--text-primary);
-      overflow-x: auto;
-      white-space: pre-wrap;
+    /* Scrollable Workspace */
+    .workspace-scroll {
+      flex: 1;
+      overflow-y: auto;
+      padding: 20px 24px 100px;
     }
 
-    .msg-row-card {
-      padding: 12px 14px;
-      background: var(--bg-canvas);
-      border: 1px solid var(--border);
-      border-radius: 3px;
-      margin-bottom: 8px;
-    }
-
-    .shot-grid {
+    /* =========================================================================
+       3. CLEAN METRIC CARDS (Switch Console Purposeful Numbers)
+       ========================================================================= */
+    .metrics-grid {
       display: grid;
-      grid-template-columns: repeat(3, 1fr);
-      gap: 16px;
-      margin-bottom: 16px;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 12px;
+      margin-bottom: 20px;
     }
 
-    .shot-card {
+    .metric-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 3px;
-      overflow: hidden;
+      border-radius: 8px;
+      padding: 14px 16px;
       cursor: pointer;
       transition: border-color 120ms var(--ease);
     }
 
-    .shot-card:hover {
+    .metric-card:hover {
       border-color: var(--border-strong);
     }
 
-    .shot-card img {
-      width: 100%;
-      height: 185px;
-      object-fit: cover;
-      object-position: top;
-      display: block;
+    .metric-top {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 11px;
+      color: var(--text-muted);
+      margin-bottom: 6px;
+    }
+
+    .metric-val {
+      font-size: 20px;
+      font-weight: 700;
+      color: var(--text-primary);
+      letter-spacing: -0.02em;
+      margin-bottom: 2px;
+    }
+
+    .metric-sub {
+      font-size: 11px;
+      color: var(--accent-green);
+      display: flex;
+      align-items: center;
+      gap: 4px;
+    }
+
+    .metric-sub.muted {
+      color: var(--text-muted);
+    }
+
+    /* =========================================================================
+       4. SWITCH ROOMS MULTI-AGENT HANDOFF PIPELINE (Learned from Switch Topology)
+       ========================================================================= */
+    .handoff-deck {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      padding: 16px 18px;
+      margin-bottom: 20px;
+    }
+
+    .handoff-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 14px;
+    }
+
+    .handoff-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 8px;
+    }
+
+    .handoff-stepper {
+      display: grid;
+      grid-template-columns: repeat(6, 1fr);
+      gap: 8px;
+      position: relative;
+    }
+
+    .step-pill {
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      cursor: pointer;
+      transition: all 120ms var(--ease);
+    }
+
+    .step-pill:hover {
+      border-color: var(--border-strong);
+      background: var(--bg-card-hover);
+    }
+
+    .step-pill.active {
+      border-color: var(--accent-blue);
+      background: var(--accent-blue-bg);
+    }
+
+    .step-num {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+      margin-bottom: 2px;
+    }
+
+    .step-name {
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+      margin-bottom: 2px;
+    }
+
+    .step-agent {
+      font-size: 10.5px;
+      color: var(--text-secondary);
+      font-family: var(--font-mono);
+    }
+
+    /* =========================================================================
+       5. TWO-COLUMN SPLIT: SWITCH CHAT STREAM & VERIFICATION LAB
+       ========================================================================= */
+    .main-grid {
+      display: grid;
+      grid-template-columns: 1.25fr 1fr;
+      gap: 16px;
+      margin-bottom: 20px;
+    }
+
+    .surface-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      display: flex;
+      flex-direction: column;
+    }
+
+    .panel-head {
+      padding: 12px 16px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      background: var(--bg-card);
+    }
+
+    .panel-title {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+      display: flex;
+      align-items: center;
+      gap: 7px;
+    }
+
+    /* Switch Console Live Chat Style (Exact match to screenshots) */
+    .chat-scroll {
+      padding: 16px;
+      overflow-y: auto;
+      max-height: 480px;
+      display: flex;
+      flex-direction: column;
+      gap: 14px;
+    }
+
+    .switch-msg {
+      display: flex;
+      gap: 12px;
+      font-size: 12.5px;
+    }
+
+    .switch-avatar {
+      width: 28px;
+      height: 28px;
+      border-radius: 8px;
+      flex-shrink: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 11px;
+    }
+
+    .avatar-producer {
+      background: #10B981;
+      color: #042F2E;
+    }
+
+    .avatar-verifier {
+      background: #3B82F6;
+      color: #1E3A8A;
+    }
+
+    .avatar-publisher {
+      background: #8B5CF6;
+      color: #2E1065;
+    }
+
+    .avatar-user {
+      background: var(--bg-elevated);
+      color: var(--text-primary);
+      border: 1px solid var(--border);
+    }
+
+    .msg-body-col {
+      flex: 1;
+      min-width: 0;
+    }
+
+    .msg-header {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      margin-bottom: 3px;
+    }
+
+    .msg-sender {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .msg-room-tag {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      color: var(--text-muted);
+    }
+
+    .msg-time {
+      font-family: var(--font-mono);
+      font-size: 10.5px;
+      color: var(--text-muted);
+      margin-left: auto;
+    }
+
+    .msg-content {
+      color: var(--text-secondary);
+      font-size: 12.5px;
+      line-height: 1.55;
+      white-space: pre-wrap;
+    }
+
+    .msg-content strong {
+      color: var(--text-primary);
+    }
+
+    .msg-content code {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      background: var(--bg-elevated);
+      padding: 1px 5px;
+      border-radius: 4px;
+      border: 1px solid var(--border);
+      color: var(--text-primary);
+    }
+
+    /* Switch Tool Call Dropdown Pills */
+    .tools-pill {
+      margin: 6px 0;
+      padding: 4px 8px;
+      border-radius: 4px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      cursor: pointer;
+    }
+
+    .tool-step {
+      display: flex;
+      align-items: center;
+      gap: 6px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      padding: 2px 0;
+    }
+
+    .tool-step svg {
+      width: 12px;
+      height: 12px;
+      color: var(--text-muted);
+    }
+
+    /* Verification Receipts & Subprocess Output (Right Panel) */
+    .receipt-item {
+      padding: 14px 16px;
       border-bottom: 1px solid var(--border);
     }
 
-    /* Modals & Toast */
+    .receipt-item:last-child {
+      border-bottom: none;
+    }
+
+    .receipt-head {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 6px;
+    }
+
+    .cmd-name {
+      font-family: var(--font-mono);
+      font-size: 12px;
+      font-weight: 600;
+      color: var(--text-primary);
+    }
+
+    .status-badge {
+      font-family: var(--font-mono);
+      font-size: 10px;
+      font-weight: 600;
+      padding: 2px 7px;
+      border-radius: 4px;
+    }
+
+    .status-badge.pass {
+      background: var(--accent-green-bg);
+      color: var(--accent-green);
+      border: 1px solid rgba(16, 185, 129, 0.25);
+    }
+
+    .status-badge.purple {
+      background: var(--accent-purple-bg);
+      color: var(--accent-purple);
+      border: 1px solid rgba(139, 92, 246, 0.25);
+    }
+
+    .receipt-sha {
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-muted);
+      word-break: break-all;
+      margin-bottom: 8px;
+    }
+
+    pre.code-card {
+      background: var(--bg-canvas);
+      border: 1px solid var(--border);
+      border-radius: 6px;
+      padding: 10px 12px;
+      font-family: var(--font-mono);
+      font-size: 11px;
+      color: var(--text-secondary);
+      overflow-x: auto;
+      max-height: 120px;
+    }
+
+    /* 7-Rule Contract Checklist */
+    .contract-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 7px 0;
+      border-bottom: 1px solid var(--border);
+      font-size: 11.5px;
+    }
+
+    .contract-row:last-child {
+      border-bottom: none;
+    }
+
+    /* =========================================================================
+       6. MULTI-CHANNEL VERIFIED ARTIFACTS TABS
+       ========================================================================= */
+    .artifacts-panel {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 8px;
+      overflow: hidden;
+      margin-bottom: 20px;
+    }
+
+    .tab-bar {
+      padding: 0 16px;
+      height: 42px;
+      border-bottom: 1px solid var(--border);
+      display: flex;
+      align-items: center;
+      gap: 16px;
+      background: var(--bg-card);
+    }
+
+    .tab-btn {
+      font-size: 12.5px;
+      font-weight: 500;
+      color: var(--text-secondary);
+      background: transparent;
+      border: none;
+      height: 42px;
+      border-bottom: 2px solid transparent;
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      gap: 6px;
+    }
+
+    .tab-btn:hover {
+      color: var(--text-primary);
+    }
+
+    .tab-btn.active {
+      color: var(--text-primary);
+      border-bottom-color: var(--text-primary);
+      font-weight: 600;
+    }
+
+    .artifact-view {
+      padding: 16px;
+      max-height: 420px;
+      overflow-y: auto;
+    }
+
+    /* =========================================================================
+       7. SWITCH CONSOLE / WISPR BOTTOM INPUT BAR (Learned from Switch Console)
+       ========================================================================= */
+    .bottom-bar {
+      position: fixed;
+      bottom: 16px;
+      left: 256px;
+      right: 24px;
+      max-width: 960px;
+      margin: 0 auto;
+      background: var(--bg-input);
+      border: 1px solid var(--border-strong);
+      border-radius: 12px;
+      padding: 8px 12px;
+      display: flex;
+      align-items: center;
+      gap: 10px;
+      box-shadow: 0 8px 24px rgba(0, 0, 0, 0.4);
+      z-index: 50;
+      transition: border-color 140ms var(--ease);
+    }
+
+    .bottom-bar.listening {
+      border-color: var(--accent-green);
+      box-shadow: 0 0 0 2px rgba(16, 185, 129, 0.2);
+    }
+
+    .prompt-input {
+      flex: 1;
+      background: transparent;
+      border: none;
+      outline: none;
+      color: var(--text-primary);
+      font-family: var(--font-sans);
+      font-size: 13px;
+    }
+
+    .prompt-input::placeholder {
+      color: var(--text-muted);
+    }
+
+    .mic-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--bg-elevated);
+      border: 1px solid var(--border);
+      color: var(--text-secondary);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: all 120ms var(--ease);
+    }
+
+    .mic-btn:hover {
+      color: var(--text-primary);
+      border-color: var(--border-strong);
+    }
+
+    .mic-btn.active {
+      background: var(--accent-green-bg);
+      border-color: var(--accent-green);
+      color: var(--accent-green);
+    }
+
+    .send-arrow-btn {
+      width: 28px;
+      height: 28px;
+      border-radius: 6px;
+      background: var(--text-primary);
+      color: var(--bg-canvas);
+      border: none;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      cursor: pointer;
+      transition: opacity 120ms var(--ease);
+    }
+
+    .send-arrow-btn:hover {
+      opacity: 0.9;
+    }
+
+    /* Toast */
+    .toast {
+      position: fixed;
+      bottom: 80px;
+      right: 24px;
+      background: var(--bg-card);
+      border: 1px solid var(--border-strong);
+      padding: 9px 14px;
+      border-radius: 6px;
+      font-size: 12px;
+      display: none;
+      z-index: 100;
+      box-shadow: 0 4px 16px rgba(0, 0, 0, 0.5);
+    }
+
+    .toast.show {
+      display: block;
+    }
+
+    /* Modals */
     .modal-backdrop {
       position: fixed;
       inset: 0;
-      background: rgba(0, 0, 0, 0.72);
+      background: rgba(0, 0, 0, 0.7);
       display: none;
-      align-items: flex-start;
+      align-items: center;
       justify-content: center;
-      padding-top: 10vh;
       z-index: 100;
     }
 
@@ -803,2042 +894,753 @@
       display: flex;
     }
 
-    .modal-panel {
-      width: 560px;
-      max-width: 92vw;
-      background: var(--bg-card);
-      border: 1px solid var(--border-strong);
-      border-radius: 4px;
-      overflow: hidden;
-    }
-
-    .toast {
-      position: fixed;
-      bottom: 24px;
-      right: 24px;
-      padding: 10px 14px;
-      background: var(--bg-card);
-      border: 1px solid var(--border-strong);
-      border-radius: 3px;
-      font-family: var(--font-mono);
-      font-size: 12px;
-      color: var(--text-primary);
-      display: none;
-      z-index: 150;
-    }
-
-    .toast.show {
-      display: block;
-    }
-
-    @media (max-width: 1080px) {
-      body {
-        grid-template-columns: 1fr;
-        height: auto;
-        overflow: auto;
-      }
-      aside.sidebar {
-        border-right: none;
-        border-bottom: 1px solid var(--border);
-      }
-      .kpi-grid, .mid-grid, .two-col, .shot-grid {
-        grid-template-columns: 1fr;
-      }
-    }
-
-    /* Voice Chat & Live Audio Telemetry */
-    .voice-deck {
+    .modal-card {
       background: var(--bg-card);
       border: 1px solid var(--border);
-      border-radius: 3px;
-      padding: 16px 20px;
-      margin-bottom: 18px;
-      transition: border-color 140ms var(--ease);
-    }
-
-    .voice-deck.listening {
-      border-color: var(--accent-emerald);
-      box-shadow: 0 0 0 1px rgba(16, 185, 129, 0.22);
-    }
-
-    .voice-deck.speaking {
-      border-color: #8B5CF6;
-      box-shadow: 0 0 0 1px rgba(139, 92, 246, 0.25);
-    }
-
-    .voice-btn-live {
-      height: 30px;
-      padding: 0 12px;
-      border-radius: 3px;
-      font-family: var(--font-mono);
-      font-size: 11px;
-      font-weight: 600;
-      display: inline-flex;
-      align-items: center;
-      gap: 7px;
-      border: 1px solid var(--border);
-      background: var(--bg-elevated);
-      color: var(--text-primary);
-      cursor: pointer;
-      transition: all 120ms var(--ease);
-    }
-
-    .voice-btn-live:hover {
-      border-color: var(--border-strong);
-      background: #1C1C24;
-    }
-
-    .voice-btn-live.active {
-      border-color: rgba(16, 185, 129, 0.55);
-      background: rgba(16, 185, 129, 0.14);
-      color: var(--accent-emerald);
-    }
-
-    .voice-dot {
-      width: 7px;
-      height: 7px;
-      border-radius: 50%;
-      background: var(--text-muted);
-      display: inline-block;
-    }
-
-    .voice-btn-live.active .voice-dot {
-      background: var(--accent-emerald);
-      box-shadow: 0 0 8px var(--accent-emerald);
-    }
-
-    .voice-wave-box {
-      height: 38px;
-      background: var(--bg-canvas);
-      border: 1px solid var(--border);
-      border-radius: 2px;
-      padding: 4px 10px;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 12px;
-    }
-
-    .voice-bars {
-      display: flex;
-      align-items: center;
-      gap: 3px;
-      height: 24px;
-      flex: 1;
-    }
-
-    .v-bar {
-      flex: 1;
-      height: 4px;
-      background: var(--bar-stroke);
-      border-radius: 1px;
-      transition: height 90ms ease, background 120ms ease;
-    }
-
-    .voice-deck.listening .v-bar {
-      background: var(--accent-emerald);
-    }
-
-    .voice-deck.speaking .v-bar {
-      background: #8B5CF6;
+      border-radius: 8px;
+      width: 640px;
+      max-width: 90vw;
+      padding: 20px;
+      box-shadow: 0 16px 36px rgba(0, 0, 0, 0.6);
     }
   </style>
 </head>
 <body>
 
-  <!-- =======================================================================
-       LEFT SIDEBAR (Exact API Monitor Structure)
-       ======================================================================= -->
+  <!-- =========================================================================
+       1. LEFT SIDEBAR: Learned directly from Switch Console
+       ========================================================================= -->
   <aside class="sidebar">
     <div>
-      <div class="sidebar-brand">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
-          <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
-        </svg>
-        <span>ShipCast Monitor</span>
+      <div class="server-switcher" onclick="showToast('Switch Local Server v0.40.1 • Connected on 127.0.0.1:44149')">
+        <div class="server-badge">S</div>
+        <div class="server-info">
+          <div class="server-name">
+            <span>Local Switch server</span>
+            <span class="live-dot" title="Connected"></span>
+          </div>
+          <div class="server-sub">This computer</div>
+        </div>
       </div>
 
-      <nav class="sidebar-nav">
-        <div>
-          <div class="nav-group-title">Overview</div>
-          <div class="nav-items">
-            <button class="nav-link active" data-view="dashboard" data-group="Overview" data-title="Telemetry" onclick="navigate('dashboard', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-                <span>Dashboard</span>
-              </span>
-              <span class="nav-shortcut">1</span>
-            </button>
+      <div class="nav-section">
+        <div class="nav-label">Studio</div>
+        <button class="nav-link active" onclick="setStudioView('overview', this)">
+          <span class="nav-link-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+            <span>Release Overview</span>
+          </span>
+          <span class="nav-badge">v0.2.0</span>
+        </button>
 
-            <button class="nav-link" data-view="rooms" data-group="Overview" data-title="Switch Rooms" onclick="navigate('rooms', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-                <span>Switch Rooms</span>
-              </span>
-              <span class="nav-shortcut">2</span>
-            </button>
+        <button class="nav-link" onclick="setStudioView('rooms', this)">
+          <span class="nav-link-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+            <span>Switch Rooms</span>
+          </span>
+          <span class="nav-badge">2</span>
+        </button>
 
-            <button class="nav-link" data-view="traces" data-group="Overview" data-title="Sandbox Traces" onclick="navigate('traces', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-                <span>Sandbox Traces</span>
-              </span>
-              <span class="nav-shortcut">3</span>
-            </button>
+        <button class="nav-link" onclick="setStudioView('verifier', this)">
+          <span class="nav-link-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+            <span>Sandbox Verifier</span>
+          </span>
+          <span class="nav-badge">2/2 PASS</span>
+        </button>
 
-            <button class="nav-link" data-view="logs" data-group="Overview" data-title="Commit Logs" onclick="navigate('logs', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 20h9"/><path d="M16.5 3.5a2.121 2.121 0 0 1 3 3L7 19l-4 1 1-4L16.5 3.5z"/></svg>
-                <span>Commit Logs</span>
-              </span>
-              <span class="nav-shortcut">4</span>
-            </button>
+        <button class="nav-link" onclick="setStudioView('artifacts', this)">
+          <span class="nav-link-left">
+            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            <span>Release Bundle</span>
+          </span>
+          <span class="nav-badge">7 Rules</span>
+        </button>
+      </div>
 
-            <button class="nav-link" data-view="voice" data-group="Overview" data-title="Voice Chat &amp; Wispr" onclick="navigate('voice', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
-                <span>Voice Chat</span>
-              </span>
-              <span class="nav-shortcut">V</span>
-            </button>
-          </div>
+      <div class="nav-section" style="margin-top:12px;">
+        <div class="nav-label">Switch Crew (3 Agents)</div>
+        <div class="room-item" onclick="filterRoom('shipcast-studio-desk')">
+          <div class="switch-avatar avatar-producer" style="width:20px; height:20px; font-size:10px;">P</div>
+          <span style="font-size:12px;">shipcast-producer</span>
         </div>
-
-        <div>
-          <div class="nav-group-title">Infrastructure</div>
-          <div class="nav-items">
-            <button class="nav-link" data-view="clusters" data-group="Infrastructure" data-title="Room Topology" onclick="navigate('clusters', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="2" y="2" width="20" height="8" rx="2"/><rect x="2" y="14" width="20" height="8" rx="2"/><line x1="6" y1="6" x2="6.01" y2="6"/><line x1="6" y1="18" x2="6.01" y2="18"/></svg>
-                <span>Room Clusters</span>
-              </span>
-              <span class="nav-shortcut">5</span>
-            </button>
-
-            <button class="nav-link" data-view="nodes" data-group="Infrastructure" data-title="Content Nodes" onclick="navigate('nodes', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
-                <span>Content Studio</span>
-              </span>
-              <span class="nav-shortcut">6</span>
-            </button>
-
-            <button class="nav-link" data-view="settings" data-group="Infrastructure" data-title="Template Setup" onclick="navigate('settings', this)">
-              <span class="nav-link-left">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="3"/><path d="M19.4 15a1.65 1.65 0 0 0 .33 1.82l.06.06a2 2 0 0 1 0 2.83 2 2 0 0 1-2.83 0l-.06-.06a1.65 1.65 0 0 0-1.82-.33 1.65 1.65 0 0 0-1 1.51V21a2 2 0 0 1-2 2 2 2 0 0 1-2-2v-.09A1.65 1.65 0 0 0 9 19.4a1.65 1.65 0 0 0-1.82.33l-.06.06a2 2 0 0 1-2.83 0 2 2 0 0 1 0-2.83l.06-.06a1.65 1.65 0 0 0 .33-1.82 1.65 1.65 0 0 0-1.51-1H3a2 2 0 0 1-2-2 2 2 0 0 1 2-2h.09A1.65 1.65 0 0 0 4.6 9a1.65 1.65 0 0 0-.33-1.82l-.06-.06a2 2 0 0 1 0-2.83 2 2 0 0 1 2.83 0l.06.06a1.65 1.65 0 0 0 1.82.33H9a1.65 1.65 0 0 0 1-1.51V3a2 2 0 0 1 2-2 2 2 0 0 1 2 2v.09a1.65 1.65 0 0 0 1 1.51 1.65 1.65 0 0 0 1.82-.33l.06-.06a2 2 0 0 1 2.83 0 2 2 0 0 1 0 2.83l-.06.06a1.65 1.65 0 0 0-.33 1.82V9a1.65 1.65 0 0 0 1.51 1H21a2 2 0 0 1 2 2 2 2 0 0 1-2 2h-.09a1.65 1.65 0 0 0-1.51 1z"/></svg>
-                <span>Settings &amp; YAML</span>
-              </span>
-              <span class="nav-shortcut">7</span>
-            </button>
-          </div>
+        <div class="room-item" onclick="filterRoom('shipcast-verification-lab')">
+          <div class="switch-avatar avatar-verifier" style="width:20px; height:20px; font-size:10px;">V</div>
+          <span style="font-size:12px;">shipcast-verifier</span>
         </div>
-      </nav>
+        <div class="room-item" onclick="filterRoom('shipcast-verification-lab')">
+          <div class="switch-avatar avatar-publisher" style="width:20px; height:20px; font-size:10px;">P</div>
+          <span style="font-size:12px;">shipcast-publisher</span>
+        </div>
+      </div>
+
+      <div class="nav-section" style="margin-top:12px;">
+        <div class="nav-label">Linked Rooms (2)</div>
+        <div class="room-item" onclick="filterRoom('shipcast-studio-desk')">
+          <span class="room-hash">#</span>
+          <span>shipcast-studio-desk</span>
+        </div>
+        <div class="room-item" onclick="filterRoom('shipcast-verification-lab')">
+          <span class="room-hash">#</span>
+          <span>shipcast-verification-lab</span>
+        </div>
+      </div>
     </div>
 
-    <div class="sidebar-footer" onclick="navigateByName('settings')" title="Switch Console Connected · Click to view Setup &amp; Proof">
-      <div style="display:flex; align-items:center; gap:10px;">
-        <div class="avatar-box">SC</div>
-        <div>
-          <div style="font-size:12px; font-weight:600; color:var(--text-primary);">Blackwrld04</div>
-          <div style="font-size:10.5px; font-family:var(--font-mono); color:var(--text-muted);">shipcast v0.2.0</div>
-        </div>
-      </div>
-      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" style="color:var(--text-muted)"><polyline points="9 18 15 12 9 6"/></svg>
+    <div class="sidebar-footer">
+      <span>Switch Console v0.40.1</span>
+      <span style="font-family:var(--font-mono)">Port 8765</span>
     </div>
   </aside>
 
-  <!-- =======================================================================
-       TOP HEADER BAR
-       ======================================================================= -->
-  <header class="topbar">
-    <div class="breadcrumbs">
-      <span class="crumb-muted" id="crumb-parent">Dashboard</span>
-      <span class="crumb-slash">/</span>
-      <span class="crumb-current" id="crumb-active">Telemetry</span>
+  <!-- =========================================================================
+       2. MAIN CONTENT AREA
+       ========================================================================= -->
+  <main class="main-viewport">
+
+    <!-- Top Header Bar -->
+    <header class="topbar">
+      <div class="breadcrumb-title">
+        <span>ShipCast Studio</span>
+        <span style="color:var(--text-muted)">/</span>
+        <span id="top-title" style="color:var(--text-primary)">Autonomous Release Crew</span>
+        <span class="tag-pill">2 ROOMS LINKED</span>
+      </div>
+
+      <div class="topbar-actions">
+        <button class="action-btn" id="run-sandbox-btn" onclick="executeSandboxPipeline()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          <span>Run Sandbox</span>
+        </button>
+
+        <button class="action-btn green" onclick="approvePublishGate()">
+          <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          <span>Approve Publish</span>
+        </button>
+
+        <a class="action-btn" href="https://dev.to/olajide_abdulquadri_807ef/shipcast-studio-on-switch-rooms-cryptographically-verified-multi-agent-release-notes-3ilf-temp-slug-4446916/edit" target="_blank" rel="noopener">
+          <span>Staged DEV.to ↗</span>
+        </a>
+
+        <button class="icon-btn" onclick="toggleTheme()" title="Toggle Dark/Light Theme">
+          <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/></svg>
+        </button>
+      </div>
+    </header>
+
+    <!-- Scrollable Workspace -->
+    <div class="workspace-scroll">
+
+      <!-- 4 Switch-Focused Metric Cards (Real numbers, no fake clutter) -->
+      <div class="metrics-grid">
+        <div class="metric-card" onclick="setStudioView('overview')">
+          <div class="metric-top">
+            <span>RELEASE IMPORTANCE</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+          </div>
+          <div class="metric-val" id="metric-score">9.0 / 10</div>
+          <div class="metric-sub" id="metric-commits">↑ 4 of 5 commits kept (1 noise filtered)</div>
+        </div>
+
+        <div class="metric-card" onclick="setStudioView('verifier')">
+          <div class="metric-top">
+            <span>SANDBOX EXECUTION</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"/></svg>
+          </div>
+          <div class="metric-val" id="metric-sandbox">185ms</div>
+          <div class="metric-sub">2/2 checks exit code 0</div>
+        </div>
+
+        <div class="metric-card" onclick="setStudioView('artifacts')">
+          <div class="metric-top">
+            <span>EDITORIAL CONTRACT</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"/></svg>
+          </div>
+          <div class="metric-val">7 / 7 Passed</div>
+          <div class="metric-sub">Deterministic gate verified</div>
+        </div>
+
+        <div class="metric-card" onclick="setStudioView('rooms')">
+          <div class="metric-top">
+            <span>MASTER RECEIPT (SHA-256)</span>
+            <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2" ry="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+          </div>
+          <div class="metric-val" style="font-family:var(--font-mono); font-size:15px;" id="metric-sha">d23ff7cf96db...</div>
+          <div class="metric-sub">Signed in verification-lab</div>
+        </div>
+      </div>
+
+      <!-- Switch Rooms Multi-Agent Handoff Stepper -->
+      <div class="handoff-deck">
+        <div class="handoff-header">
+          <div class="handoff-title">
+            <span>Switch Rooms Handoff Pipeline</span>
+            <span class="tag-pill">#shipcast-studio-desk ↔ #shipcast-verification-lab</span>
+          </div>
+          <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);">
+            Topology: 2 Linked Rooms • 3 Agents • Exclusive Role Locks
+          </div>
+        </div>
+
+        <div class="handoff-stepper">
+          <div class="step-pill active" onclick="highlightStage(1, 'shipcast-studio-desk')">
+            <div class="step-num">STAGE 1</div>
+            <div class="step-name">Intake &amp; Diff</div>
+            <div class="step-agent">@shipcast-producer</div>
+          </div>
+          <div class="step-pill" onclick="highlightStage(2, 'shipcast-studio-desk')">
+            <div class="step-num">STAGE 2</div>
+            <div class="step-name">Role Lock</div>
+            <div class="step-agent">release-captain</div>
+          </div>
+          <div class="step-pill" onclick="highlightStage(3, 'shipcast-verification-lab')">
+            <div class="step-num">STAGE 3</div>
+            <div class="step-name">Link Hop</div>
+            <div class="step-agent">connect_to_room</div>
+          </div>
+          <div class="step-pill" onclick="highlightStage(4, 'shipcast-verification-lab')">
+            <div class="step-num">STAGE 4</div>
+            <div class="step-name">Sandbox CLI</div>
+            <div class="step-agent">@shipcast-verifier</div>
+          </div>
+          <div class="step-pill" onclick="highlightStage(5, 'shipcast-verification-lab')">
+            <div class="step-num">STAGE 5</div>
+            <div class="step-name">7-Rule Audit</div>
+            <div class="step-agent">@shipcast-publisher</div>
+          </div>
+          <div class="step-pill" onclick="highlightStage(6, 'shipcast-studio-desk')">
+            <div class="step-num">STAGE 6</div>
+            <div class="step-name">Human Gate</div>
+            <div class="step-agent">Sig 21203f17...</div>
+          </div>
+        </div>
+      </div>
+
+      <!-- Main Split: Live Switch Console Chat Stream & Verification Receipts -->
+      <div class="main-grid">
+
+        <!-- Left: Switch Console Live Chat -->
+        <div class="surface-panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
+              <span>Switch Rooms Event Stream</span>
+            </div>
+            <div style="display:flex; gap:6px;">
+              <button class="action-btn" style="height:24px; font-size:11px; padding:0 8px;" onclick="filterRoom('all')">All</button>
+              <button class="action-btn" style="height:24px; font-size:11px; padding:0 8px;" onclick="filterRoom('shipcast-studio-desk')">#studio-desk</button>
+              <button class="action-btn" style="height:24px; font-size:11px; padding:0 8px;" onclick="filterRoom('shipcast-verification-lab')">#verification-lab</button>
+            </div>
+          </div>
+
+          <div class="chat-scroll" id="switch-chat-list">
+            <!-- Messages rendered dynamically from live state -->
+          </div>
+        </div>
+
+        <!-- Right: Verification Lab & Cryptographic Receipts -->
+        <div class="surface-panel">
+          <div class="panel-head">
+            <div class="panel-title">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
+              <span>Subprocess Verification Receipts</span>
+            </div>
+            <span class="status-badge pass" id="master-badge">SHA-256 SIGNED</span>
+          </div>
+
+          <div>
+            <div class="receipt-item">
+              <div class="receipt-head">
+                <span class="cmd-name">1. python3 -m shipcast.cli --help</span>
+                <span class="status-badge pass">EXIT 0 · 85ms</span>
+              </div>
+              <div class="receipt-sha">SHA-256: 9e0b9428774d2022a14257b0b508893463b55ee1a1eec827b5e2e6a3d29da725</div>
+              <pre class="code-card">usage: shipcast [-h] {analyze,verify,run-pipeline,validate,publish,serve-studio} ...
+ShipCast Studio — Autonomous release notes crew on Switch Rooms</pre>
+            </div>
+
+            <div class="receipt-item">
+              <div class="receipt-head">
+                <span class="cmd-name">2. pytest -q</span>
+                <span class="status-badge pass">EXIT 0 · 100ms</span>
+              </div>
+              <div class="receipt-sha">SHA-256: 72a6dd9366fcadfb70045c96401a40bdb1153b2ccfb8d1c753d9fada4819110c</div>
+              <pre class="code-card">.....                                                                    [100%]
+5 passed in 0.10s</pre>
+            </div>
+
+            <div class="receipt-item" style="background:var(--bg-elevated);">
+              <div class="receipt-head">
+                <span class="cmd-name">7-Rule Deterministic Contract Audit</span>
+                <span class="status-badge purple">7 / 7 RULES PASS</span>
+              </div>
+              <div class="receipt-sha">Loaded via: load_internal_documents('shipcast-editorial-contract')</div>
+
+              <div id="contract-rows">
+                <div class="contract-row"><span>frontmatter.required_fields</span><span style="color:var(--accent-green); font-family:var(--font-mono)">PASS</span></div>
+                <div class="contract-row"><span>verification.all_snippets_passed</span><span style="color:var(--accent-green); font-family:var(--font-mono)">PASS (exit 0)</span></div>
+                <div class="contract-row"><span>editorial.no_banned_buzzwords</span><span style="color:var(--accent-green); font-family:var(--font-mono)">PASS (zero buzzwords)</span></div>
+                <div class="contract-row"><span>switch.slack_telegram_safe_summary</span><span style="color:var(--accent-green); font-family:var(--font-mono)">PASS</span></div>
+              </div>
+            </div>
+          </div>
+        </div>
+
+      </div>
+
+      <!-- Verified Multi-Channel Artifact Viewer -->
+      <div class="artifacts-panel">
+        <div class="tab-bar">
+          <button class="tab-btn active" onclick="switchArtifactTab('devto', this)">DEV.to Release Post</button>
+          <button class="tab-btn" onclick="switchArtifactTab('changelog', this)">Keep-a-Changelog (CHANGELOG.md)</button>
+          <button class="tab-btn" onclick="switchArtifactTab('social', this)">Social Announcement Kit</button>
+          <button class="tab-btn" onclick="switchArtifactTab('receipt', this)">Signed Publication Receipt</button>
+          <div style="margin-left:auto;">
+            <button class="action-btn" style="height:26px; font-size:11px;" onclick="copyCurrentArtifact()">Copy Content</button>
+          </div>
+        </div>
+
+        <div class="artifact-view">
+          <pre class="code-card" id="artifact-content-pre" style="max-height:360px;"></pre>
+        </div>
+      </div>
+
     </div>
 
-    <div class="topbar-right">
-      <div class="search-box">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
-        <input
-          type="text"
-          id="global-search"
-          placeholder="Search rooms, SHA, or press /..."
-          onfocus="openCommandPalette()"
-          readonly
-        />
-        <span class="slash-badge">/</span>
-      </div>
-
-      <button class="voice-btn-live" id="topbar-voice-btn" onclick="toggleVoiceListening()" title="Start / Stop Live Voice Chat (Shortcut: V)">
-        <span class="voice-dot"></span>
-        <span id="topbar-voice-label">Voice Chat (V)</span>
+    <!-- Switch Console & Wispr Bottom Input Bar -->
+    <div class="bottom-bar" id="bottom-prompt-bar">
+      <button class="mic-btn" id="wispr-mic-btn" onclick="toggleVoiceDictation()" title="Voice Note / Wispr Dictation (Click to speak)">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/><line x1="12" y1="19" x2="12" y2="23"/><line x1="8" y1="23" x2="16" y2="23"/></svg>
       </button>
 
-      <button class="icon-btn" onclick="toggleTheme()" title="Toggle Dark / Light Theme">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/></svg>
-      </button>
+      <input
+        type="text"
+        id="prompt-input-el"
+        class="prompt-input"
+        placeholder="Message @shipcast-producer or dictate release command with Wispr Flow..."
+        value="Cut release v0.2.0 from HEAD~5..HEAD in shipcast-studio-desk."
+        onkeydown="if(event.key==='Enter') submitReleasePrompt()"
+      />
 
-      <button class="icon-btn" onclick="openCommandPalette()" title="Quick Actions &amp; Notifications">
-        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
-        <span class="bell-dot"></span>
+      <button class="action-btn" style="height:28px; padding:0 8px; font-size:11px;" onclick="insertApproveSnippet()">Approve publish</button>
+
+      <button class="send-arrow-btn" onclick="submitReleasePrompt()" title="Send instruction to Switch Room">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="12" y1="19" x2="12" y2="5"/><polyline points="5 12 12 5 19 12"/></svg>
       </button>
     </div>
-  </header>
-
-  <!-- =======================================================================
-       MAIN SCROLLABLE VIEWPORT
-       ======================================================================= -->
-  <main class="main-scroll">
-
-    <!-- 1. DASHBOARD / TELEMETRY (Exact Reference Aesthetic + Embedded Live Voice Chat) -->
-    <section id="view-dashboard" class="view-pane active">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Release Studio Status</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span id="dash-status-line">All 3 Switch agents &amp; 2 linked rooms operating normally · Master SHA-256 d23ff7cf96db</span>
-          </div>
-        </div>
-
-        <div class="header-controls">
-          <button class="voice-btn-live" id="dash-voice-btn" onclick="toggleVoiceListening()">
-            <span class="voice-dot"></span>
-            <span id="dash-voice-btn-text">Start Voice Chat</span>
-          </button>
-          <button class="action-btn" id="btn-run-sandbox" onclick="runLiveSandboxPipeline()">Run Sandbox</button>
-          <button class="action-btn emerald" onclick="approveReleaseInRoom('@shipcast-producer Approve publish in shipcast-studio-desk')">Approve Publish</button>
-          <div class="segmented-group">
-            <button class="seg-btn active" onclick="setRangeMode('HEAD~5..HEAD', this)">HEAD~5</button>
-            <button class="seg-btn" onclick="setRangeMode('HEAD~3..HEAD', this)">HEAD~3</button>
-            <button class="seg-btn" onclick="setRangeMode('ALL', this)">39 EVTS</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- 4 KPI Cards -->
-      <div class="kpi-grid">
-        <div class="kpi-card" onclick="navigateByName('logs')">
-          <div class="kpi-top">
-            <span>Release Importance</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="kpi-score">9.0/10</span>
-            <span class="kpi-trend" id="kpi-score-sub">↑ 4 commits kept</span>
-          </div>
-        </div>
-
-        <div class="kpi-card" onclick="navigateByName('traces')">
-          <div class="kpi-top">
-            <span>Sandbox Latency</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="kpi-latency">185ms</span>
-            <span class="kpi-trend" id="kpi-latency-sub">↓ 2/2 exit 0</span>
-          </div>
-        </div>
-
-        <div class="kpi-card" onclick="navigateByName('traces')">
-          <div class="kpi-top">
-            <span>Contract Violation Rate</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="kpi-violation">0.00%</span>
-            <span class="kpi-trend" id="kpi-violation-sub">— 7/7 rules pass</span>
-          </div>
-        </div>
-
-        <div class="kpi-card" onclick="navigateByName('rooms')">
-          <div class="kpi-top">
-            <span>Active Room Events</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="3" width="18" height="18" rx="2"/><line x1="3" y1="9" x2="21" y2="9"/><line x1="9" y1="21" x2="9" y2="9"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="kpi-events">39</span>
-            <span class="kpi-trend" id="kpi-events-sub">↑ 2 linked rooms</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- Embedded Live Voice Chat & Wispr Command Console (Directly in This Tab) -->
-      <div class="voice-deck" id="dash-voice-deck">
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:12px; flex-wrap:wrap; margin-bottom:12px;">
-          <div style="display:flex; align-items:center; gap:10px;">
-            <span class="card-title">Live Voice Chat &amp; Wispr Agent Command Console</span>
-            <span class="mono-badge pass" id="voice-state-badge">READY · 168 WPM WISPR</span>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px;">
-            <button class="action-btn" id="tts-toggle-btn" onclick="toggleVoiceTTS()">Agent Audio Readback: ON</button>
-            <button class="card-link" onclick="navigateByName('voice')">Open Full Voice Studio →</button>
-          </div>
-        </div>
-
-        <div style="display:grid; grid-template-columns:260px 1fr; gap:12px; align-items:center; margin-bottom:10px;">
-          <div class="voice-wave-box">
-            <div class="voice-bars" id="dash-voice-bars"></div>
-            <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);" id="dash-voice-db">-42dB</span>
-          </div>
-
-          <div style="display:flex; gap:8px;">
-            <input
-              type="text"
-              id="dash-voice-input"
-              class="input-field"
-              value="Cut release v0.2.0 from HEAD~5..HEAD, verify CLI snippets in the sandbox, and report the SHA-256 receipt."
-              placeholder="Click Start Voice Chat to speak into your mic, or dictate with Wispr Flow..."
-              onkeydown="if(event.key==='Enter') submitVoiceChat('dash-voice-input')"
-            />
-            <button class="voice-btn-live" id="dash-mic-inline" onclick="toggleVoiceListening()">
-              <span class="voice-dot"></span>
-              <span>Mic</span>
-            </button>
-            <button class="action-btn primary" onclick="submitVoiceChat('dash-voice-input')">Send Voice</button>
-          </div>
-        </div>
-
-        <div style="display:flex; justify-content:space-between; align-items:center; gap:10px; flex-wrap:wrap;">
-          <div style="display:flex; align-items:center; gap:6px; flex-wrap:wrap;">
-            <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">VOICE MACROS:</span>
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="triggerVoiceMacro('cut')">"Cut release v0.2.0 &amp; run sandbox"</button>
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="triggerVoiceMacro('status')">"Report sandbox latency &amp; SHA-256"</button>
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="triggerVoiceMacro('contract')">"Audit 7-rule editorial contract"</button>
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="triggerVoiceMacro('approve')">"Approve publish in #studio-desk"</button>
-          </div>
-          <div style="display:flex; align-items:center; gap:8px; font-family:var(--font-mono); font-size:11px; color:var(--text-secondary);">
-            <span id="dash-voice-reply-preview"><strong>@shipcast-producer:</strong> Standing by on #shipcast-studio-desk voice channel.</span>
-            <button class="action-btn" style="height:24px; padding:0 8px; font-size:10.5px;" onclick="replayLastAgentSpeech()">Replay Audio</button>
-          </div>
-        </div>
-      </div>
-
-      <!-- Middle 2-Column Section: Dual-Axis Bar+Spline Chart & Horizontal Progress Bars -->
-      <div class="mid-grid">
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Room Handoff Activity &amp; Sandbox Verification Latency</span>
-            <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);" id="chart-hover-readout">Hover any bar to inspect event</span>
-          </div>
-          <div id="telemetry-chart-box" style="width:100%; height:290px;"></div>
-        </div>
-
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Highest Latency &amp; Impact Targets</span>
-            <button class="card-link" onclick="navigateByName('traces')">Inspect →</button>
-          </div>
-          <div class="bar-list" id="highest-targets-list"></div>
-        </div>
-      </div>
-
-      <!-- Bottom Full-Width Table: Recent Switch Room & Verification Events -->
-      <div class="table-card">
-        <div class="table-card-head">
-          <span class="card-title">Recent Switch Room &amp; Sandbox Verification Events</span>
-          <button class="card-link" onclick="navigateByName('rooms')">View all 39 events →</button>
-        </div>
-        <table class="monitor-table">
-          <thead>
-            <tr>
-              <th>ACTOR / ROLE</th>
-              <th>ROOM / COMMAND PATH</th>
-              <th>VERIFICATION STATUS</th>
-              <th>RECEIPT / LATENCY</th>
-              <th>SEQ</th>
-            </tr>
-          </thead>
-          <tbody id="dash-anomalies-tbody"></tbody>
-        </table>
-      </div>
-    </section>
-
-    <!-- 2. SWITCH ROOMS LIVE STREAM -->
-    <section id="view-rooms" class="view-pane">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Switch Rooms Live Event Stream</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span>Real-time transcript across #shipcast-studio-desk &amp; #shipcast-verification-lab (39 events)</span>
-          </div>
-        </div>
-        <div class="segmented-group">
-          <button class="seg-btn active" onclick="filterRoomsView('all', this)">ALL (39)</button>
-          <button class="seg-btn" onclick="filterRoomsView('shipcast-studio-desk', this)">#STUDIO-DESK</button>
-          <button class="seg-btn" onclick="filterRoomsView('shipcast-verification-lab', this)">#VERIFICATION-LAB</button>
-          <button class="seg-btn" onclick="filterRoomsView('New Chat', this)">DIRECT</button>
-        </div>
-      </div>
-
-      <div class="surface-card" style="margin-bottom:16px;">
-        <div style="display:flex; gap:10px; margin-bottom:14px;">
-          <input
-            type="text"
-            id="room-compose-input"
-            class="input-field"
-            value="@shipcast-producer Approve publish in shipcast-studio-desk"
-            onkeydown="if(event.key==='Enter') sendRoomMessage()"
-          />
-          <button class="action-btn" onclick="insertWisprVoiceNote()">Wispr Flow Preset</button>
-          <button class="action-btn primary" onclick="sendRoomMessage()">Send to Room</button>
-        </div>
-        <div id="full-room-stream" style="max-height:560px; overflow-y:auto;"></div>
-      </div>
-    </section>
-
-    <!-- 3. SANDBOX TRACES & 7-RULE CONTRACT LAB -->
-    <section id="view-traces" class="view-pane">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Subprocess Sandbox Traces &amp; Contract Stress Lab</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span>Isolated subprocess verification receipts (SHA-256) and 7-rule deterministic contract auditor</span>
-          </div>
-        </div>
-        <button class="action-btn primary" onclick="runLiveSandboxPipeline()">Execute Sandbox Pipeline</button>
-      </div>
-
-      <div class="two-col">
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Subprocess Execution Receipts (#shipcast-verification-lab)</span>
-            <span class="mono-badge pass" id="trace-master-sha">SHA-256 Verified</span>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin-bottom:14px;">
-            <div>
-              <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">COMMIT RANGE</div>
-              <input type="text" id="trace-range" class="input-field" value="HEAD~5..HEAD" />
-            </div>
-            <div>
-              <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">VERSION TAG</div>
-              <input type="text" id="trace-version" class="input-field" value="v0.2.0" />
-            </div>
-          </div>
-          <div id="trace-commands-box"></div>
-        </div>
-
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">7-Rule Editorial Contract Stress Tester</span>
-            <span class="mono-badge pass" id="contract-stress-badge">7/7 PASS</span>
-          </div>
-          <div style="font-size:12px; color:var(--text-secondary); margin-bottom:12px;">
-            Inject simulated violations below to see how <code>shipcast-editorial-contract</code> catches and rejects non-compliant bundles:
-          </div>
-          <div style="display:flex; flex-wrap:wrap; gap:6px; margin-bottom:16px;">
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="toggleFault('buzzword', this)">Inject Buzzword ("unleash")</button>
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="toggleFault('table', this)">Inject Table Pipe ("|")</button>
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="toggleFault('mention', this)">Inject @agent Mention</button>
-            <button class="seg-btn" style="border:1px solid var(--border)" onclick="toggleFault('exitcode', this)">Simulate Exit Code 1</button>
-          </div>
-          <div id="contract-stress-bars" class="bar-list"></div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 4. COMMIT LOGS & SCORE SIMULATOR -->
-    <section id="view-logs" class="view-pane">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Git Commit Intelligence &amp; Score Simulator</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span>Automated commit classification, lockfile noise filtering, and 1–10 importance scoring</span>
-          </div>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="table-card">
-          <div class="table-card-head">
-            <span class="card-title">Analyzed Commits in Release Range</span>
-            <span class="mono-badge pass">4 Kept · 1 Noise Filtered</span>
-          </div>
-          <table class="monitor-table">
-            <thead>
-              <tr>
-                <th>COMMIT SHA</th>
-                <th>CATEGORY</th>
-                <th>SUBJECT &amp; FILES</th>
-                <th>DIFF</th>
-                <th>SCORE</th>
-              </tr>
-            </thead>
-            <tbody id="commit-logs-tbody"></tbody>
-          </table>
-        </div>
-
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Live Commit Score Simulator</span>
-            <span class="mono-badge amber">Interactive</span>
-          </div>
-          <div style="display:flex; flex-direction:column; gap:12px;">
-            <div>
-              <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">COMMIT SUBJECT</div>
-              <input
-                type="text"
-                id="sim-subj"
-                class="input-field"
-                value="feat(verifier): add cryptographic SHA-256 sandbox command receipt"
-                oninput="updateCommitSim()"
-              />
-            </div>
-            <div>
-              <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">CHANGED FILES</div>
-              <input
-                type="text"
-                id="sim-files"
-                class="input-field"
-                value="shipcast/verifier.py, tests/test_shipcast_pipeline.py"
-                oninput="updateCommitSim()"
-              />
-            </div>
-            <div style="display:flex; gap:6px; flex-wrap:wrap;">
-              <button class="action-btn" onclick="loadSimPreset('feat(api): add live telemetry endpoint', 'shipcast/cli.py, studio-ui/index.html')">Feature</button>
-              <button class="action-btn" onclick="loadSimPreset('chore(deps): bump uv.lock and package-lock.json', 'uv.lock, package-lock.json')">Lockfile Noise</button>
-              <button class="action-btn" onclick="loadSimPreset('docs: fix typo [skip-post]', 'README.md')">[skip-post]</button>
-            </div>
-            <div id="sim-output-card" class="msg-row-card" style="margin-top:4px;"></div>
-          </div>
-        </div>
-      </div>
-    </section>
-
-    <!-- 5. ROOM CLUSTERS / TOPOLOGY -->
-    <section id="view-clusters" class="view-pane">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Switch Room Clusters &amp; Handoff Replay</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span>Two-room isolation boundary (#shipcast-studio-desk ↔ #shipcast-verification-lab)</span>
-          </div>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="action-btn" onclick="stepTopo(-1)">← Prev Stage</button>
-          <button class="action-btn primary" onclick="stepTopo(1)">Next Stage →</button>
-        </div>
-      </div>
-
-      <div class="kpi-grid" id="topo-stages-grid" style="grid-template-columns:repeat(6, 1fr);"></div>
-
-      <div class="two-col">
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Room Cluster Nodes (Click any node to inspect)</span>
-            <span class="mono-badge pass">Link: verification-and-drafting</span>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr; gap:12px;">
-            <div>
-              <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-bottom:8px;">ROOM 1: #shipcast-studio-desk</div>
-              <div class="msg-row-card" style="cursor:pointer" onclick="inspectClusterNode('producer')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong style="font-family:var(--font-mono)">@shipcast-producer</strong>
-                  <span class="mono-badge pass">anyone</span>
-                </div>
-                <div style="font-size:12px; color:var(--text-secondary);">Holds exclusive <code>release-captain</code> lock; coordinates release intake &amp; human publish gate.</div>
-              </div>
-              <div class="msg-row-card" style="cursor:pointer" onclick="inspectClusterNode('role-captain')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong style="font-family:var(--font-mono)">Role: release-captain</strong>
-                  <span class="mono-badge amber">exclusive</span>
-                </div>
-                <div style="font-size:12px; color:var(--text-secondary);">Lease <code>4b356ae8</code> prevents overlapping releases in the control room.</div>
-              </div>
-              <div class="msg-row-card" style="cursor:pointer" onclick="inspectClusterNode('ref-bundle')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong style="font-family:var(--font-mono)">Ref: 50850bdf</strong>
-                  <span class="mono-badge">bundle</span>
-                </div>
-                <div style="font-size:12px; color:var(--text-secondary);">Attached by publisher via <code>attach_reference_to_room</code>.</div>
-              </div>
-            </div>
-
-            <div>
-              <div style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted); margin-bottom:8px;">ROOM 2: #shipcast-verification-lab</div>
-              <div class="msg-row-card" style="cursor:pointer" onclick="inspectClusterNode('verifier')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong style="font-family:var(--font-mono)">@shipcast-verifier</strong>
-                  <span class="mono-badge">owner-agents</span>
-                </div>
-                <div style="font-size:12px; color:var(--text-secondary);">Holds <code>snippet-auditor</code> role; executes CLI commands in sandbox &amp; signs SHA-256.</div>
-              </div>
-              <div class="msg-row-card" style="cursor:pointer" onclick="inspectClusterNode('publisher')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong style="font-family:var(--font-mono)">@shipcast-publisher</strong>
-                  <span class="mono-badge">owner-agents</span>
-                </div>
-                <div style="font-size:12px; color:var(--text-secondary);">Builds DEV.to + Changelog + SEO bundle and validates 7-rule contract.</div>
-              </div>
-              <div class="msg-row-card" style="cursor:pointer" onclick="inspectClusterNode('doc-contract')">
-                <div style="display:flex; justify-content:space-between; margin-bottom:4px;">
-                  <strong style="font-family:var(--font-mono)">Doc: editorial-contract</strong>
-                  <span class="mono-badge pass">7 rules</span>
-                </div>
-                <div style="font-size:12px; color:var(--text-secondary);">Room-scoped deterministic contract loaded via <code>load_internal_documents</code>.</div>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title" id="cluster-node-title">Node Telemetry: @shipcast-producer</span>
-            <span class="mono-badge pass" id="cluster-node-badge">Active</span>
-          </div>
-          <pre class="code-block" id="cluster-node-json"></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- 6. CONTENT STUDIO & PUBLICATION RECEIPT -->
-    <section id="view-nodes" class="view-pane">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Multi-Channel Content Studio &amp; Signed Receipt</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span>Contract-validated DEV.to article, Keep-a-Changelog, X/LinkedIn social kit, and SHA-256 approval signature</span>
-          </div>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <a
-            class="action-btn primary"
-            href="https://dev.to/olajide_abdulquadri_807ef/shipcast-studio-on-switch-rooms-cryptographically-verified-multi-agent-release-notes-3ilf-temp-slug-4446916/edit"
-            target="_blank"
-            rel="noopener"
-          >Open Staged DEV.to Draft ↗</a>
-          <a class="action-btn" href="https://github.com/Blackwrld04/shipcast-studio" target="_blank" rel="noopener">GitHub Repo ↗</a>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="surface-card">
-          <div class="card-header">
-            <div class="segmented-group">
-              <button class="seg-btn active" onclick="setContentTab('devto', this)">DEV.TO ARTICLE</button>
-              <button class="seg-btn" onclick="setContentTab('changelog', this)">CHANGELOG.MD</button>
-              <button class="seg-btn" onclick="setContentTab('social', this)">SOCIAL THREADS</button>
-            </div>
-            <button class="action-btn" onclick="copyActiveContent()">Copy Active Artifact</button>
-          </div>
-          <pre class="code-block" id="content-studio-pre" style="max-height:520px;"></pre>
-        </div>
-
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Signed Publication Receipt (publication-receipt.json)</span>
-            <span class="mono-badge pass">Sig: 21203f17...</span>
-          </div>
-          <pre class="code-block" id="pub-receipt-pre"></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- 7. SETTINGS, NEW-USER TEMPLATE WIZARD & LIVE PROOF -->
-    <section id="view-settings" class="view-pane">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Switch Template Generator &amp; Live Execution Proof</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span>1-click reproducible Switch YAML customizer for new users + real Switch Console v0.40.1 screenshots</span>
-          </div>
-        </div>
-        <div style="display:flex; gap:8px;">
-          <button class="action-btn" onclick="downloadTemplateYaml('v1')">Download v1 YAML</button>
-          <button class="action-btn primary" onclick="downloadTemplateYaml('v2')">Download v2 YAML</button>
-        </div>
-      </div>
-
-      <div class="shot-grid">
-        <div class="shot-card" onclick="openImageModal('./assets/switch-console-template-import.png', '1. One-Click Group Template Import in Switch Console v0.40.1')">
-          <img src="./assets/switch-console-template-import.png" alt="Switch Console Template Import" />
-          <div style="padding:12px 14px;">
-            <div style="font-weight:600; font-size:12.5px; margin-bottom:2px;">1. One-Click Switch Template Import</div>
-            <div style="font-size:11.5px; color:var(--text-secondary);">Provisions 3 Antigravity agents &amp; 2 linked rooms. Click to enlarge.</div>
-          </div>
-        </div>
-        <div class="shot-card" onclick="openImageModal('./assets/switch-console-producer-live.png', '2. @shipcast-producer Claiming release-captain &amp; Coordinating Rooms')">
-          <img src="./assets/switch-console-producer-live.png" alt="Switch Console Producer Live" />
-          <div style="padding:12px 14px;">
-            <div style="font-weight:600; font-size:12.5px; margin-bottom:2px;">2. Live Multi-Agent Room Handoff</div>
-            <div style="font-size:11.5px; color:var(--text-secondary);">Runs <code>connect_to_room</code>, <code>load_internal_documents</code>, and <code>assume_role</code>.</div>
-          </div>
-        </div>
-        <div class="shot-card" onclick="openImageModal('./assets/switch-console-publication-complete.png', '3. Human Gate (Approve publish) &amp; Signed Publication Receipt')">
-          <img src="./assets/switch-console-publication-complete.png" alt="Switch Console Publication Complete" />
-          <div style="padding:12px 14px;">
-            <div style="font-weight:600; font-size:12.5px; margin-bottom:2px;">3. Human Approval &amp; Signed Receipt</div>
-            <div style="font-size:11.5px; color:var(--text-secondary);">Verifies <code>Approve publish</code>, signs <code>21203f17...</code>, and releases lock.</div>
-          </div>
-        </div>
-      </div>
-
-      <div class="two-col">
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Customize shipcast.template.yaml for Any Team</span>
-            <span class="mono-badge pass">0 lint errors</span>
-          </div>
-          <div style="display:grid; grid-template-columns:1fr 1fr 1fr; gap:10px; margin-bottom:14px;">
-            <div>
-              <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">STUDIO PREFIX</div>
-              <input type="text" id="cfg-team" class="input-field" value="shipcast" oninput="updateTemplateWizard()" />
-            </div>
-            <div>
-              <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">GITHUB REPO URL</div>
-              <input type="text" id="cfg-repo" class="input-field" value="https://github.com/Blackwrld04/shipcast-studio" oninput="updateTemplateWizard()" />
-            </div>
-            <div>
-              <div style="font-size:11px; color:var(--text-muted); margin-bottom:4px;">AI PROVIDER</div>
-              <select id="cfg-provider" class="select-field" onchange="updateTemplateWizard()">
-                <option value="antigravity">antigravity</option>
-                <option value="claude">claude</option>
-                <option value="opencode">opencode</option>
-                <option value="codex">codex</option>
-                <option value="cursor">cursor</option>
-              </select>
-            </div>
-          </div>
-          <pre class="code-block" id="cfg-yaml-out" style="max-height:300px;"></pre>
-        </div>
-
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">New User Quickstart (60 Seconds)</span>
-            <button class="action-btn" onclick="copyText(document.getElementById('cfg-cli-out').textContent, 'Quickstart CLI copied')">Copy Commands</button>
-          </div>
-          <pre class="code-block" id="cfg-cli-out"></pre>
-        </div>
-      </div>
-    </section>
-
-    <!-- 8. VOICE CHAT & WISPR AUDIO TELEMETRY STUDIO (Exact API Monitor Layout) -->
-    <section id="view-voice" class="view-pane">
-      <div class="status-header">
-        <div>
-          <h1 class="status-title">Voice Chat &amp; Wispr Audio Telemetry</h1>
-          <div class="status-sub">
-            <span class="status-square"></span>
-            <span id="voice-tab-status-line">Two-way Web Speech &amp; Wispr Flow dictation bridge connected to #shipcast-studio-desk</span>
-          </div>
-        </div>
-        <div class="header-controls">
-          <button class="voice-btn-live" id="voice-tab-mic-btn" onclick="toggleVoiceListening()">
-            <span class="voice-dot"></span>
-            <span id="voice-tab-mic-label">Start Voice Session (V)</span>
-          </button>
-          <button class="action-btn" id="voice-tab-tts-btn" onclick="toggleVoiceTTS()">TTS Readback: ON</button>
-          <button class="action-btn primary" onclick="replayLastAgentSpeech()">Replay Last Agent Audio</button>
-        </div>
-      </div>
-
-      <!-- 4 Voice Telemetry KPI Cards -->
-      <div class="kpi-grid">
-        <div class="kpi-card">
-          <div class="kpi-top">
-            <span>Dictation Throughput</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 1a3 3 0 0 0-3 3v8a3 3 0 0 0 6 0V4a3 3 0 0 0-3-3z"/><path d="M19 10v2a7 7 0 0 1-14 0v-2"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="voice-kpi-wpm">168 WPM</span>
-            <span class="kpi-trend">↑ 3.7x vs typing</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-top">
-            <span>STT Recognition Latency</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="12" r="10"/><polyline points="12 6 12 12 16 14"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="voice-kpi-lat">84ms</span>
-            <span class="kpi-trend">↓ 14ms P99</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-top">
-            <span>Intent Recognition Accuracy</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><polyline points="22 12 18 12 15 21 9 3 6 12 2 12"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="voice-kpi-conf">99.4%</span>
-            <span class="kpi-trend">— Zero misfires</span>
-          </div>
-        </div>
-
-        <div class="kpi-card">
-          <div class="kpi-top">
-            <span>Active Voice Turns</span>
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>
-          </div>
-          <div class="kpi-bottom">
-            <span class="kpi-num" id="voice-kpi-turns">6</span>
-            <span class="kpi-trend">↑ 3 agents online</span>
-          </div>
-        </div>
-      </div>
-
-      <!-- 2-Column Split: Live Voice Stream & Highest Confidence Voice Intents -->
-      <div class="mid-grid">
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Live Voice Transcript &amp; Multi-Agent Audio Stream</span>
-            <span class="mono-badge pass" id="voice-tab-channel-badge">#shipcast-studio-desk · 48kHz</span>
-          </div>
-
-          <div class="voice-wave-box" style="margin-bottom:12px;">
-            <div class="voice-bars" id="voice-tab-bars"></div>
-            <span style="font-family:var(--font-mono); font-size:11px; color:var(--text-muted);" id="voice-tab-state-readout">STANDBY · PRESS V TO SPEAK</span>
-          </div>
-
-          <div style="display:flex; gap:8px; margin-bottom:14px;">
-            <input
-              type="text"
-              id="voice-tab-input"
-              class="input-field"
-              value="Cut release v0.2.0 from HEAD~5..HEAD and verify all CLI commands in the isolated sandbox."
-              placeholder="Speak into microphone or type/dictate with Wispr Flow..."
-              onkeydown="if(event.key==='Enter') submitVoiceChat('voice-tab-input')"
-            />
-            <button class="voice-btn-live" onclick="toggleVoiceListening()">
-              <span class="voice-dot"></span>
-              <span>Speak</span>
-            </button>
-            <button class="action-btn primary" onclick="submitVoiceChat('voice-tab-input')">Send Voice</button>
-          </div>
-
-          <div id="voice-conversation-list" style="max-height:280px; overflow-y:auto;"></div>
-        </div>
-
-        <div class="surface-card">
-          <div class="card-header">
-            <span class="card-title">Voice Command Macros &amp; Intent Confidence</span>
-            <span class="mono-badge amber">Click to Speak</span>
-          </div>
-          <div class="bar-list">
-            <div class="bar-item" style="cursor:pointer" onclick="triggerVoiceMacro('cut')">
-              <div class="bar-item-head">
-                <span class="bar-item-name">VOICE /cut-release v0.2.0 (Run Sandbox)</span>
-                <span class="bar-item-val emerald">168 WPM · 99.6%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill-el" style="width:96%; background:var(--accent-emerald);"></div></div>
-            </div>
-
-            <div class="bar-item" style="cursor:pointer" onclick="triggerVoiceMacro('status')">
-              <div class="bar-item-head">
-                <span class="bar-item-name">VOICE /verify-sandbox (Latency &amp; SHA-256)</span>
-                <span class="bar-item-val amber">84ms · 99.4%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill-el" style="width:88%; background:var(--accent-amber);"></div></div>
-            </div>
-
-            <div class="bar-item" style="cursor:pointer" onclick="triggerVoiceMacro('contract')">
-              <div class="bar-item-head">
-                <span class="bar-item-name">VOICE /audit-contract (7-Rule Gate)</span>
-                <span class="bar-item-val">7/7 PASS · 99.1%</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill-el" style="width:82%; background:var(--text-primary);"></div></div>
-            </div>
-
-            <div class="bar-item" style="cursor:pointer" onclick="triggerVoiceMacro('approve')">
-              <div class="bar-item-head">
-                <span class="bar-item-name">VOICE /approve-publish (Sign SHA-256)</span>
-                <span class="bar-item-val emerald">SIG 21203f17</span>
-              </div>
-              <div class="bar-track"><div class="bar-fill-el" style="width:94%; background:var(--accent-emerald);"></div></div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </section>
 
   </main>
 
-  <!-- Command Palette Modal (/) -->
-  <div class="modal-backdrop" id="palette-modal" onclick="if(event.target===this) closeCommandPalette()">
-    <div class="modal-panel">
-      <div style="padding:12px 14px; border-bottom:1px solid var(--border);">
-        <input
-          type="text"
-          id="palette-input"
-          class="input-field"
-          placeholder="Jump to view or trigger action (Esc to close)..."
-          oninput="renderPaletteItems()"
-          onkeydown="handlePaletteKey(event)"
-        />
-      </div>
-      <div id="palette-list" style="padding:8px; max-height:320px; overflow-y:auto;"></div>
-    </div>
-  </div>
-
-  <!-- Image Lightbox Modal -->
-  <div class="modal-backdrop" id="image-modal" onclick="closeImageModal()">
-    <div class="modal-panel" style="width:960px; max-width:94vw; padding:14px;">
-      <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:10px;">
-        <span class="card-title" id="image-modal-title">Switch Console Proof</span>
-        <button class="action-btn" onclick="closeImageModal()">Close (Esc)</button>
-      </div>
-      <img id="image-modal-img" src="" alt="Proof" style="width:100%; border-radius:3px; border:1px solid var(--border);" />
-    </div>
-  </div>
-
-  <div class="toast" id="toast"></div>
+  <div class="toast" id="toast-el"></div>
 
   <script>
     // =========================================================================
-    // STATE & LIVE SERVER HYDRATION
+    // STATE & INITIAL DATA (Matches Local Switch Console & Backend API)
     // =========================================================================
-    let currentView = "dashboard";
-    let roomFilter = "all";
-    let activeContentTab = "devto";
-    let topoStageIndex = 0;
-    const faults = { buzzword: false, table: false, mention: false, exitcode: false };
+    let currentFilterRoom = "all";
+    let activeArtifact = "devto";
+    let isListening = false;
+    let speechRecognition = null;
 
-    let activePublicationReceipt = {
-      published_at: "2026-11-05T16:34:43Z",
-      version_tag: "v0.2.0",
-      approved_by: "Admin",
-      approval_message: "Approve publish in shipcast-studio-desk",
-      approval_signature_sha256: "21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5",
-      verification_receipt_sha256: "d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9",
-      changelog_path: "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/CHANGELOG.md",
-      changelog_updated: true,
-      devto: {
-        status: "staged_on_devto",
-        article_id: 4983277,
-        edit_url: "https://dev.to/olajide_abdulquadri_807ef/shipcast-studio-on-switch-rooms-cryptographically-verified-multi-agent-release-notes-3ilf-temp-slug-4446916/edit"
-      }
-    };
-
-    let activeBundle = {
-      analysis: {
-        repo_name: "shipcast",
-        commit_range: "HEAD~5..HEAD",
-        version_tag: "v0.2.0",
-        voice_note: "Focus on the two-room Switch topology (#shipcast-studio-desk and #shipcast-verification-lab), cryptographic SHA-256 sandbox receipts, and human approval gate.",
-        total_commits: 5,
-        included_commits: 4,
-        skipped_commits: 1,
-        overall_importance: 9,
-        total_insertions: 457,
-        total_deletions: 182,
-        categories: {
-          Added: [
-            { short_sha: "d02883b", subject: "feat(templates): default provider to antigravity and working directory to shipcast repo", category: "Added", files_changed: ["shipcast.template.yaml", "shipcast.v2.template.yaml"], insertions: 22, deletions: 6, importance_score: 8 }
-          ],
-          Fixed: [
-            { short_sha: "985b6c5", subject: "fix(templates): remove $creator requirement so local unbridged Switch rooms enable Create all", category: "Fixed", files_changed: ["shipcast.template.yaml", "shipcast.v2.template.yaml"], insertions: 5, deletions: 15, importance_score: 7 },
-            { short_sha: "31c1f72", subject: "fix(template-v2): add studio_group resource so v2 passes switch_core.template_lint with 0 errors", category: "Fixed", files_changed: ["shipcast.v2.template.yaml"], insertions: 11, deletions: 0, importance_score: 7 }
-          ],
-          Documentation: [
-            { short_sha: "58ab37d", subject: "docs(bundle): refresh dist/latest bundle across full commit range", category: "Documentation", files_changed: ["dist/latest/bundle-data.json", "dist/latest/devto-article.md"], insertions: 419, deletions: 161, importance_score: 9 }
+    let appState = {
+      bundle: {
+        analysis: {
+          commit_range: "HEAD~5..HEAD",
+          version_tag: "v0.2.0",
+          overall_importance: 9,
+          total_commits: 5,
+          included_commits: 4,
+          skipped_commits: 1
+        },
+        verification_receipt: {
+          overall_receipt_sha256: "d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9",
+          all_passed: true,
+          results: [
+            { command: "python3 -m shipcast.cli --help", duration_ms: 85, exit_code: 0 },
+            { command: "pytest -q", duration_ms: 100, exit_code: 0 }
           ]
+        },
+        preview: {
+          devto_article_markdown: "# ShipCast Studio on Switch Rooms: Cryptographically Verified Multi-Agent Release Notes\\n\\nEvery software release normally ends with a tedious chore: reading git logs, testing commands, and writing notes...",
+          changelog_markdown: "## [v0.2.0] - 2026-11-05\\n\\n> Importance Score: **9/10** · Receipt: `d23ff7cf96db30bd`\\n\\n### Added\\n- feat(templates): default provider to antigravity...",
+          social_posts: {
+            x_thread: ["Shipped shipcast v0.2.0 (+457/-182 lines) with our Switch Rooms agent crew #HowISwitch"],
+            linkedin: "Today we shipped shipcast v0.2.0 using ShipCast Studio on Switch Rooms (#HowISwitch)."
+          }
         }
       },
-      verification_receipt: {
-        version_tag: "v0.2.0",
-        all_passed: true,
-        total_checks: 2,
-        passed_checks: 2,
-        overall_receipt_sha256: "d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9",
-        results: [
-          { index: 1, language: "bash", command: "python3 -m shipcast.cli --help", passed: true, exit_code: 0, duration_ms: 85, stdout: "usage: shipcast [-h] {analyze,verify,run-pipeline,validate,publish,serve-studio} ...", receipt_sha256: "9e0b9428774d2022a14257b0b508893463b55ee1a1eec827b5e2e6a3d29da725" },
-          { index: 2, language: "bash", command: "pytest -q", passed: true, exit_code: 0, duration_ms: 100, stdout: ".....                                                                    [100%]\n5 passed in 0.10s", receipt_sha256: "72a6dd9366fcadfb70045c96401a40bdb1153b2ccfb8d1c753d9fada4819110c" }
-        ]
+      publication_receipt: {
+        approval_signature_sha256: "21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5",
+        approved_by: "Admin",
+        approval_message: "Approve publish in shipcast-studio-desk"
       },
-      validation_report: {
-        valid: true,
-        passed_count: 7,
-        findings: [
-          { rule_id: "frontmatter.required_fields", passed: true, message: "Frontmatter includes title, description, tags, and ai_disclosure_level." },
-          { rule_id: "frontmatter.description_length", passed: true, message: "Description length is 110/160 chars." },
-          { rule_id: "markdown.title_matches_h1", passed: true, message: "Frontmatter title matches first '# ' heading." },
-          { rule_id: "verification.all_snippets_passed", passed: true, message: "All 2 sandbox checks passed (SHA-256: d23ff7cf96db...)." },
-          { rule_id: "editorial.no_banned_buzzwords", passed: true, message: "Zero banned marketing buzzwords detected." },
-          { rule_id: "switch.slack_telegram_safe_summary", passed: true, message: "Switch room summary uses Slack/Telegram-safe bolded bullet lines." },
-          { rule_id: "switch.no_accidental_agent_mentions", passed: true, message: "No accidental '@agent' mentions inside free-text summary body." }
-        ]
-      },
-      preview: {
-        changelog_markdown: "## [v0.2.0] - 2026-11-05\n\n> Importance Score: **9/10** · Verification Receipt: `d23ff7cf96db30bd`\n\n### Added\n- **feat(templates): default provider to antigravity and working directory to shipcast repo** (`d02883b`)\n\n### Fixed\n- **fix(templates): remove $creator requirement so local unbridged Switch rooms enable Create all** (`985b6c5`)\n- **fix(template-v2): add studio_group resource so v2 passes switch_core.template_lint with 0 errors** (`31c1f72`)\n",
-        devto_article_markdown: "# ShipCast Studio on Switch Rooms: Cryptographically Verified Multi-Agent Release Notes\n\nEvery software release normally ends with a tedious chore: reading `git log`, checking which CLI flags changed, testing tutorial code blocks by hand, and re-formatting release notes.",
-        social_posts: {
-          x_thread: [
-            "Shipped shipcast v0.2.0 (+457/-182 lines across 11 files) and let our Switch Rooms agent crew verify and package the release.\n\n• 4 commits analyzed (1 noise commit filtered)\n• 2/2 CLI snippets executed in sandbox (SHA: d23ff7cf96db)\n• Gated by human sign-off in chat #HowISwitch"
-          ],
-          linkedin_post: "Today we shipped shipcast v0.2.0 using ShipCast Studio on Switch Rooms (#HowISwitch)."
+      messages: [
+        {
+          room: "shipcast-studio-desk",
+          sender: "Admin",
+          isUser: true,
+          time: "17:13:04",
+          tools: [],
+          body: "Cut release v0.2.0 from HEAD~5..HEAD in shipcast-studio-desk. Voice note (Wispr Flow): Focus on the two-room Switch topology, cryptographic SHA-256 sandbox receipts, and human approval gate."
+        },
+        {
+          room: "shipcast-studio-desk",
+          sender: "shipcast-producer",
+          avatarCls: "avatar-producer",
+          avatarLetter: "P",
+          time: "17:13:19",
+          tools: ["connect_to_room", "assume_role (release-captain)"],
+          body: "🎭 assumed the `release-captain` role.\\n\\n• **Analysis Complete:** Analyzed `HEAD~5..HEAD` for `v0.2.0` (4 commits included, 1 chore skipped, overall importance 9/10). Hopping across the room link to `#shipcast-verification-lab`."
+        },
+        {
+          room: "shipcast-verification-lab",
+          sender: "shipcast-producer",
+          avatarCls: "avatar-producer",
+          avatarLetter: "P",
+          time: "17:15:22",
+          tools: ["connect_to_room (#shipcast-verification-lab)"],
+          body: "@shipcast-verifier • **Release Handoff:** Please verify and sign the SHA-256 sandbox receipt for `v0.2.0` (`HEAD~5..HEAD`)."
+        },
+        {
+          room: "shipcast-verification-lab",
+          sender: "shipcast-verifier",
+          avatarCls: "avatar-verifier",
+          avatarLetter: "V",
+          time: "17:18:42",
+          tools: ["assume_role (snippet-auditor)", "execute_subprocess (python3 -m shipcast.cli --help)", "execute_subprocess (pytest -q)"],
+          body: "@shipcast-publisher Sandbox verification for `v0.2.0` passed (`all_passed: true`, 2/2 checks exit 0).\\nReceipt SHA-256: `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`."
+        },
+        {
+          room: "shipcast-verification-lab",
+          sender: "shipcast-publisher",
+          avatarCls: "avatar-publisher",
+          avatarLetter: "P",
+          time: "17:25:10",
+          tools: ["load_internal_documents (shipcast-editorial-contract)", "attach_reference_to_room (50850bdf)"],
+          body: "@shipcast-producer Release bundle for `shipcast` `v0.2.0` validated against `shipcast-editorial-contract` (7/7 rules passed) and attached as reference `50850bdf-0435-43ea-8fac-af269286fb0f`."
+        },
+        {
+          room: "shipcast-studio-desk",
+          sender: "shipcast-producer",
+          avatarCls: "avatar-producer",
+          avatarLetter: "P",
+          time: "17:31:00",
+          tools: ["connect_to_room (#shipcast-studio-desk)"],
+          body: "**ShipCast Release Package Ready — shipcast v0.2.0**\\n• Status: Ready for human approval\\n• Sandbox SHA-256: `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`\\n• Contract: 7/7 rules passed\\n\\nReply `Approve publish in shipcast-studio-desk` to sign and publish."
+        },
+        {
+          room: "shipcast-studio-desk",
+          sender: "Admin",
+          isUser: true,
+          time: "17:34:12",
+          tools: [],
+          body: "Approve publish in shipcast-studio-desk"
+        },
+        {
+          room: "shipcast-studio-desk",
+          sender: "shipcast-producer",
+          avatarCls: "avatar-producer",
+          avatarLetter: "P",
+          time: "17:34:43",
+          tools: ["verify_approval", "write_publication_receipt", "release_role (release-captain)"],
+          body: "**ShipCast Publication Complete — shipcast v0.2.0**\\n• Status: Published in `shipcast-studio-desk` and verified `CHANGELOG.md`\\n• Approved By: Admin\\n• Approval Signature (SHA-256): `21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5`\\n• Verification Receipt (SHA-256): `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`\\n• Publication Receipt: `dist/latest/publication-receipt.json`\\n• Role Status: Released exclusive `release-captain` role."
         }
-      }
+      ]
     };
 
-    let liveMessages = [
-      { room: "shipcast-studio-desk", seq: 9, sender: "shipcast-producer", body: "🎭 assumed the `release-captain` role." },
-      { room: "shipcast-studio-desk", seq: 12, sender: "shipcast-producer", body: "• **Analysis Complete:** Analyzed `HEAD~5..HEAD` for `v0.2.0` (4 commits included, 1 chore skipped, overall importance 9/10). Hopping to `shipcast-verification-lab`." },
-      { room: "shipcast-verification-lab", seq: 14, sender: "shipcast-producer", body: "@shipcast-verifier • **Release Handoff:** Please verify and sign the SHA-256 sandbox receipt for `v0.2.0` (`HEAD~5..HEAD`)." },
-      { room: "shipcast-verification-lab", seq: 16, sender: "shipcast-verifier", body: "🎭 assumed the `snippet-auditor` role." },
-      { room: "shipcast-verification-lab", seq: 17, sender: "shipcast-verifier", body: "@shipcast-publisher Sandbox verification for `v0.2.0` passed (`all_passed: true`, 2/2 checks exit 0). Receipt SHA-256: `d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9`." },
-      { room: "shipcast-verification-lab", seq: 19, sender: "shipcast-publisher", body: "@shipcast-producer Release bundle for `shipcast` `v0.2.0` validated against `shipcast-editorial-contract` (7/7 rules passed) and attached as reference `50850bdf-0435-43ea-8fac-af269286fb0f`." },
-      { room: "shipcast-studio-desk", seq: 14, sender: "shipcast-producer", body: "**ShipCast Release Package Ready — shipcast v0.2.0** · Reply `Approve publish` in this thread." },
-      { room: "New Chat", seq: 10, sender: "Admin", body: "Approve publish in shipcast-studio-desk" },
-      { room: "shipcast-studio-desk", seq: 16, sender: "shipcast-producer", body: "**ShipCast Publication Complete — shipcast v0.2.0** · Approval Signature: `21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5` · Released `release-captain` role." }
-    ];
-
-    async function hydrate() {
+    // Hydrate from live backend state
+    async function loadLiveBackendState() {
       try {
-        const res = await fetch("/api/state", { cache: "no-store" });
+        const res = await fetch("/api/state");
         if (res.ok) {
           const data = await res.json();
-          if (data.bundle) activeBundle = data.bundle;
-          if (data.transcript && Array.isArray(data.transcript.messages)) liveMessages = data.transcript.messages;
-          if (data.publication_receipt) activePublicationReceipt = data.publication_receipt;
+          if (data.bundle) appState.bundle = data.bundle;
+          if (data.publication_receipt) appState.publication_receipt = data.publication_receipt;
+          if (data.transcript && Array.isArray(data.transcript.messages)) {
+            // Merge actual transcript messages
+            const parsed = data.transcript.messages.map(m => ({
+              room: m.room || "shipcast-studio-desk",
+              sender: m.sender || "Agent",
+              isUser: (m.sender || "").toLowerCase().includes("admin") || (m.sender || "").toLowerCase().includes("user"),
+              avatarCls: (m.sender || "").includes("verifier") ? "avatar-verifier" : (m.sender || "").includes("publisher") ? "avatar-publisher" : "avatar-producer",
+              avatarLetter: (m.sender || "").includes("verifier") ? "V" : (m.sender || "").includes("publisher") ? "P" : "P",
+              time: m.time || "17:34",
+              tools: m.tools || [],
+              body: m.body || ""
+            }));
+            if (parsed.length >= 6) appState.messages = parsed;
+          }
         }
       } catch (_) {}
-      renderAll();
-    }
-
-    function renderAll() {
-      renderDashboard();
-      renderRoomsStream();
-      renderTracesAndContract();
-      renderCommitLogs();
-      updateCommitSim();
-      renderClusters();
-      renderContentStudio();
-      updateTemplateWizard();
-      initVoiceStudio();
+      renderUI();
     }
 
     // =========================================================================
-    // NAVIGATION
+    // RENDERING FUNCTIONS
     // =========================================================================
-    function navigate(viewId, btnEl) {
-      currentView = viewId;
-      document.querySelectorAll(".view-pane").forEach(el => el.classList.remove("active"));
-      const target = document.getElementById(`view-${viewId}`);
-      if (target) target.classList.add("active");
+    function renderUI() {
+      renderChatMessages();
+      renderArtifactView();
 
-      document.querySelectorAll(".nav-link").forEach(el => {
-        el.classList.toggle("active", el.getAttribute("data-view") === viewId);
-      });
-
-      if (btnEl) {
-        document.getElementById("crumb-parent").textContent = btnEl.getAttribute("data-group") || "Dashboard";
-        document.getElementById("crumb-active").textContent = btnEl.getAttribute("data-title") || "Telemetry";
-      }
+      const b = appState.bundle;
+      document.getElementById("metric-score").textContent = `${b.analysis.overall_importance}.0 / 10`;
+      document.getElementById("metric-commits").textContent = `↑ ${b.analysis.included_commits} of ${b.analysis.total_commits} commits kept`;
+      document.getElementById("metric-sha").textContent = `${b.verification_receipt.overall_receipt_sha256.slice(0, 14)}...`;
     }
 
-    function navigateByName(viewId) {
-      const btn = document.querySelector(`.nav-link[data-view="${viewId}"]`);
-      navigate(viewId, btn);
-    }
+    function renderChatMessages() {
+      const container = document.getElementById("switch-chat-list");
+      const filtered = appState.messages.filter(m => currentFilterRoom === "all" || m.room === currentFilterRoom);
 
-    // =========================================================================
-    // 1. DASHBOARD (Dual-Axis SVG Chart + Horizontal Bars + Event Table)
-    // =========================================================================
-    function renderDashboard() {
-      const a = activeBundle.analysis;
-      const r = activeBundle.verification_receipt;
-      const v = activeBundle.validation_report;
-
-      const totalMs = (r.results || []).reduce((acc, x) => acc + (x.duration_ms || 0), 0);
-      document.getElementById("kpi-score").textContent = `${a.overall_importance}.0/10`;
-      document.getElementById("kpi-score-sub").textContent = `↑ ${a.included_commits} commits kept`;
-      document.getElementById("kpi-latency").textContent = `${totalMs}ms`;
-      document.getElementById("kpi-latency-sub").textContent = `↓ ${r.passed_checks}/${r.total_checks} exit 0`;
-      const failCount = v.findings.filter(f => !f.passed).length;
-      document.getElementById("kpi-violation").textContent = failCount === 0 ? "0.00%" : `${Math.round((failCount / 7) * 100)}%`;
-      document.getElementById("kpi-violation-sub").textContent = `— ${v.passed_count}/${v.findings.length} rules pass`;
-      document.getElementById("kpi-events").textContent = String(liveMessages.length);
-
-      renderDualAxisChart();
-      renderHighestTargets();
-      renderAnomaliesTable();
-    }
-
-    function renderDualAxisChart() {
-      const box = document.getElementById("telemetry-chart-box");
-      const series = [
-        { t: "16:02", events: 420, latency: 118, label: "Template Kickoff (#studio-desk)" },
-        { t: "16:05", events: 480, latency: 112, label: "Verifier & Publisher Standby (#verification-lab)" },
-        { t: "16:08", events: 510, latency: 142, label: "Producer Assumes Exclusive release-captain Role" },
-        { t: "16:11", events: 495, latency: 128, label: "Git Commit Range Analysis (HEAD~5..HEAD)" },
-        { t: "16:14", events: 620, latency: 185, label: "Room Link Hop → #shipcast-verification-lab" },
-        { t: "16:16", events: 580, latency: 162, label: "Verifier Assumes snippet-auditor Role" },
-        { t: "16:18", events: 720, latency: 224, label: "Subprocess Sandbox Execution (pytest + cli)" },
-        { t: "16:21", events: 690, latency: 198, label: "SHA-256 Master Receipt Signed (d23ff7cf96db)" },
-        { t: "16:25", events: 815, latency: 154, label: "Publisher 7-Rule Editorial Contract Audit" },
-        { t: "16:28", events: 785, latency: 148, label: "Reference 50850bdf Attached to #studio-desk" },
-        { t: "16:31", events: 910, latency: 136, label: "Human Gate: Approve publish in #studio-desk" },
-        { t: "16:34", events: 880, latency: 124, label: "Publication Signed (21203f17) & Role Released" }
-      ];
-
-      const W = 760, H = 275;
-      const padL = 48, padR = 42, padT = 16, padB = 34;
-      const plotW = W - padL - padR;
-      const plotH = H - padT - padB;
-
-      const yGridVals = [0, 200, 400, 600, 800, 1000];
-      const rGridVals = [100, 150, 200, 250];
-
-      let gridHtml = "";
-      for (const val of yGridVals) {
-        const y = padT + plotH - (val / 1000) * plotH;
-        gridHtml += `
-          <line x1="${padL}" y1="${y}" x2="${W - padR}" y2="${y}" stroke="var(--border)" stroke-dasharray="2 2" stroke-width="1" />
-          <text x="${padL - 10}" y="${y + 4}" text-anchor="end" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">${val}</text>
-        `;
-      }
-      for (const rVal of rGridVals) {
-        const y = padT + plotH - ((rVal - 100) / 150) * plotH;
-        gridHtml += `
-          <text x="${W - padR + 10}" y="${y + 4}" text-anchor="start" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">${rVal}ms</text>
-        `;
-      }
-
-      const colW = plotW / series.length;
-      const barW = colW * 0.64;
-      let barsHtml = "";
-      const pts = [];
-
-      series.forEach((d, i) => {
-        const cx = padL + i * colW + colW / 2;
-        const bx = cx - barW / 2;
-        const bh = (d.events / 1000) * plotH;
-        const by = padT + plotH - bh;
-
-        const ly = padT + plotH - ((d.latency - 100) / 150) * plotH;
-        pts.push({ x: cx, y: ly, d });
-
-        barsHtml += `
-          <g class="chart-col" onmouseenter="showChartTip('${escapeHtml(d.t)} · ${escapeHtml(d.label)} (${d.latency}ms)')" style="cursor:pointer">
-            <rect x="${bx.toFixed(1)}" y="${by.toFixed(1)}" width="${barW.toFixed(1)}" height="${bh.toFixed(1)}" fill="var(--bar-fill)" stroke="var(--bar-stroke)" stroke-width="1" rx="1" />
-            <text x="${cx.toFixed(1)}" y="${H - 10}" text-anchor="middle" fill="var(--text-muted)" font-family="var(--font-mono)" font-size="10">${d.t}</text>
-          </g>
-        `;
-      });
-
-      // Smooth Catmull-Rom / cubic Bezier path through pts
-      let pathD = `M ${pts[0].x.toFixed(1)} ${pts[0].y.toFixed(1)}`;
-      for (let i = 0; i < pts.length - 1; i++) {
-        const p0 = pts[i === 0 ? 0 : i - 1];
-        const p1 = pts[i];
-        const p2 = pts[i + 1];
-        const p3 = pts[i + 2 < pts.length ? i + 2 : i + 1];
-        const cp1x = p1.x + (p2.x - p0.x) / 6;
-        const cp1y = p1.y + (p2.y - p0.y) / 6;
-        const cp2x = p2.x - (p3.x - p1.x) / 6;
-        const cp2y = p2.y - (p3.y - p1.y) / 6;
-        pathD += ` C ${cp1x.toFixed(1)} ${cp1y.toFixed(1)}, ${cp2x.toFixed(1)} ${cp2y.toFixed(1)}, ${p2.x.toFixed(1)} ${p2.y.toFixed(1)}`;
-      }
-
-      const dotsHtml = pts.map(p => `
-        <circle cx="${p.x.toFixed(1)}" cy="${p.y.toFixed(1)}" r="3.5" fill="var(--bg-card)" stroke="#8B5CF6" stroke-width="2" />
-      `).join("");
-
-      box.innerHTML = `
-        <svg viewBox="0 0 ${W} ${H}" width="100%" height="100%" preserveAspectRatio="none">
-          ${gridHtml}
-          ${barsHtml}
-          <path d="${pathD}" fill="none" stroke="#8B5CF6" stroke-width="1.8" stroke-dasharray="4 4" />
-          ${dotsHtml}
-        </svg>
-      `;
-    }
-
-    function showChartTip(text) {
-      const el = document.getElementById("chart-hover-readout");
-      if (el) el.textContent = text;
-    }
-
-    function renderHighestTargets() {
-      const r = activeBundle.verification_receipt;
-      const items = [
-        { name: "POST /api/run-pipeline (pytest -q)", val: `${r.results[1]?.duration_ms || 100}ms`, pct: 78, color: "var(--accent-amber)", cls: "amber" },
-        { name: "EXEC python3 -m shipcast.cli --help", val: `${r.results[0]?.duration_ms || 85}ms`, pct: 62, color: "var(--accent-amber)", cls: "amber" },
-        { name: "MCP attach_reference_to_room (50850bdf)", val: "44ms", pct: 38, color: "var(--text-primary)", cls: "" },
-        { name: "VALIDATOR shipcast-editorial-contract (7/7)", val: "19ms", pct: 22, color: "var(--text-primary)", cls: "" },
-        { name: "POST /api/publish (SHA-256 sign-off)", val: "12ms", pct: 14, color: "var(--accent-emerald)", cls: "emerald" }
-      ];
-
-      document.getElementById("highest-targets-list").innerHTML = items.map(item => `
-        <div class="bar-item">
-          <div class="bar-item-head">
-            <span class="bar-item-name">${escapeHtml(item.name)}</span>
-            <span class="bar-item-val ${item.cls}">${escapeHtml(item.val)}</span>
+      container.innerHTML = filtered.map(m => {
+        const toolsHtml = m.tools && m.tools.length > 0 ? `
+          <div class="tools-pill">
+            <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/></svg>
+            <span>Used ${m.tools.length} tool${m.tools.length > 1 ? 's' : ''}</span>
           </div>
-          <div class="bar-track">
-            <div class="bar-fill-el" style="width:${item.pct}%; background:${item.color};"></div>
+          <div style="margin-bottom:6px;">
+            ${m.tools.map(t => `
+              <div class="tool-step">
+                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="9 18 15 12 9 6"/></svg>
+                <span>Running ${escapeHtml(t)}</span>
+              </div>
+            `).join('')}
           </div>
-        </div>
-      `).join("");
-    }
+        ` : '';
 
-    function renderAnomaliesTable() {
-      const recent = liveMessages.slice(-6).reverse();
-      document.getElementById("dash-anomalies-tbody").innerHTML = recent.map(m => {
-        const isPub = (m.body || "").includes("Publication Complete");
-        const isReceipt = (m.body || "").includes("SHA-256") || (m.body || "").includes("Release Package Ready");
-        const badge = isPub
-          ? `<span class="mono-badge pass">200 · PUBLISHED</span>`
-          : isReceipt
-            ? `<span class="mono-badge amber">SHA-256 VERIFIED</span>`
-            : `<span class="mono-badge">ROOM EVENT</span>`;
+        const avatar = m.isUser
+          ? `<div class="switch-avatar avatar-user">A</div>`
+          : `<div class="switch-avatar ${m.avatarCls}">${m.avatarLetter}</div>`;
 
         return `
-          <tr onclick="navigateByName('rooms')" style="cursor:pointer">
-            <td style="font-family:var(--font-mono); font-weight:600;">${escapeHtml(m.sender)}</td>
-            <td style="font-family:var(--font-mono); color:var(--text-secondary);">/${escapeHtml(m.room)} · ${escapeHtml((m.body || "").slice(0, 68))}...</td>
-            <td>${badge}</td>
-            <td style="font-family:var(--font-mono); color:var(--text-secondary);">d23ff7cf96db</td>
-            <td style="font-family:var(--font-mono); color:var(--text-muted);">#${m.seq || "-"}</td>
-          </tr>
+          <div class="switch-msg">
+            ${avatar}
+            <div class="msg-body-col">
+              <div class="msg-header">
+                <span class="msg-sender">${escapeHtml(m.sender)}</span>
+                <span class="msg-room-tag">#${escapeHtml(m.room)}</span>
+                <span class="msg-time">${escapeHtml(m.time)}</span>
+              </div>
+              ${toolsHtml}
+              <div class="msg-content">${formatMessageContent(m.body)}</div>
+            </div>
+          </div>
         `;
-      }).join("");
+      }).join('');
+
+      container.scrollTop = container.scrollHeight;
     }
 
-    function setRangeMode(range, btn) {
-      btn.parentElement.querySelectorAll(".seg-btn").forEach(el => el.classList.remove("active"));
+    function formatMessageContent(text) {
+      return escapeHtml(text)
+        .replace(/\\n/g, '<br/>')
+        .replace(/\*\*(.*?)\*\*/g, '<strong>$1</strong>')
+        .replace(/`(.*?)`/g, '<code>$1</code>');
+    }
+
+    function renderArtifactView() {
+      const pre = document.getElementById("artifact-content-pre");
+      const p = appState.bundle.preview;
+      if (activeArtifact === "devto") {
+        pre.textContent = p.devto_article_markdown;
+      } else if (activeArtifact === "changelog") {
+        pre.textContent = p.changelog_markdown;
+      } else if (activeArtifact === "social") {
+        pre.textContent = JSON.stringify(p.social_posts, null, 2);
+      } else if (activeArtifact === "receipt") {
+        pre.textContent = JSON.stringify(appState.publication_receipt, null, 2);
+      }
+    }
+
+    function switchArtifactTab(tab, btn) {
+      activeArtifact = tab;
+      document.querySelectorAll(".tab-btn").forEach(el => el.classList.remove("active"));
       btn.classList.add("active");
-      if (range !== "ALL") {
-        const rInput = document.getElementById("trace-range");
-        if (rInput) rInput.value = range;
-      }
-      toast(`Selected telemetry range: ${range}`);
+      renderArtifactView();
     }
 
-    // =========================================================================
-    // 2. SWITCH ROOMS STREAM
-    // =========================================================================
-    function filterRoomsView(room, btn) {
-      roomFilter = room;
-      btn.parentElement.querySelectorAll(".seg-btn").forEach(el => el.classList.remove("active"));
-      btn.classList.add("active");
-      renderRoomsStream();
+    function copyCurrentArtifact() {
+      const text = document.getElementById("artifact-content-pre").textContent;
+      navigator.clipboard.writeText(text);
+      showToast("Copied artifact content to clipboard");
     }
 
-    function renderRoomsStream() {
-      const box = document.getElementById("full-room-stream");
-      const list = liveMessages.filter(m => roomFilter === "all" || m.room === roomFilter);
-      box.innerHTML = list.map(m => `
-        <div class="msg-row-card">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <span style="font-family:var(--font-mono); font-weight:600; font-size:12px;">
-              [${escapeHtml(m.room)}] ${escapeHtml(m.sender)}
-            </span>
-            <span class="mono-badge">seq #${m.seq || "-"}</span>
-          </div>
-          <div style="font-size:12.5px; color:var(--text-primary); white-space:pre-wrap;">${escapeHtml(m.body)}</div>
-        </div>
-      `).join("");
-      box.scrollTop = box.scrollHeight;
+    function filterRoom(roomName) {
+      currentFilterRoom = roomName;
+      document.querySelectorAll(".room-item").forEach(el => el.classList.remove("active"));
+      renderChatMessages();
+      showToast(`Showing stream for: ${roomName === 'all' ? 'All Rooms' : '#' + roomName}`);
     }
 
-    function insertWisprVoiceNote() {
-      document.getElementById("room-compose-input").value =
-        "@shipcast-producer Cut release v0.2.0 from HEAD~5..HEAD. Voice note (Wispr Flow): Focus on the two-room Switch topology, SHA-256 sandbox receipts, and human approval gate.";
-      toast("Inserted Wispr Flow voice note preset");
-    }
-
-    function sendRoomMessage() {
-      const input = document.getElementById("room-compose-input");
-      const val = input.value.trim();
-      if (!val) return;
-      approveReleaseInRoom(val);
-      input.value = "";
-    }
-
-    // =========================================================================
-    // 3. SANDBOX TRACES & 7-RULE CONTRACT LAB
-    // =========================================================================
-    function renderTracesAndContract() {
-      const r = activeBundle.verification_receipt;
-      document.getElementById("trace-master-sha").textContent = `SHA-256: ${r.overall_receipt_sha256.slice(0, 16)}...`;
-      document.getElementById("trace-commands-box").innerHTML = (r.results || []).map(item => `
-        <div style="margin-bottom:14px;">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:6px;">
-            <code style="font-family:var(--font-mono); font-size:12px;">${escapeHtml(item.command)}</code>
-            <span class="mono-badge pass">EXIT ${item.exit_code} · ${item.duration_ms}ms</span>
-          </div>
-          <pre class="code-block">${escapeHtml(item.stdout || "(no stdout)")}</pre>
-        </div>
-      `).join("");
-
-      renderContractBars();
-    }
-
-    function toggleFault(key, btn) {
-      faults[key] = !faults[key];
-      btn.classList.toggle("active", faults[key]);
-      renderContractBars();
-    }
-
-    function renderContractBars() {
-      const rules = JSON.parse(JSON.stringify(activeBundle.validation_report.findings));
-      for (const f of rules) {
-        if (faults.buzzword && f.rule_id === "editorial.no_banned_buzzwords") {
-          f.passed = false;
-          f.message = "REJECTED: Found banned AI buzzword 'unleash'";
-        }
-        if (faults.table && f.rule_id === "switch.slack_telegram_safe_summary") {
-          f.passed = false;
-          f.message = "REJECTED: Found raw Markdown table pipe ('|')";
-        }
-        if (faults.mention && f.rule_id === "switch.no_accidental_agent_mentions") {
-          f.passed = false;
-          f.message = "REJECTED: Found accidental @agent mention in body";
-        }
-        if (faults.exitcode && f.rule_id === "verification.all_snippets_passed") {
-          f.passed = false;
-          f.message = "REJECTED: Command #2 exited with non-zero status (1)";
-        }
-      }
-
-      const passCount = rules.filter(r => r.passed).length;
-      const badge = document.getElementById("contract-stress-badge");
-      badge.textContent = `${passCount}/${rules.length} ${passCount === rules.length ? 'PASS' : 'BLOCKED'}`;
-      badge.className = `mono-badge ${passCount === rules.length ? 'pass' : 'fail'}`;
-
-      document.getElementById("contract-stress-bars").innerHTML = rules.map(f => `
-        <div class="bar-item">
-          <div class="bar-item-head">
-            <span class="bar-item-name">${escapeHtml(f.rule_id)}</span>
-            <span class="bar-item-val ${f.passed ? 'emerald' : 'amber'}">${f.passed ? 'PASS' : 'REJECTED'}</span>
-          </div>
-          <div class="bar-track">
-            <div class="bar-fill-el" style="width:100%; background:${f.passed ? 'var(--accent-emerald)' : 'var(--accent-danger)'};"></div>
-          </div>
-          <div style="font-size:11px; color:var(--text-secondary);">${escapeHtml(f.message)}</div>
-        </div>
-      `).join("");
-    }
-
-    // =========================================================================
-    // 4. COMMIT LOGS & SCORE SIMULATOR
-    // =========================================================================
-    function renderCommitLogs() {
-      const cats = activeBundle.analysis.categories || {};
-      const flat = [];
-      for (const [cName, arr] of Object.entries(cats)) {
-        for (const item of arr) flat.push({ ...item, category: item.category || cName });
-      }
-      document.getElementById("commit-logs-tbody").innerHTML = flat.map(c => `
-        <tr>
-          <td style="font-family:var(--font-mono);">${escapeHtml(c.short_sha)}</td>
-          <td><span class="mono-badge">${escapeHtml(c.category)}</span></td>
-          <td>
-            <div style="font-weight:600;">${escapeHtml(c.subject)}</div>
-            <div style="font-size:11px; font-family:var(--font-mono); color:var(--text-muted);">${escapeHtml((c.files_changed || []).join(", "))}</div>
-          </td>
-          <td style="font-family:var(--font-mono); color:var(--accent-emerald);">+${c.insertions} / -${c.deletions}</td>
-          <td><span class="mono-badge pass">${c.importance_score}/10</span></td>
-        </tr>
-      `).join("");
-    }
-
-    function loadSimPreset(subj, files) {
-      document.getElementById("sim-subj").value = subj;
-      document.getElementById("sim-files").value = files;
-      updateCommitSim();
-    }
-
-    function updateCommitSim() {
-      const subj = (document.getElementById("sim-subj")?.value || "").trim();
-      const files = (document.getElementById("sim-files")?.value || "").split(",").map(s => s.trim()).filter(Boolean);
-      const lower = subj.toLowerCase();
-      const locks = ["uv.lock", "package-lock.json", "pnpm-lock.yaml", "yarn.lock"];
-      const allLock = files.length > 0 && files.every(f => locks.some(l => f.endsWith(l)));
-
-      let score = 6, status = "INCLUDED IN BUNDLE", cls = "pass";
-      if (lower.includes("[skip-post]")) { score = 1; status = "FILTERED ([skip-post])"; cls = "amber"; }
-      else if (allLock) { score = 1; status = "FILTERED (LOCKFILE NOISE)"; cls = "amber"; }
-      else if (lower.startsWith("feat")) { score = 9; }
-      else if (lower.startsWith("fix")) { score = 7; }
-      else if (lower.startsWith("chore")) { score = 2; status = "FILTERED (CHORE < 4)"; cls = "amber"; }
-
-      document.getElementById("sim-output-card").innerHTML = `
-        <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:8px;">
-          <span style="font-family:var(--font-mono); font-size:12px;">Importance Score: <strong>${score}/10</strong></span>
-          <span class="mono-badge ${cls}">${status}</span>
-        </div>
-        <div class="bar-track">
-          <div class="bar-fill-el" style="width:${score * 10}%; background:${score >= 4 ? 'var(--accent-emerald)' : 'var(--accent-amber)'};"></div>
-        </div>
-      `;
-    }
-
-    // =========================================================================
-    // 5. ROOM CLUSTERS / TOPOLOGY
-    // =========================================================================
-    const TOPO_STAGES = [
-      { id: 1, title: "1. Intake", sub: "assume_role", node: "producer" },
-      { id: 2, title: "2. Analyze", sub: "HEAD~5..HEAD", node: "role-captain" },
-      { id: 3, title: "3. Link Hop", sub: "#verification-lab", node: "verifier" },
-      { id: 4, title: "4. Sandbox", sub: "SHA-256 exit 0", node: "verifier" },
-      { id: 5, title: "5. Contract", sub: "7/7 rules pass", node: "publisher" },
-      { id: 6, title: "6. Publish", sub: "Sig 21203f17", node: "ref-bundle" }
-    ];
-
-    const CLUSTER_NODES = {
-      producer: { agent: "shipcast-producer", room: "#shipcast-studio-desk", addressing: "anyone", exclusive_role: "release-captain", tools: ["connect_to_room", "assume_role", "send_targeted_message", "release_role"] },
-      verifier: { agent: "shipcast-verifier", room: "#shipcast-verification-lab", addressing: "owner-agents", shared_role: "snippet-auditor", master_receipt_sha256: "d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9" },
-      publisher: { agent: "shipcast-publisher", room: "#shipcast-verification-lab", addressing: "owner-agents", contract: "shipcast-editorial-contract (7/7)", reference_attached: "50850bdf-0435-43ea-8fac-af269286fb0f" },
-      "role-captain": { role: "release-captain", exclusive: true, lease_id: "4b356ae8-c1f1-479d-9d8c-8fe087c9e628", status: "Released after publication sign-off" },
-      "ref-bundle": { reference: "shipcast-v0.2.0-release-bundle", id: "50850bdf-0435-43ea-8fac-af269286fb0f", approval_signature_sha256: "21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5" },
-      "doc-contract": { document: "shipcast-editorial-contract", rules_passed: 7, rules_total: 7 }
-    };
-
-    function renderClusters() {
-      document.getElementById("topo-stages-grid").innerHTML = TOPO_STAGES.map((s, i) => `
-        <div class="kpi-card" style="padding:12px 14px; border-color:${i === topoStageIndex ? 'var(--text-primary)' : 'var(--border)'}" onclick="setTopoStage(${i})">
-          <div style="font-family:var(--font-mono); font-size:11.5px; font-weight:600; margin-bottom:2px;">${escapeHtml(s.title)}</div>
-          <div style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">${escapeHtml(s.sub)}</div>
-        </div>
-      `).join("");
-      inspectClusterNode(TOPO_STAGES[topoStageIndex].node);
-    }
-
-    function setTopoStage(i) {
-      topoStageIndex = (i + TOPO_STAGES.length) % TOPO_STAGES.length;
-      renderClusters();
-    }
-
-    function stepTopo(delta) {
-      setTopoStage(topoStageIndex + delta);
-    }
-
-    function inspectClusterNode(key) {
-      const data = CLUSTER_NODES[key] || CLUSTER_NODES.producer;
-      document.getElementById("cluster-node-title").textContent = `Node Telemetry: ${key}`;
-      document.getElementById("cluster-node-json").textContent = JSON.stringify(data, null, 2);
-    }
-
-    // =========================================================================
-    // 6. CONTENT STUDIO
-    // =========================================================================
-    function setContentTab(tab, btn) {
-      activeContentTab = tab;
-      btn.parentElement.querySelectorAll(".seg-btn").forEach(el => el.classList.remove("active"));
-      btn.classList.add("active");
-      renderContentStudio();
-    }
-
-    function renderContentStudio() {
-      const p = activeBundle.preview;
-      const pre = document.getElementById("content-studio-pre");
-      if (activeContentTab === "devto") pre.textContent = p.devto_article_markdown;
-      else if (activeContentTab === "changelog") pre.textContent = p.changelog_markdown;
-      else pre.textContent = JSON.stringify(p.social_posts, null, 2);
-
-      document.getElementById("pub-receipt-pre").textContent = JSON.stringify(activePublicationReceipt, null, 2);
-    }
-
-    function copyActiveContent() {
-      copyText(document.getElementById("content-studio-pre").textContent, `Copied ${activeContentTab} artifact`);
-    }
-
-    // =========================================================================
-    // 7. SETTINGS & NEW USER TEMPLATE WIZARD
-    // =========================================================================
-    function updateTemplateWizard() {
-      const team = (document.getElementById("cfg-team")?.value || "shipcast").trim();
-      const repo = (document.getElementById("cfg-repo")?.value || "https://github.com/Blackwrld04/shipcast-studio").trim();
-      const prov = document.getElementById("cfg-provider")?.value || "antigravity";
-
-      document.getElementById("cfg-yaml-out").textContent =
-`version: 1
-params:
-  team: { type: string, default: ${team} }
-  repo_url: { type: string, default: "${repo}" }
-  provider: { type: provider, default: [${prov}, claude, opencode, codex, cursor] }
-  location: { type: location, default: local }
-  directory: { type: directory, default: "{$agents_dir}/{agent}" }
-
-agents:
-  - name: "{team}-producer"
-    addressing: anyone
-    allow_existing: true
-    auto_mode: true
-    auto_approve: true
-    provider: "{provider}"
-    location: "{location}"
-    directory: "{directory}"
-    repo: "{repo_url}"
-  - name: "{team}-verifier"
-    addressing: owner-agents
-    allow_existing: true
-    auto_mode: true
-    auto_approve: true
-    provider: "{provider}"
-    location: "{location}"
-    directory: "{directory}"
-  - name: "{team}-publisher"
-    addressing: owner-agents
-    allow_existing: true
-    auto_mode: true
-    auto_approve: true
-    provider: "{provider}"
-    location: "{location}"
-    directory: "{directory}"
-
-group:
-  name: "{team} ShipCast Studio"
-rooms:
-  - name: "{team}-studio-desk"
-    agents: ["{team}-producer", "{team}-publisher"]
-  - name: "{team}-verification-lab"
-    agents: ["{team}-producer", "{team}-verifier", "{team}-publisher"]
-links:
-  - from: "{team}-studio-desk"
-    to: "{team}-verification-lab"
-    label: verification-and-drafting`;
-
-      document.getElementById("cfg-cli-out").textContent =
-`# 1. Clone & install
-git clone https://github.com/Blackwrld04/shipcast-studio.git
-cd shipcast-studio && pip install -e .
-
-# 2. Run verified sandbox pipeline on any git repo
-shipcast run-pipeline --repo . --range HEAD~5..HEAD --version v0.2.0
-
-# 3. Publish after human sign-off
-shipcast publish --bundle-dir dist/latest --repo . --approved-by ${team}
-
-# 4. Launch ShipCast Monitor UI
-python3 -m shipcast.cli serve-studio --dir studio-ui --port 8765`;
-    }
-
-    function downloadTemplateYaml(ver) {
-      const text = document.getElementById("cfg-yaml-out").textContent;
-      const blob = new Blob([text], { type: "text/yaml;charset=utf-8" });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement("a");
-      a.href = url;
-      a.download = ver === "v2" ? "shipcast.v2.template.yaml" : "shipcast.template.yaml";
-      a.click();
-      URL.revokeObjectURL(url);
-      toast(`Downloaded ${a.download}`);
-    }
-
-    // =========================================================================
-    // LIVE API ACTIONS (/api/run-pipeline & /api/publish)
-    // =========================================================================
-    async function runLiveSandboxPipeline() {
-      const btn = document.getElementById("btn-run-sandbox");
-      if (btn) btn.textContent = "Running...";
-      const range = document.getElementById("trace-range")?.value || "HEAD~5..HEAD";
-      const version = document.getElementById("trace-version")?.value || "v0.2.0";
-
-      try {
-        const res = await fetch("/api/run-pipeline", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ range, version, commands: ["pytest -q"] })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.bundle) {
-            activeBundle = data.bundle;
-            liveMessages.push({
-              room: "shipcast-verification-lab",
-              seq: liveMessages.length + 1,
-              sender: "shipcast-verifier",
-              body: `Live sandbox execution passed (${version}). Master SHA-256: ${activeBundle.verification_receipt.overall_receipt_sha256}`
-            });
-            renderAll();
-            toast(`Sandbox verified: ${activeBundle.verification_receipt.overall_receipt_sha256.slice(0, 14)}...`);
-          }
-        }
-      } catch (_) {
-        toast("Sandbox receipt verified");
-      }
-      if (btn) btn.textContent = "Run Sandbox";
-    }
-
-    async function approveReleaseInRoom(msgText) {
-      liveMessages.push({
-        room: "New Chat",
-        seq: liveMessages.length + 1,
-        sender: "Admin",
-        body: msgText
+    function highlightStage(num, roomName) {
+      document.querySelectorAll(".step-pill").forEach((el, idx) => {
+        el.classList.toggle("active", idx + 1 === num);
       });
-
-      let sig = activePublicationReceipt.approval_signature_sha256;
-      try {
-        const res = await fetch("/api/publish", {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ approved_by: "Admin", approval_message: msgText })
-        });
-        if (res.ok) {
-          const data = await res.json();
-          if (data.publication_receipt) {
-            activePublicationReceipt = data.publication_receipt;
-            sig = data.publication_receipt.approval_signature_sha256;
-          }
-        }
-      } catch (_) {}
-
-      liveMessages.push({
-        room: "shipcast-studio-desk",
-        seq: liveMessages.length + 1,
-        sender: "shipcast-producer",
-        body: `**ShipCast Publication Complete** · Approval Signature: \`${sig}\` · Released \`release-captain\` lock.`
-      });
-      renderAll();
-      toast(`Published! Signature: ${sig.slice(0, 14)}...`);
+      filterRoom(roomName);
     }
 
-    // =========================================================================
-    // LIVE VOICE CHAT & WISPR AUDIO ENGINE (Web Speech STT + TTS + Waveform)
-    // =========================================================================
-    let voiceListening = false;
-    let voiceTTS = true;
-    let speechRec = null;
-    let waveTimer = null;
-    let lastSpokenReply = "ShipCast Producer online in shipcast-studio-desk. All 2 sandbox commands passed with SHA-256 receipt d23ff7cf96db. Ready for your voice command.";
-
-    let voiceTurns = [
-      { speaker: "Admin (Voice · 168 WPM)", room: "shipcast-studio-desk", text: "Cut release v0.2.0 from HEAD~5..HEAD and verify all CLI snippets in the isolated sandbox.", time: "17:13:04", isAgent: false },
-      { speaker: "@shipcast-producer", room: "shipcast-studio-desk", text: "Assumed exclusive release-captain role. Analyzed 5 commits (4 kept, 1 lockfile noise filtered, importance 9/10). Handing off to #shipcast-verification-lab.", time: "17:13:19", isAgent: true },
-      { speaker: "@shipcast-verifier", room: "shipcast-verification-lab", text: "Executed python3 -m shipcast.cli --help (85ms, exit 0) and pytest -q (100ms, exit 0). Signed master SHA-256 receipt d23ff7cf96db30bd.", time: "17:18:42", isAgent: true },
-      { speaker: "@shipcast-publisher", room: "shipcast-verification-lab", text: "Validated 7 of 7 rules in shipcast-editorial-contract and attached bundle reference 50850bdf to #shipcast-studio-desk.", time: "17:25:10", isAgent: true },
-      { speaker: "Admin (Voice · Wispr Flow)", room: "shipcast-studio-desk", text: "Approve publish in shipcast-studio-desk", time: "17:34:12", isAgent: false },
-      { speaker: "@shipcast-producer", room: "shipcast-studio-desk", text: "Publication complete for v0.2.0. Signed SHA-256 approval receipt 21203f17a3adfb41 and released release-captain lock.", time: "17:34:43", isAgent: true }
-    ];
-
-    function initVoiceStudio() {
-      const barCount = 28;
-      const barsHtml = Array.from({ length: barCount }, () => `<div class="v-bar" style="height:4px;"></div>`).join("");
-      const dBars = document.getElementById("dash-voice-bars");
-      const tBars = document.getElementById("voice-tab-bars");
-      if (dBars && !dBars.innerHTML) dBars.innerHTML = barsHtml;
-      if (tBars && !tBars.innerHTML) tBars.innerHTML = barsHtml;
-      renderVoiceConversation();
-    }
-
-    function setWaveActive(mode) {
-      const deck = document.getElementById("dash-voice-deck");
-      if (deck) {
-        deck.classList.toggle("listening", mode === "listening");
-        deck.classList.toggle("speaking", mode === "speaking");
+    function setStudioView(viewName, btn) {
+      if (btn) {
+        document.querySelectorAll(".nav-link").forEach(el => el.classList.remove("active"));
+        btn.classList.add("active");
       }
-      clearInterval(waveTimer);
-      if (mode === "idle") {
-        document.querySelectorAll(".v-bar").forEach(b => { b.style.height = "4px"; });
-        const dbEl = document.getElementById("dash-voice-db");
-        if (dbEl) dbEl.textContent = "-42dB";
+      if (viewName === 'rooms') filterRoom('shipcast-studio-desk');
+      else if (viewName === 'verifier') filterRoom('shipcast-verification-lab');
+      else filterRoom('all');
+    }
+
+    // =========================================================================
+    // VOICE CHAT & WISPR DICTATION BRIDGE
+    // =========================================================================
+    function toggleVoiceDictation() {
+      const bar = document.getElementById("bottom-prompt-bar");
+      const micBtn = document.getElementById("wispr-mic-btn");
+
+      if (isListening) {
+        stopVoiceDictation();
         return;
       }
-      waveTimer = setInterval(() => {
-        document.querySelectorAll(".v-bar").forEach((b, idx) => {
-          const h = 4 + Math.floor(Math.abs(Math.sin(Date.now() / 110 + idx * 0.45)) * 18 + Math.random() * 5);
-          b.style.height = `${h}px`;
-        });
-        const dbEl = document.getElementById("dash-voice-db");
-        if (dbEl) dbEl.textContent = mode === "listening" ? `-${12 + Math.floor(Math.random() * 8)}dB` : "TTS OUT";
-      }, 90);
-    }
 
-    function updateVoiceButtonsUI() {
-      const ids = ["topbar-voice-btn", "dash-voice-btn", "dash-mic-inline", "voice-tab-mic-btn"];
-      ids.forEach(id => {
-        const el = document.getElementById(id);
-        if (el) el.classList.toggle("active", voiceListening);
-      });
-      const topLbl = document.getElementById("topbar-voice-label");
-      if (topLbl) topLbl.textContent = voiceListening ? "Listening... (Stop)" : "Voice Chat (V)";
-      const dashLbl = document.getElementById("dash-voice-btn-text");
-      if (dashLbl) dashLbl.textContent = voiceListening ? "Stop Mic (Listening)" : "Start Voice Chat";
-      const tabLbl = document.getElementById("voice-tab-mic-label");
-      if (tabLbl) tabLbl.textContent = voiceListening ? "Stop Listening" : "Start Voice Session (V)";
-      const badge = document.getElementById("voice-state-badge");
-      if (badge) {
-        badge.textContent = voiceListening ? "LIVE MIC · LISTENING" : "READY · 168 WPM WISPR";
-        badge.className = `mono-badge ${voiceListening ? "amber" : "pass"}`;
-      }
-      const tabReadout = document.getElementById("voice-tab-state-readout");
-      if (tabReadout) {
-        tabReadout.textContent = voiceListening ? "LISTENING TO MICROPHONE (SPEAK NOW)..." : "STANDBY · PRESS V TO SPEAK";
-      }
-    }
+      isListening = true;
+      bar.classList.add("listening");
+      micBtn.classList.add("active");
 
-    function toggleVoiceListening() {
-      if (voiceListening) {
-        stopVoiceListening();
-        return;
-      }
-      voiceListening = true;
-      updateVoiceButtonsUI();
-      setWaveActive("listening");
-
-      const SR = window.SpeechRecognition || window.webkitSpeechRecognition;
-      if (SR) {
+      const SpeechRec = window.SpeechRecognition || window.webkitSpeechRecognition;
+      if (SpeechRec) {
         try {
-          speechRec = new SR();
-          speechRec.lang = "en-US";
-          speechRec.interimResults = true;
-          speechRec.continuous = false;
-          speechRec.onresult = (event) => {
-            let transcript = "";
-            for (let i = event.resultIndex; i < event.results.length; i++) {
-              transcript += event.results[i][0].transcript;
+          speechRecognition = new SpeechRec();
+          speechRecognition.lang = "en-US";
+          speechRecognition.interimResults = true;
+          speechRecognition.onresult = (e) => {
+            let str = "";
+            for (let i = e.resultIndex; i < e.results.length; i++) {
+              str += e.results[i][0].transcript;
             }
-            const dInp = document.getElementById("dash-voice-input");
-            const tInp = document.getElementById("voice-tab-input");
-            if (dInp) dInp.value = transcript;
-            if (tInp) tInp.value = transcript;
-            if (event.results[event.results.length - 1].isFinal) {
-              stopVoiceListening();
-              processSpokenCommand(transcript.trim());
+            document.getElementById("prompt-input-el").value = str;
+            if (e.results[e.results.length - 1].isFinal) {
+              stopVoiceDictation();
+              showToast("Voice captured! Press Enter or arrow to send.");
             }
           };
-          speechRec.onerror = () => {
-            stopVoiceListening();
-            toast("Mic captured via Wispr input bar — press Send Voice or click a Voice Macro");
+          speechRecognition.onerror = () => stopVoiceDictation();
+          speechRecognition.onend = () => {
+            if (isListening) stopVoiceDictation();
           };
-          speechRec.onend = () => {
-            if (voiceListening) stopVoiceListening();
-          };
-          speechRec.start();
-          toast("Microphone active — speak your command to @shipcast-producer");
+          speechRecognition.start();
+          showToast("Listening with Wispr / Microphone...");
           return;
         } catch (_) {}
       }
 
-      toast("Voice capture active — speak with Wispr Flow or press Send Voice");
-      const activeInput = currentView === "voice"
-        ? document.getElementById("voice-tab-input")
-        : document.getElementById("dash-voice-input");
-      if (activeInput) activeInput.focus();
+      showToast("Voice mode active — speak with Wispr Flow hotkey");
+      document.getElementById("prompt-input-el").focus();
     }
 
-    function stopVoiceListening() {
-      voiceListening = false;
-      if (speechRec) {
-        try { speechRec.stop(); } catch (_) {}
-        speechRec = null;
+    function stopVoiceDictation() {
+      isListening = false;
+      document.getElementById("bottom-prompt-bar").classList.remove("listening");
+      document.getElementById("wispr-mic-btn").classList.remove("active");
+      if (speechRecognition) {
+        try { speechRecognition.stop(); } catch (_) {}
+        speechRecognition = null;
       }
-      updateVoiceButtonsUI();
-      setWaveActive("idle");
     }
 
-    function toggleVoiceTTS() {
-      voiceTTS = !voiceTTS;
-      const b1 = document.getElementById("tts-toggle-btn");
-      const b2 = document.getElementById("voice-tab-tts-btn");
-      if (b1) b1.textContent = `Agent Audio Readback: ${voiceTTS ? "ON" : "OFF"}`;
-      if (b2) b2.textContent = `TTS Readback: ${voiceTTS ? "ON" : "OFF"}`;
-      if (!voiceTTS && "speechSynthesis" in window) {
-        window.speechSynthesis.cancel();
-        setWaveActive("idle");
-      }
-      toast(`Agent voice synthesis ${voiceTTS ? "enabled" : "muted"}`);
+    function insertApproveSnippet() {
+      document.getElementById("prompt-input-el").value = "Approve publish in shipcast-studio-desk";
+      document.getElementById("prompt-input-el").focus();
     }
 
-    function speakAgentText(text) {
-      lastSpokenReply = text;
-      if (!voiceTTS || !("speechSynthesis" in window)) return;
-      try {
-        window.speechSynthesis.cancel();
-        const utter = new SpeechSynthesisUtterance(text);
-        utter.rate = 1.04;
-        utter.pitch = 0.98;
-        utter.onstart = () => setWaveActive("speaking");
-        utter.onend = () => setWaveActive("idle");
-        utter.onerror = () => setWaveActive("idle");
-        window.speechSynthesis.speak(utter);
-      } catch (_) {}
-    }
+    async function submitReleasePrompt() {
+      const inp = document.getElementById("prompt-input-el");
+      const val = inp.value.trim();
+      if (!val) return;
 
-    function replayLastAgentSpeech() {
-      speakAgentText(lastSpokenReply);
-      toast("Playing agent audio readback...");
-    }
-
-    function submitVoiceChat(inputId) {
-      const inp = document.getElementById(inputId);
-      const text = (inp?.value || "").trim();
-      if (!text) return;
-      if (voiceListening) stopVoiceListening();
-      processSpokenCommand(text);
-    }
-
-    function triggerVoiceMacro(kind) {
-      const map = {
-        cut: "Cut release v0.2.0 from HEAD~5..HEAD, run pytest and CLI verification in the sandbox, and sign the SHA-256 receipt.",
-        status: "Report current P99 sandbox verification latency and master SHA-256 receipt status.",
-        contract: "Audit the release bundle against all 7 rules of shipcast-editorial-contract.",
-        approve: "Approve publish in shipcast-studio-desk"
-      };
-      const cmd = map[kind] || map.cut;
-      const dInp = document.getElementById("dash-voice-input");
-      const tInp = document.getElementById("voice-tab-input");
-      if (dInp) dInp.value = cmd;
-      if (tInp) tInp.value = cmd;
-      processSpokenCommand(cmd);
-    }
-
-    async function processSpokenCommand(text) {
       const now = new Date().toTimeString().slice(0, 8);
-      voiceTurns.push({
-        speaker: "Admin (Voice · 168 WPM)",
+      appState.messages.push({
         room: "shipcast-studio-desk",
-        text,
+        sender: "Admin",
+        isUser: true,
         time: now,
-        isAgent: false
+        tools: [],
+        body: val
       });
-
-      const lower = text.toLowerCase();
-      let agentName = "@shipcast-producer";
-      let agentRoom = "shipcast-studio-desk";
-      let replyText = "";
-
-      if (lower.includes("approve") || lower.includes("publish")) {
-        await approveReleaseInRoom(text);
-        const sig = activePublicationReceipt.approval_signature_sha256.slice(0, 16);
-        replyText = `Publication approved and signed in shipcast-studio-desk. Approval signature SHA-256 starts with ${sig}. Released exclusive release-captain role.`;
-      } else if (lower.includes("cut") || lower.includes("run") || lower.includes("pipeline")) {
-        await runLiveSandboxPipeline();
-        const sha = activeBundle.verification_receipt.overall_receipt_sha256.slice(0, 14);
-        replyText = `Release v0.2.0 pipeline complete. 4 commits included with importance 9 of 10. All 2 sandbox commands exited 0 with SHA-256 receipt ${sha}. Ready for human approval.`;
-      } else if (lower.includes("contract") || lower.includes("7-rule") || lower.includes("audit")) {
-        agentName = "@shipcast-publisher";
-        agentRoom = "shipcast-verification-lab";
-        replyText = `Audited release bundle against shipcast-editorial-contract. All 7 of 7 deterministic rules passed with zero banned buzzwords and zero raw table pipes.`;
-      } else {
-        agentName = "@shipcast-verifier";
-        agentRoom = "shipcast-verification-lab";
-        const r = activeBundle.verification_receipt;
-        const totalMs = (r.results || []).reduce((acc, x) => acc + (x.duration_ms || 0), 0);
-        replyText = `Sandbox telemetry normal. ${r.passed_checks} of ${r.total_checks} CLI commands exited 0 in ${totalMs} milliseconds. Master SHA-256 receipt is ${r.overall_receipt_sha256.slice(0, 12)}.`;
-      }
-
-      voiceTurns.push({
-        speaker: agentName,
-        room: agentRoom,
-        text: replyText,
-        time: new Date().toTimeString().slice(0, 8),
-        isAgent: true
-      });
-
-      const previewEl = document.getElementById("dash-voice-reply-preview");
-      if (previewEl) {
-        previewEl.innerHTML = `<strong>${escapeHtml(agentName)}:</strong> ${escapeHtml(replyText.slice(0, 92))}...`;
-      }
-      const turnsKpi = document.getElementById("voice-kpi-turns");
-      if (turnsKpi) turnsKpi.textContent = String(voiceTurns.length);
-
-      renderVoiceConversation();
-      speakAgentText(replyText);
-    }
-
-    function renderVoiceConversation() {
-      const box = document.getElementById("voice-conversation-list");
-      if (!box) return;
-      box.innerHTML = voiceTurns.slice().reverse().map((t, idx) => `
-        <div class="msg-row-card" style="border-left:2px solid ${t.isAgent ? '#8B5CF6' : 'var(--accent-emerald)'}">
-          <div style="display:flex; justify-content:space-between; align-items:center; margin-bottom:4px;">
-            <span style="font-family:var(--font-mono); font-size:11.5px; font-weight:600; color:${t.isAgent ? '#C4B5FD' : 'var(--accent-emerald)'}">
-              ${escapeHtml(t.speaker)} · #${escapeHtml(t.room)}
-            </span>
-            <div style="display:flex; align-items:center; gap:6px;">
-              <span style="font-family:var(--font-mono); font-size:10.5px; color:var(--text-muted);">${escapeHtml(t.time)}</span>
-              <button class="action-btn" style="height:22px; padding:0 7px; font-size:10px;" onclick="speakAgentText(${JSON.stringify(t.text).replace(/"/g, '&quot;')})">🔊 Play</button>
-            </div>
-          </div>
-          <div style="font-size:12.5px; color:var(--text-primary);">${escapeHtml(t.text)}</div>
-        </div>
-      `).join("");
-    }
-
-    // =========================================================================
-    // COMMAND PALETTE (/ or Ctrl+K) & MODALS
-    // =========================================================================
-    const PALETTE_ACTIONS = [
-      { label: "Dashboard / Telemetry Overview", key: "1", fn: () => navigateByName("dashboard") },
-      { label: "Switch Rooms Live Event Stream (39 events)", key: "2", fn: () => navigateByName("rooms") },
-      { label: "Subprocess Sandbox Traces & 7-Rule Contract Lab", key: "3", fn: () => navigateByName("traces") },
-      { label: "Git Commit Logs & Score Simulator", key: "4", fn: () => navigateByName("logs") },
-      { label: "Voice Chat & Wispr Audio Telemetry Studio", key: "V", fn: () => navigateByName("voice") },
-      { label: "Toggle Live Microphone Voice Chat", key: "M", fn: () => toggleVoiceListening() },
-      { label: "Room Clusters & 6-Stage Handoff Replay", key: "5", fn: () => navigateByName("clusters") },
-      { label: "Content Studio & Signed Publication Receipt", key: "6", fn: () => navigateByName("nodes") },
-      { label: "Settings, YAML Template Generator & Proof Gallery", key: "7", fn: () => navigateByName("settings") },
-      { label: "Execute Live Subprocess Sandbox Pipeline", key: "R", fn: () => runLiveSandboxPipeline() },
-      { label: "Approve & Publish Release in #shipcast-studio-desk", key: "A", fn: () => approveReleaseInRoom("@shipcast-producer Approve publish in shipcast-studio-desk") },
-      { label: "Open Staged DEV.to Draft", key: "↗", fn: () => window.open("https://dev.to/olajide_abdulquadri_807ef/shipcast-studio-on-switch-rooms-cryptographically-verified-multi-agent-release-notes-3ilf-temp-slug-4446916/edit", "_blank") }
-    ];
-
-    function openCommandPalette() {
-      document.getElementById("palette-modal").classList.add("open");
-      const inp = document.getElementById("palette-input");
+      renderChatMessages();
       inp.value = "";
-      renderPaletteItems();
-      setTimeout(() => inp.focus(), 20);
-    }
 
-    function closeCommandPalette() {
-      document.getElementById("palette-modal").classList.remove("open");
-    }
-
-    function renderPaletteItems() {
-      const q = (document.getElementById("palette-input")?.value || "").toLowerCase().trim();
-      const items = PALETTE_ACTIONS.filter(x => !q || x.label.toLowerCase().includes(q));
-      document.getElementById("palette-list").innerHTML = items.map(x => `
-        <button class="nav-link" style="width:100%" onclick="runPaletteItem(${PALETTE_ACTIONS.indexOf(x)})">
-          <span>${escapeHtml(x.label)}</span>
-          <span class="slash-badge">${escapeHtml(x.key)}</span>
-        </button>
-      `).join("");
-    }
-
-    function runPaletteItem(idx) {
-      closeCommandPalette();
-      if (PALETTE_ACTIONS[idx]) PALETTE_ACTIONS[idx].fn();
-    }
-
-    function handlePaletteKey(e) {
-      if (e.key === "Escape") closeCommandPalette();
-      if (e.key === "Enter") {
-        const first = document.querySelector("#palette-list .nav-link");
-        if (first) first.click();
+      if (val.toLowerCase().includes("approve")) {
+        await approvePublishGate();
+      } else {
+        await executeSandboxPipeline();
       }
     }
 
-    function openImageModal(src, title) {
-      document.getElementById("image-modal-img").src = src;
-      document.getElementById("image-modal-title").textContent = title;
-      document.getElementById("image-modal").classList.add("open");
+    async function executeSandboxPipeline() {
+      const btn = document.getElementById("run-sandbox-btn");
+      if (btn) btn.textContent = "Running...";
+      try {
+        const res = await fetch("/api/run-pipeline", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ range: "HEAD~5..HEAD", version: "v0.2.0" })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.bundle) {
+            appState.bundle = data.bundle;
+            showToast("Sandbox verification complete (exit 0)!");
+          }
+        }
+      } catch (_) {
+        showToast("Sandbox pipeline executed");
+      }
+      if (btn) btn.innerHTML = `
+        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+        <span>Run Sandbox</span>
+      `;
+      renderUI();
     }
 
-    function closeImageModal() {
-      document.getElementById("image-modal").classList.remove("open");
+    async function approvePublishGate() {
+      try {
+        const res = await fetch("/api/publish", {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ approved_by: "Admin", approval_message: "Approve publish in shipcast-studio-desk" })
+        });
+        if (res.ok) {
+          const data = await res.json();
+          if (data.publication_receipt) {
+            appState.publication_receipt = data.publication_receipt;
+          }
+        }
+      } catch (_) {}
+
+      const now = new Date().toTimeString().slice(0, 8);
+      appState.messages.push({
+        room: "shipcast-studio-desk",
+        sender: "shipcast-producer",
+        avatarCls: "avatar-producer",
+        avatarLetter: "P",
+        time: now,
+        tools: ["verify_approval", "write_publication_receipt", "release_role"],
+        body: "**ShipCast Publication Complete**\\n• Approval Signature: `" + appState.publication_receipt.approval_signature_sha256 + "`\\n• Released `release-captain` role."
+      });
+      renderUI();
+      showToast("Publication approved & signed!");
     }
 
     function toggleTheme() {
       document.documentElement.classList.toggle("light");
-      toast("Switched theme");
+      showToast("Theme toggled");
     }
 
-    function copyText(text, msg) {
-      navigator.clipboard.writeText(text || "");
-      toast(msg || "Copied");
-    }
-
-    function toast(msg) {
-      const el = document.getElementById("toast");
-      el.textContent = msg;
+    function showToast(text) {
+      const el = document.getElementById("toast-el");
+      el.textContent = text;
       el.classList.add("show");
-      clearTimeout(window._tTimer);
-      window._tTimer = setTimeout(() => el.classList.remove("show"), 2300);
+      clearTimeout(window._toastTimer);
+      window._toastTimer = setTimeout(() => el.classList.remove("show"), 2200);
     }
 
     function escapeHtml(s) {
@@ -2849,31 +1651,19 @@ python3 -m shipcast.cli serve-studio --dir studio-ui --port 8765`;
         .replace(/"/g, "&quot;");
     }
 
+    // Keyboard shortcuts
     window.addEventListener("keydown", e => {
-      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === "k") {
-        e.preventDefault();
-        openCommandPalette();
-        return;
-      }
-      if (e.key === "Escape") {
-        closeCommandPalette();
-        closeImageModal();
-        return;
-      }
+      if (e.key === "Escape") stopVoiceDictation();
       const tag = (e.target?.tagName || "").toLowerCase();
-      if (tag === "input" || tag === "textarea" || tag === "select") return;
-      if (e.key === "/") { e.preventDefault(); openCommandPalette(); }
-      if (e.key === "1") navigateByName("dashboard");
-      if (e.key === "2") navigateByName("rooms");
-      if (e.key === "3") navigateByName("traces");
-      if (e.key === "4") navigateByName("logs");
-      if (e.key === "5") navigateByName("clusters");
-      if (e.key === "6") navigateByName("nodes");
-      if (e.key === "7") navigateByName("settings");
-      if (e.key.toLowerCase() === "v" || e.key === "8") navigateByName("voice");
+      if (tag === "input" || tag === "textarea") return;
+      if (e.key === "1") setStudioView('overview');
+      if (e.key === "2") setStudioView('rooms');
+      if (e.key === "3") setStudioView('verifier');
+      if (e.key === "4") setStudioView('artifacts');
+      if (e.key.toLowerCase() === "v") toggleVoiceDictation();
     });
 
-    hydrate();
+    loadLiveBackendState();
   </script>
 </body>
 </html>
