@@ -1,0 +1,13 @@
+{
+  "published_at": "2026-11-05T16:34:43Z",
+  "version_tag": "v0.2.0",
+  "approved_by": "Admin",
+  "approval_message": "Approve publish in shipcast-studio-desk",
+  "approval_signature_sha256": "21203f17a3adfb41b90aaf64896227dee9b56010edd93feaa8fb5ca586c5ccc5",
+  "verification_receipt_sha256": "d23ff7cf96db30bdabb4fe5aef9304f7ff72e02391a47a87b0d534515a9a9fc9",
+  "changelog_path": "/home/blackwrld04/.gemini/antigravity/scratch/shipcast/CHANGELOG.md",
+  "changelog_updated": false,
+  "devto": {
+    "status": "staged_locally"
+  }
+}

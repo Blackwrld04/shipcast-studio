@@ -154,6 +154,30 @@ class StudioRequestHandler(http.server.SimpleHTTPRequestHandler):
         self.end_headers()
         self.wfile.write(raw)
 
+    def do_GET(self) -> None:
+        if self.path.startswith("/api/state"):
+            dist_dir = self.repo_root / "dist" / "latest"
+            state: dict[str, Any] = {"ok": True}
+            for key, rel in [
+                ("bundle", dist_dir / "bundle-data.json"),
+                ("transcript", dist_dir / "switch-live-transcript.json"),
+                ("publication_receipt", dist_dir / "publication-receipt.json"),
+            ]:
+                if rel.exists():
+                    try:
+                        state[key] = json.loads(rel.read_text(encoding="utf-8"))
+                    except Exception:
+                        state[key] = None
+            for key, yaml_path in [
+                ("template_v1", self.repo_root / "shipcast.template.yaml"),
+                ("template_v2", self.repo_root / "shipcast.v2.template.yaml"),
+            ]:
+                if yaml_path.exists():
+                    state[key] = yaml_path.read_text(encoding="utf-8")
+            self._send_json(200, state)
+            return
+        super().do_GET()
+
     def do_POST(self) -> None:
         length = int(self.headers.get("Content-Length", "0"))
         body_raw = self.rfile.read(length).decode("utf-8") if length > 0 else "{}"
