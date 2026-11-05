@@ -1,7 +1,7 @@
 **ShipCast Release Package Ready — shipcast v0.2.0**
 • **Role Held:** `release-captain` (exclusive lock active)
-• **Git Range:** `HEAD~3..HEAD` (3 commits included, 0 filtered)
-• **Importance Score:** 10/10 (+2813/-0 lines in 13 files)
-• **Sandbox Verification:** 2/2 commands passed (Receipt `21fe43f069b40485`)
+• **Git Range:** `HEAD~5..HEAD` (4 commits included, 1 filtered)
+• **Importance Score:** 10/10 (+3471/-42 lines in 36 files)
+• **Sandbox Verification:** 1/1 commands passed (Receipt `4e659d6e9a14709a`)
 • **Artifacts Staged:** `devto-article.md`, `changelog-entry.md`, `social-posts.json`, `changelog-seo.jsonld`
 • **Next Step:** Reply `Approve publish` in this thread to update `CHANGELOG.md` and publish the release bundle.

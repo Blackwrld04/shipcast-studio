@@ -12,7 +12,7 @@ Every code release normally ends with a manual chore: reading `git log`, checkin
 
 For **shipcast `v0.2.0`**, we automated this workflow inside **Switch Rooms** using two linked rooms (`studio-desk` and `verification-lab`) and three specialized agents (`producer`, `verifier`, and `publisher`) governed by an explicit human sign-off gate.
 
-> **Creator Note (Dictated in Switch Room):** Dictated with Wispr Flow: Highlight how our two linked Switch rooms separate noisy sandbox command verification from the human approval desk.
+> **Creator Note (Dictated in Switch Room):** Focus on the two-room Switch topology (#studio-desk and #verification-lab), cryptographic SHA-256 sandbox receipts, and how Wispr Flow voice notes steer the Producer agent before human approval.
 
 ## 1. Architecture: Why Two Linked Switch Rooms Beat a Single Bot
 
@@ -30,17 +30,18 @@ flowchart LR
 
 ## 2. What Shipped in `shipcast v0.2.0`
 
-Our git analyzer scanned `HEAD~3..HEAD` (3 total commits, filtering out 0 low-signal commits) and scored this release **10/10** across **13 files** (`+2813 / -0` lines):
+Our git analyzer scanned `HEAD~5..HEAD` (5 total commits, filtering out 1 low-signal commits) and scored this release **10/10** across **36 files** (`+3471 / -42` lines):
 
+- **`722574d` — feat(studio): add live interactive API endpoints and hackathon submission kit** (`+261 / -42` lines across `README.md, SUBMISSION_KIT.md, agents/PRODUCER.md`)
+- **`297e8c9` — docs(release): publish verified v0.2.0 release bundle and CHANGELOG.md** (`+753 / -0` lines across `CHANGELOG.md, dist/latest/bundle-data.json, dist/latest/changelog-entry.md`)
 - **`e486111` — feat(switch): add linked two-room Switch templates, agent briefs, and Studio Workbench UI** (`+1845 / -0` lines across `README.md, agents/PRODUCER.md, agents/PUBLISHER.md`)
 - **`b7f7c7a` — feat(pipeline): add multi-format release bundler and human-gated CHANGELOG publisher** (`+612 / -0` lines across `shipcast/bundler.py, shipcast/cli.py, shipcast/publisher.py`)
-- **`70efffb` — feat(verifier): add subprocess sandbox runner with SHA-256 receipts and 7-rule contract validator** (`+356 / -0` lines across `shipcast/validator.py, shipcast/verifier.py`)
 
 ## 3. Sandbox Verification Receipts (`verification-lab`)
 
-Before `publisher` was allowed to draft this post, `verifier` executed every command in an isolated subprocess and recorded its cryptographic SHA-256 receipt (`21fe43f069b404854866...`):
+Before `publisher` was allowed to draft this post, `verifier` executed every command in an isolated subprocess and recorded its cryptographic SHA-256 receipt (`4e659d6e9a14709a0c9d...`):
 
-### Check #1: `PASS (exit 0)` in 199ms
+### Check #1: `PASS (exit 0)` in 139ms
 - **Receipt SHA-256:** `9e0b9428774d2022a14257b0...`
 
 ```bash
@@ -67,19 +68,6 @@ positional arguments:
 
 options:
   -h, --help            show this help message and exit
-```
-
-### Check #2: `PASS (exit 0)` in 1930ms
-- **Receipt SHA-256:** `debc015f11b7ccecfa56c88a...`
-
-```bash
-pytest -q
-```
-
-**Captured Sandbox Output:**
-```text
-.....                                                                    [100%]
-5 passed in 0.19s
 ```
 
 ## 4. Reproducing This Setup in Switch Console
