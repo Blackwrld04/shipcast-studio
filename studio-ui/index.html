@@ -1189,13 +1189,15 @@ ShipCast Studio — Autonomous release notes crew on Switch Rooms</pre>
       </div>
 
       <!-- Verified Multi-Channel Artifact Viewer -->
-      <div class="artifacts-panel">
+      <div class="artifacts-panel" id="artifacts-section">
         <div class="tab-bar">
           <button class="tab-btn active" onclick="switchArtifactTab('devto', this)">DEV.to Release Post</button>
           <button class="tab-btn" onclick="switchArtifactTab('changelog', this)">Keep-a-Changelog (CHANGELOG.md)</button>
           <button class="tab-btn" onclick="switchArtifactTab('social', this)">Social Announcement Kit</button>
           <button class="tab-btn" onclick="switchArtifactTab('receipt', this)">Signed Publication Receipt</button>
-          <div style="margin-left:auto;">
+          <button class="tab-btn" onclick="switchArtifactTab('template', this)">Switch Template (YAML)</button>
+          <div style="margin-left:auto; display:flex; gap:6px;">
+            <button class="action-btn" style="height:26px; font-size:11px;" onclick="downloadSwitchTemplate()">Download YAML</button>
             <button class="action-btn" style="height:26px; font-size:11px;" onclick="copyCurrentArtifact()">Copy Content</button>
           </div>
         </div>
@@ -1438,6 +1440,53 @@ ShipCast Studio — Autonomous release notes crew on Switch Rooms</pre>
         .replace(/`(.*?)`/g, '<code>$1</code>');
     }
 
+    const SWITCH_TEMPLATE_YAML = `version: 1
+params:
+  team: { type: string, default: shipcast }
+  repo_url: { type: string, default: "https://github.com/Blackwrld04/shipcast-studio" }
+  provider: { type: provider, default: [antigravity, claude, opencode, codex, cursor] }
+  location: { type: location, default: local }
+  directory: { type: directory, default: "{$agents_dir}/{agent}" }
+
+agents:
+  - name: "{team}-producer"
+    addressing: anyone
+    allow_existing: true
+    auto_mode: true
+    auto_approve: true
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+    repo: "{repo_url}"
+  - name: "{team}-verifier"
+    addressing: owner-agents
+    allow_existing: true
+    auto_mode: true
+    auto_approve: true
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+  - name: "{team}-publisher"
+    addressing: owner-agents
+    allow_existing: true
+    auto_mode: true
+    auto_approve: true
+    provider: "{provider}"
+    location: "{location}"
+    directory: "{directory}"
+
+group:
+  name: "{team} ShipCast Studio"
+rooms:
+  - name: "{team}-studio-desk"
+    agents: ["{team}-producer", "{team}-publisher"]
+  - name: "{team}-verification-lab"
+    agents: ["{team}-producer", "{team}-verifier", "{team}-publisher"]
+links:
+  - from: "{team}-studio-desk"
+    to: "{team}-verification-lab"
+    label: verification-and-drafting`;
+
     function renderArtifactView() {
       const pre = document.getElementById("artifact-content-pre");
       const p = appState.bundle.preview;
@@ -1449,7 +1498,20 @@ ShipCast Studio — Autonomous release notes crew on Switch Rooms</pre>
         pre.textContent = JSON.stringify(p.social_posts, null, 2);
       } else if (activeArtifact === "receipt") {
         pre.textContent = JSON.stringify(appState.publication_receipt, null, 2);
+      } else if (activeArtifact === "template") {
+        pre.textContent = SWITCH_TEMPLATE_YAML;
       }
+    }
+
+    function downloadSwitchTemplate() {
+      const blob = new Blob([SWITCH_TEMPLATE_YAML], { type: "text/yaml;charset=utf-8" });
+      const url = URL.createObjectURL(blob);
+      const a = document.createElement("a");
+      a.href = url;
+      a.download = "shipcast.template.yaml";
+      a.click();
+      URL.revokeObjectURL(url);
+      showToast("Downloaded shipcast.template.yaml");
     }
 
     function switchArtifactTab(tab, btn) {
