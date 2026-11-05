@@ -14,7 +14,7 @@ params:
   repo_url:
     type: string
     label: Target GitHub repository URL
-    default: "https://github.com/sandbox-quantum/switch"
+    default: "https://github.com/Blackwrld04/shipcast-studio"
   bridge:
     type: bridge
     label: Messaging app
@@ -30,7 +30,7 @@ params:
     input: advanced
   directory:
     type: directory
-    default: "/home/blackwrld04/.gemini/antigravity/scratch/shipcast"
+    default: "{$agents_dir}/{producer.name}"
     input: advanced
 
 form:

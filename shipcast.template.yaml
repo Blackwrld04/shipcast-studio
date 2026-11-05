@@ -25,7 +25,7 @@ params:
     type: string
     label: Target GitHub repository URL
     description: Repository whose commits and CLI snippets ShipCast will analyze and verify
-    default: "https://github.com/sandbox-quantum/switch"
+    default: "https://github.com/Blackwrld04/shipcast-studio"
   bridge:
     type: bridge
     label: Messaging app
@@ -44,8 +44,8 @@ params:
     input: advanced
   directory:
     type: directory
-    description: Working directory for each agent on the host machine.
-    default: "/home/blackwrld04/.gemini/antigravity/scratch/shipcast"
+    description: Working directory for each agent on the host machine (or point to an existing local clone).
+    default: "{$agents_dir}/{agent}"
     input: advanced
 
 form:
