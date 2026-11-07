@@ -22,6 +22,9 @@ dev = [
 [project.scripts]
 shipcast = "shipcast.cli:main"
 
+[tool.setuptools]
+py-modules = ["app"]
+
 [tool.setuptools.packages.find]
 where = ["."]
 include = ["shipcast*"]
@@ -29,4 +32,8 @@ include = ["shipcast*"]
 [tool.pytest.ini_options]
 testpaths = ["tests"]
 pythonpath = ["."]
+
+[tool.vercel]
+entrypoint = "app:app"
+
 
