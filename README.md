@@ -1,5 +1,8 @@
 # ShipCast Studio — Autonomous Code-to-Content & Verified Release Studio on Switch Rooms
 
+- **Live Studio Workbench (Vercel):** https://shipcast-studio-knhe.vercel.app
+- **Switch Group Template:** [`shipcast.template.yaml`](shipcast.template.yaml)
+
 **ShipCast** turns a git commit range (plus an optional voice-dictated context note from **Wispr Flow**) into a **cryptographically verified release & content bundle** inside **Switch Rooms** (Discord, Telegram, Slack, Mattermost, or Switch Console).
 
 Instead of trusting a single chatbot to summarize `git log` and publish unchecked tutorial commands, ShipCast coordinates **three specialized agents** across **two linked Switch rooms** (`{team}-studio-desk` and `{team}-verification-lab`) with an exclusive role lock (`release-captain`), a subprocess sandbox verifier (`SHA-256` execution receipts), a 7-rule deterministic editorial contract, and an explicit human sign-off gate.

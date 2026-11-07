@@ -1,5 +1,6 @@
 # ShipCast Studio — 4-Track Hackathon Submission Kit
 
+- **Live Hosted Studio UI (Vercel):** https://shipcast-studio-knhe.vercel.app
 - **Live Public GitHub Repository:** https://github.com/Blackwrld04/shipcast-studio
 - **Staged DEV.to Blog Draft (`edit_url`):** https://dev.to/olajide_abdulquadri_807ef/shipcast-studio-on-switch-rooms-cryptographically-verified-multi-agent-release-notes-3ilf-temp-slug-4446916/edit
 - **Local Studio Workbench UI:** http://127.0.0.1:8765
