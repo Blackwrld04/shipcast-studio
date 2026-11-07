@@ -8,7 +8,7 @@
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 24 24%22 fill=%22none%22 stroke=%22%23161614%22 stroke-width=%222.2%22><path d=%22M12 2L2 7l10 5 10-5-10-5zM2 17l10 5 10-5M2 12l10 5 10-5%22/></svg>" />
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600;9..40,700&family=Instrument+Serif:ital@0;1&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:ital,wght@0,400;0,500;0,600;0,700;1,400;1,500;1,600&family=Inter+Tight:ital,wght@0,500;0,600;0,700;1,500;1,600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet" />
   <style>
     :root {
       --bg: #DEDCD3;
@@ -35,8 +35,8 @@
       --blue-soft: #E3EDFF;
       --dark: #171715;
       --dark-2: #232320;
-      --font-sans: 'DM Sans', -apple-system, BlinkMacSystemFont, sans-serif;
-      --font-serif: 'Instrument Serif', Georgia, serif;
+      --font-sans: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+      --font-display: 'Inter Tight', 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
       --font-mono: 'JetBrains Mono', ui-monospace, SFMono-Regular, Menlo, monospace;
       --shadow-sm: 0 1px 2px rgba(20, 20, 19, 0.05);
       --shadow-md: 0 12px 34px rgba(20, 20, 19, 0.10);
@@ -388,11 +388,11 @@
     }
 
     .page-head h1 {
-      font-family: var(--font-serif);
+      font-family: var(--font-display);
       font-size: 50px;
-      font-weight: 400;
-      line-height: 0.98;
-      letter-spacing: -0.02em;
+      font-weight: 600;
+      line-height: 1.02;
+      letter-spacing: -0.035em;
       color: var(--ink);
     }
     .page-head h1 em { font-style: italic; }
@@ -1141,7 +1141,15 @@
       border-color: var(--line-strong);
       box-shadow: var(--shadow-sm);
     }
-    .room-tab-name { font-family: var(--font-mono); font-size: 11.5px; font-weight: 600; color: var(--ink); }
+    .room-tab-name {
+      font-family: var(--font-mono);
+      font-size: 11.5px;
+      font-weight: 600;
+      color: var(--ink);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
     .room-tab-count {
       font-family: var(--font-mono);
       font-size: 9.5px;
@@ -1378,11 +1386,11 @@
       margin-bottom: 10px;
     }
     .content-meta h1 {
-      font-family: var(--font-serif);
+      font-family: var(--font-display);
       font-size: 35px;
-      font-weight: 400;
-      line-height: 1.06;
-      letter-spacing: -0.015em;
+      font-weight: 600;
+      line-height: 1.1;
+      letter-spacing: -0.03em;
     }
     .content-desc { margin-top: 9px; color: var(--muted); font-size: 13.5px; line-height: 1.55; }
     .tag-row { display: flex; align-items: center; gap: 5px; flex-wrap: wrap; margin-top: 13px; }
@@ -1412,7 +1420,7 @@
       line-height: 1.25;
       margin: 1.5em 0 0.55em;
     }
-    .prose h1 { font-family: var(--font-serif); font-size: 31px; font-weight: 400; }
+    .prose h1 { font-family: var(--font-display); font-size: 31px; font-weight: 600; letter-spacing: -0.025em; }
     .prose h2 { font-size: 21px; }
     .prose h3 { font-size: 16px; }
     .prose p { margin: 0 0 1.05em; }
@@ -1662,6 +1670,10 @@
       user-select: none;
       flex: 0 0 auto;
       border-right: 1px solid rgba(255, 255, 255, 0.07);
+      position: sticky;
+      left: 0;
+      background: var(--dark);
+      z-index: 1;
     }
     .lc { padding-left: 14px; padding-right: 24px; white-space: pre; }
 
@@ -1789,15 +1801,18 @@
       position: fixed;
       inset: 0;
       z-index: 210;
-      display: grid;
-      place-items: center;
+      display: flex;
+      align-items: center;
+      justify-content: center;
       padding: 20px;
       background: rgba(20, 20, 19, 0.38);
       backdrop-filter: blur(5px);
     }
     .modal {
       position: relative;
-      width: min(560px, 100%);
+      width: 100%;
+      max-width: 560px;
+      min-width: 0;
       max-height: calc(100vh - 40px);
       overflow-y: auto;
       padding: 26px;
@@ -1823,11 +1838,11 @@
     .modal-close .icon { width: 14px; height: 14px; }
     .modal h2 {
       margin-top: 2px;
-      font-family: var(--font-serif);
+      font-family: var(--font-display);
       font-size: 34px;
-      font-weight: 400;
-      line-height: 1.05;
-      letter-spacing: -0.015em;
+      font-weight: 600;
+      line-height: 1.08;
+      letter-spacing: -0.03em;
     }
     .modal-sub { margin-top: 8px; color: var(--muted); font-size: 12.5px; line-height: 1.55; }
     .modal-form { margin-top: 20px; display: flex; flex-direction: column; gap: 13px; }
@@ -1986,19 +2001,24 @@
       .social-grid { grid-template-columns: 1fr; }
       .social-card.span-2 { grid-column: auto; }
       .rooms-shell {
-        grid-template-columns: 1fr;
+        grid-template-columns: minmax(0, 1fr);
         height: auto;
         min-height: 0;
       }
       .room-list {
-        flex-direction: row;
-        overflow-x: auto;
+        display: block;
+        overflow: visible;
         border-right: none;
         border-bottom: 1px solid var(--line);
         padding: 9px;
       }
+      #roomTabs {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+        gap: 6px;
+      }
       .room-list-title, .room-list-note { display: none; }
-      .room-tab { min-width: 190px; }
+      .room-tab { width: 100%; min-width: 0; }
       .chat-pane { height: 620px; }
       .article-wrap { padding: 26px 24px 30px; }
       .page-head { align-items: flex-start; flex-direction: column; }
@@ -2083,7 +2103,7 @@
       .modal { padding: 21px 17px; border-radius: 16px; }
       .modal h2 { font-size: 28px; }
       .field-row { grid-template-columns: 1fr; }
-      .modal-actions { flex-direction: column-reverse; align-items: stretch; }
+      .modal-actions { flex-direction: column; align-items: stretch; }
       .modal-actions .btn { width: 100%; }
       .foot { font-size: 8.5px; }
     }
@@ -2251,14 +2271,14 @@
         <div class="verify-grid">
           <section class="card" aria-labelledby="commitsTitle">
             <div class="table-toolbar">
-              <div class="seg" id="commitFilters">
+              <div class="seg" id="commitFilters" role="group" aria-label="Commit filter">
                 <button type="button" class="seg-btn active" data-commit-filter="all">All <span id="filterAllCount">—</span></button>
                 <button type="button" class="seg-btn" data-commit-filter="included">Included <span id="filterIncludedCount">—</span></button>
                 <button type="button" class="seg-btn" data-commit-filter="filtered">Filtered <span id="filterFilteredCount">—</span></button>
               </div>
               <label class="search-box">
                 <svg class="icon"><use href="#i-search"/></svg>
-                <input type="search" id="commitSearch" placeholder="Filter by subject, SHA, or type…" autocomplete="off" />
+                <input type="search" id="commitSearch" placeholder="Filter commits…" aria-label="Filter commits by subject, SHA, or type" autocomplete="off" />
               </label>
             </div>
             <div class="table-wrap">
@@ -2323,7 +2343,7 @@
             <div class="chat-scroll" id="chatScroll"></div>
             <div class="composer-wrap">
               <form class="composer" id="composerForm">
-                <input type="text" id="composerInput" placeholder="Message @producer…" autocomplete="off" />
+                <input type="text" id="composerInput" placeholder="Message @producer…" aria-label="Write a room message" autocomplete="off" />
                 <button type="submit" class="btn dark">
                   <svg class="icon"><use href="#i-send"/></svg>
                   Send
@@ -2347,13 +2367,13 @@
 
         <div class="content-inner">
           <div class="content-toolbar">
-            <div class="seg" id="contentTabs">
+            <div class="seg" id="contentTabs" role="group" aria-label="Content format">
               <button type="button" class="seg-btn active" data-content-tab="devto">DEV.to draft</button>
               <button type="button" class="seg-btn" data-content-tab="changelog">Changelog</button>
               <button type="button" class="seg-btn" data-content-tab="social">Social</button>
             </div>
             <div class="toolbar-actions">
-              <div class="seg" id="contentModes">
+              <div class="seg" id="contentModes" role="group" aria-label="Content view mode">
                 <button type="button" class="seg-btn active" data-content-mode="preview">Preview</button>
                 <button type="button" class="seg-btn" data-content-mode="raw">Raw</button>
               </div>
@@ -2388,11 +2408,11 @@
                 <div class="code-file-meta" id="artifactMeta">—</div>
               </div>
               <div class="code-actions">
-                <button type="button" class="btn ghost" id="copyArtifactBtn">
+                <button type="button" class="btn ghost" id="copyArtifactBtn" aria-label="Copy this file" title="Copy this file">
                   <svg class="icon"><use href="#i-copy"/></svg>
                   <span>Copy</span>
                 </button>
-                <button type="button" class="btn ghost" id="downloadArtifactBtn">
+                <button type="button" class="btn ghost" id="downloadArtifactBtn" aria-label="Download this file" title="Download this file">
                   <svg class="icon"><use href="#i-download"/></svg>
                   <span>Download</span>
                 </button>
@@ -2416,7 +2436,7 @@
     <div class="palette-box" role="dialog" aria-modal="true" aria-label="Search ShipCast">
       <div class="palette-search">
         <svg class="icon"><use href="#i-search"/></svg>
-        <input type="text" id="paletteInput" placeholder="Search views, commits, rules, artifacts…" autocomplete="off" spellcheck="false" />
+        <input type="text" id="paletteInput" placeholder="Search views, commits, rules, artifacts…" aria-label="Search ShipCast" autocomplete="off" spellcheck="false" />
         <kbd>esc</kbd>
       </div>
       <div class="palette-list" id="paletteList"></div>
@@ -3013,7 +3033,7 @@
                     <span class="metric-label">Receipt</span>
                     <span class="metric-value">
                       ${escapeHtml(shortSha(result.receipt_sha256, 16))}
-                      <button type="button" data-copy-value="${escapeHtml(result.receipt_sha256 || "")}" data-copy-label="Receipt SHA copied" title="Copy full receipt SHA-256">
+                      <button type="button" data-copy-value="${escapeHtml(result.receipt_sha256 || "")}" data-copy-label="Receipt SHA copied" aria-label="Copy receipt SHA-256" title="Copy full receipt SHA-256">
                         ${icon("copy")}
                       </button>
                     </span>
@@ -3038,7 +3058,9 @@
       $("#filterFilteredCount").textContent = String(filteredCount);
 
       $$("#commitFilters [data-commit-filter]").forEach(button => {
-        button.classList.toggle("active", button.dataset.commitFilter === state.commitFilter);
+        const active = button.dataset.commitFilter === state.commitFilter;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
       });
       const search = $("#commitSearch");
       if (search.value !== state.commitQuery) search.value = state.commitQuery;
@@ -3094,7 +3116,7 @@
                   <div class="t-subject">${escapeHtml(commit.subject)}</div>
                   <div class="t-meta">
                     <span>${escapeHtml(commit.short_sha || shortSha(commit.sha, 7))}</span>
-                    <button type="button" class="copy-mini" data-copy-value="${escapeHtml(commit.sha || "")}" data-copy-label="Commit SHA copied" title="Copy full commit SHA">
+                    <button type="button" class="copy-mini" data-copy-value="${escapeHtml(commit.sha || "")}" data-copy-label="Commit SHA copied" aria-label="Copy commit SHA" title="Copy full commit SHA">
                       ${icon("copy")}
                     </button>
                     ${files ? `<span>${escapeHtml(files)}</span>` : ""}
@@ -3144,7 +3166,7 @@
           .filter(sender => String(sender).startsWith("shipcast-"))
           .map(sender => `@${String(sender).replace("shipcast-", "")}`)));
         return `
-          <button type="button" class="room-tab ${room === activeRoom ? "active" : ""}" data-room-name="${escapeHtml(room)}">
+          <button type="button" class="room-tab ${room === activeRoom ? "active" : ""}" data-room-name="${escapeHtml(room)}" aria-pressed="${room === activeRoom}">
             <span class="room-tab-name">#${escapeHtml(room)}</span>
             <span class="room-tab-count">${roomMessages.length}</span>
             <span class="room-tab-sub">${escapeHtml(agents.join(" · ") || "Switch room")}</span>
@@ -3172,6 +3194,7 @@
 
       const scroll = $("#chatScroll");
       scroll.scrollTop = scroll.scrollHeight;
+      renderNavCounts();
     }
 
     function renderMessage(message) {
@@ -3233,10 +3256,14 @@
       const mode = state.activeContentMode;
 
       $$("#contentTabs [data-content-tab]").forEach(button => {
-        button.classList.toggle("active", button.dataset.contentTab === tab);
+        const active = button.dataset.contentTab === tab;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
       });
       $$("#contentModes [data-content-mode]").forEach(button => {
-        button.classList.toggle("active", button.dataset.contentMode === mode);
+        const active = button.dataset.contentMode === mode;
+        button.classList.toggle("active", active);
+        button.setAttribute("aria-pressed", String(active));
       });
       $("#contentModes").hidden = tab === "social";
       $("#copyContentBtn").hidden = tab === "social";
@@ -3598,7 +3625,7 @@
       state.activeArtifact = active.key;
 
       $("#artifactList").innerHTML = files.map(file => `
-        <button type="button" class="file-btn ${file.key === active.key ? "active" : ""}" data-artifact-key="${file.key}">
+        <button type="button" class="file-btn ${file.key === active.key ? "active" : ""}" data-artifact-key="${file.key}" aria-pressed="${file.key === active.key}">
           <span class="file-icon">${icon(file.kind)}</span>
           <span class="file-info">
             <span class="file-name">${escapeHtml(file.name)}</span>
@@ -3777,10 +3804,22 @@
     function renderPalette() {
       const input = $("#paletteInput");
       const query = input.value.trim().toLowerCase();
-      let filtered = state.paletteItems
+      const entries = state.paletteItems
         .map((item, index) => ({ item, index, score: paletteScore(item, query) }))
-        .filter(entry => !query || entry.score > 0)
-        .sort((a, b) => b.score - a.score || a.index - b.index)
+        .filter(entry => !query || entry.score > 0);
+
+      const groups = new Map();
+      entries.forEach(entry => {
+        const group = entry.item.group;
+        if (!groups.has(group)) groups.set(group, { best: 0, first: entry.index, items: [] });
+        const bucket = groups.get(group);
+        bucket.best = Math.max(bucket.best, entry.score);
+        bucket.items.push(entry);
+      });
+
+      let filtered = Array.from(groups.values())
+        .sort((a, b) => b.best - a.best || a.first - b.first)
+        .flatMap(group => group.items.sort((a, b) => b.score - a.score || a.index - b.index))
         .map(entry => entry.item);
 
       if (!query) {
@@ -4121,7 +4160,9 @@
         if (!button) return;
         state.commitFilter = button.dataset.commitFilter;
         $$("#commitFilters [data-commit-filter]").forEach(item => {
-          item.classList.toggle("active", item === button);
+          const active = item === button;
+          item.classList.toggle("active", active);
+          item.setAttribute("aria-pressed", String(active));
         });
         renderCommitRows();
       });

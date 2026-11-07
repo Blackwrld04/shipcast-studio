@@ -21,7 +21,7 @@
     {
       "rule_id": "verification.all_snippets_passed",
       "passed": true,
-      "message": "All 2 sandbox checks passed (SHA-256: d23ff7cf96db...)."
+      "message": "All 2 sandbox checks passed (SHA-256: 40b11ad60b45...)."
     },
     {
       "rule_id": "editorial.no_banned_buzzwords",

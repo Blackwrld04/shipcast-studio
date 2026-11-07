@@ -28,7 +28,7 @@ A sticky release strip under the header carries the repo, version, published/ver
 - **Header:** brand, one segmented nav, search, refresh, run, and publish. Below 1180px the nav moves to its own full-width row. Below 400px the brand wordmark hides and the logo remains.
 - **Overview:** release run panel full width; below it a two-column grid for release commits and the ship checklist.
 - **Verify:** two sandbox cards side by side above a two-column grid for the commit table and editorial contract.
-- **Rooms:** a linked-room list and chat pane in one bordered shell; the list becomes a horizontal tray below 900px.
+- **Rooms:** a linked-room list and chat pane in one bordered shell; below 900px the list becomes a full-width grid above the chat.
 - **Content:** centered reading column for the draft and changelog; social posts use a two-column card grid that collapses to one column.
 - **Artifacts:** a sticky file list beside a dark code surface; the list becomes a horizontal file tray below 1180px.
 
@@ -57,8 +57,8 @@ Semantic pills always pair color with a label (`Passed`, `Filtered`, `Published`
 
 ## Typography
 
-- **Display:** Instrument Serif, regular and italic. Used only for page titles and the release headline (`v0.2.0 is live.`). One display moment per view.
-- **UI and body:** DM Sans, 400–700. 14px base, 12.5–13px in dense tables and cards.
+- **Display:** Inter Tight, 500–700, roman and italic. Used for page titles, the release headline (`v0.2.0 is live.`), the article title, and modal titles. Keep display type at the top of a view.
+- **UI and body:** Inter, 400–700. 14px base, 12.5–13px in dense tables and cards.
 - **Data:** JetBrains Mono, 9–12px. Commit SHAs, receipt hashes, commands, scores, dates, file sizes, and line numbers.
 - **Eyebrows:** 9–10px uppercase mono with wide tracking. Used sparingly for section context.
 
@@ -108,7 +108,7 @@ Run pipeline: version, commit range, voice note with optional Web Speech dictati
 | Breakpoint | Change |
 | :--- | :--- |
 | `1180px` | Nav takes its own row; overview/verify stack; artifact list becomes a horizontal tray |
-| `900px` | Sandbox and social grids stack; rooms become list-over-chat; pipeline gap tightens and step details wrap |
+| `900px` | Sandbox and social grids stack; rooms become a full-width switch grid over the chat; pipeline gap tightens and step details wrap |
 | `620px` | Pipeline becomes a one-column list; compact header actions; article and modal padding tighten |
 | `400px` | Brand wordmark hides, logo remains; header actions keep their labels |
 
@@ -117,8 +117,8 @@ No horizontal page overflow at 320px and above. Tables and code surfaces scroll 
 ## Accessibility
 
 - Visible `:focus-visible` ring in indigo.
-- Nav buttons expose `aria-current="page"`; icon-only actions have labels and titles.
-- Modals use `role="dialog"` and `aria-modal`; Escape closes the palette or active modal; body scroll locks while an overlay is open.
+- Nav buttons expose `aria-current="page"`; filters, room tabs, artifact files, and content modes expose `aria-pressed`; icon-only actions have labels and titles.
+- Modals use `role="dialog"` and `aria-modal`; focus is trapped while open and restored to the trigger on close; Escape closes the palette or active modal; body scroll locks while an overlay is open.
 - Release strip and toast are live regions.
 - Decorative SVG icons are `aria-hidden`; copy actions describe what they copy.
 - Reduced-motion preference disables meaningful animation.
